@@ -1,0 +1,2 @@
+#here we pull the csv and generate plots from it like for example for victims that faced L2 contention
+#we'll show the variation of execution time as a function of a certain working set size for different grid sizes or idk 
