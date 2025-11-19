@@ -272,6 +272,8 @@ def main():
     }
     
     #define sweep ranges for each parameter (values to loop over)
+    #i should add an intelligent function that depending on the gpu target platform decides the ranges and values to test 
+    #of the victim and enemy grid dimensions and working set sizes
     SWEEP_RANGES = {
         'runtime_seconds': [10],
         'num_enemy_sms': [4, 6, 8], 
