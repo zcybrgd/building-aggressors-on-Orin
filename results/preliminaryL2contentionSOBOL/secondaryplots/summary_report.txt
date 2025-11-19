@@ -1,0 +1,93 @@
+L2 CACHE CONTENTION - SOBOL SAMPLING ANALYSIS
+======================================================================
+
+Total Sobol Samples: 60
+
+PARAMETER RANGES:
+----------------------------------------------------------------------
+num_enemy_sms       : min=1, max=16, unique_values=7
+victim_ws_kb        : min=64, max=4096, unique_values=8
+enemy_array_mb      : min=2, max=16, unique_values=6
+victim_grid_x       : min=2, max=16, unique_values=4
+victim_block_x      : min=64, max=512, unique_values=4
+enemy_block_x       : min=32, max=1024, unique_values=5
+
+
+PERFORMANCE METRICS SUMMARY:
+----------------------------------------------------------------------
+
+Victim Alone (ms):
+  Min:          563.49
+  Max:        11728.81
+  Mean:        2871.44
+  Median:      2213.37
+  Std:         2585.09
+
+Victim Concurrent (ms):
+  Min:          644.38
+  Max:        27739.66
+  Mean:        8834.98
+  Median:      8954.70
+  Std:         5367.69
+
+Interference (%):
+  Min:            1.16
+  Max:         1835.51
+  Mean:         382.88
+  Median:       181.14
+  Std:          447.27
+
+Slowdown Factor:
+  Min:            1.01
+  Max:           19.36
+  Mean:           4.83
+  Median:         2.81
+  Std:            4.47
+
+Cache Misses (Alone):
+  Min:          118.25
+  Max:     45221448.62
+  Mean:      762479.92
+  Median:      2135.88
+  Std:      5836931.53
+
+Cache Misses (Concurrent):
+  Min:          611.25
+  Max:     46270812.88
+  Mean:      772369.75
+  Median:       908.75
+  Std:      5973380.28
+
+
+TOP 5 WORST INTERFERENCE CASES:
+----------------------------------------------------------------------
+
+Interference: 1835.5%
+  SMs=16.0, V_WS=384.0KB, E_Arr=2.0MB
+  V_Grid=8.0, V_Blk=64.0, E_Blk=256.0
+
+Interference: 1524.3%
+  SMs=16.0, V_WS=2048.0KB, E_Arr=16.0MB
+  V_Grid=4.0, V_Blk=64.0, E_Blk=32.0
+
+Interference: 1476.1%
+  SMs=10.0, V_WS=1024.0KB, E_Arr=2.0MB
+  V_Grid=4.0, V_Blk=64.0, E_Blk=64.0
+
+Interference: 1437.0%
+  SMs=16.0, V_WS=256.0KB, E_Arr=16.0MB
+  V_Grid=2.0, V_Blk=64.0, E_Blk=64.0
+
+Interference: 1350.0%
+  SMs=6.0, V_WS=1024.0KB, E_Arr=6.0MB
+  V_Grid=2.0, V_Blk=64.0, E_Blk=64.0
+
+
+CORRELATIONS WITH INTERFERENCE:
+----------------------------------------------------------------------
+num_enemy_sms       :   0.631
+victim_ws_kb        :  -0.044
+enemy_array_mb      :   0.011
+victim_grid_x       :  -0.231
+victim_block_x      :  -0.461
+enemy_block_x       :  -0.094
