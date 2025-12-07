@@ -1,0 +1,16 @@
+nvcc -o main.exe main.cu
+
+main.exe
+
+nsys profile --stats=true main.exe 
+
+ncu --kernel-name victimKernel --metrics lts__t_sectors_lookup_miss,lts__t_requests_op_read_lookup_miss,dram__bytes_read main.exe -t 20
+
+python -m venv env
+
+source env/bin/activate if on linux
+ if on windows
+
+python interferenceL2ofat.py
+
+python ofat.py l2_contention_dataset.csv (will be found on /plots)

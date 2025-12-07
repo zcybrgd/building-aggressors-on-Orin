@@ -27,8 +27,6 @@ import subprocess, re, csv, logging
 from pathlib import Path
 from dataclasses import dataclass, asdict
 from typing import Optional, List, Dict, Any
-from scipy.stats import qmc
-import numpy as np
 
 #configure logging
 logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(levelname)s - %(message)s')
@@ -259,63 +257,6 @@ class L2InterferenceRunner:
         logger.info(f"Saved {len(self.results)} results to {filename}")
 
 
-def generate_sobol_configs(domains: Dict[str, List[Any]], n_samples: int) -> List[ExperimentConfig]:
-    """
-    Generate Sobol-sampled experiment configurations.
-    
-    domains: dict mapping parameter names -> list of discrete allowed values
-    n_samples: number of Sobol points to generate
-    """
-    dim = len(domains)
-    sampler = qmc.Sobol(d=dim, scramble=True)
-    sobol_points = sampler.random(n_samples)  # génère n_samples points Sobol dans [0,1)^dim
-    param_names = list(domains.keys())
-    configs = []
-    for i in range(n_samples):
-        s = sobol_points[i]
-        config_dict = {}
-        for j, pname in enumerate(param_names):
-            domain = domains[pname]
-            idx = int(np.floor(s[j] * len(domain)))
-            if idx == len(domain):
-                idx -= 1
-            config_dict[pname] = domain[idx]
-        logger.info(f"SOBOL VECTOR: {s}")
-        logger.info(f"MAPPED CONFIG: {config_dict}")
-        configs.append(ExperimentConfig(**config_dict))
-    return configs
-
-
-def main():
-    runner = L2InterferenceRunner(exe_path="enemy.exe", output_csv="l2_contention_dataset.csv")
-    DOMAINS = {
-        'runtime_seconds': [10],
-        'num_enemy_sms': [1, 2, 4, 6, 10, 12, 16],
-        'victim_ws_kb': [64, 128, 256, 384, 768, 1024, 2048, 4096],
-        'enemy_array_mb': [2, 4, 6, 8, 12, 16],
-        'victim_grid_x': [2, 4, 8, 16],
-        'victim_block_x': [64, 128, 256, 512],
-        'enemy_block_x': [32, 64, 256, 512, 1024]
-        #si on fait 7×8×6×4×4×5 = 26 880 
-    }
-    N_SAMPLES = 60  #we choose based on time and computational power
-    logger.info(f"Generating {N_SAMPLES} Sobol configurations over {len(DOMAINS)} dimensions")
-    configs = generate_sobol_configs(DOMAINS, N_SAMPLES)
-    for cfg in configs:
-        try:
-            logger.info(f"RUN START: {cfg}")
-            result = runner.run_experiment(cfg, collect_ncu=True)
-            logger.info(f"RUN END: {cfg}")
-        except Exception as e:
-            logger.error(f"FAILED CONFIG {cfg}: {e}")
-            continue
-    runner.save_results_to_csv()
-    logger.info(f"Total Sobol runs: {len(runner.results)}")
-
-if __name__ == "__main__":
-    main()
-
-'''
 def main():
     # init runner // should be an argument so the first script can inject the executables files names here
     runner = L2InterferenceRunner(exe_path="enemy.exe",output_csv="l2_contention_dataset.csv")
@@ -331,16 +272,17 @@ def main():
     }
     
     #define sweep ranges for each parameter (values to loop over)
+    #i should add an intelligent function that depending on the gpu target platform decides the ranges and values to test 
+    #of the victim and enemy grid dimensions and working set sizes
     SWEEP_RANGES = {
-        'runtime_seconds': [10],
-        'num_enemy_sms': [1, 2, 4, 6, 10, 12, 16], #depending on the target platform, my gpu now has 16 sms
+        'num_enemy_sms': [4, 6], 
+        #'num_enemy_sms': [1, 2, 4, 6, 8, 10, 12, 16], #depending on the target platform, my gpu now has 16 sms
         'victim_ws_kb': [64, 128, 256, 384, 768, 1024, 2048, 4096],
-        'enemy_array_mb': [2, 4, 6, 8, 12, 16],
-        'victim_grid_x': [ 2, 4, 8, 16],
-        'victim_block_x': [ 64, 128, 256, 512],
-        'enemy_block_x': [32, 64, 256, 512, 1024]
+        'enemy_array_mb': [2, 4, 6, 12, 16, 24, 32, 48, 64],
+        'victim_grid_x': [2, 4, 8, 16],
+        'victim_block_x': [64, 128, 256, 512],
+        'enemy_block_x': [32, 64,  256, 512, 1024]
     }
-    
     
     #for each parameter, fix all others and sweep over this one
     for param_to_sweep, values_to_test in SWEEP_RANGES.items():
@@ -354,15 +296,14 @@ def main():
             config_dict[param_to_sweep] = value
             config = ExperimentConfig(**config_dict)
             try:
-                # run single experiment
                 result = runner.run_experiment(config, collect_ncu=True)
                 logger.info(f"\n{param_to_sweep}={value}")
             except Exception as e:
                 logger.error(f"\n{param_to_sweep}={value}: FAILED - {e}\n")
                 continue
-    # save all results
     runner.save_results_to_csv()
     logger.info(f"Experiment complete! Total runs: {len(runner.results)}")
     logger.info(f"Results saved to: {runner.output_csv}")
 
-'''
+if __name__ == "__main__":
+    main()

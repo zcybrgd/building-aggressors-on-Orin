@@ -1,0 +1,39 @@
+Found 1 CUDA device(s).
+
+--- Device 0 ---
+  Name: NVIDIA GeForce GTX 1650 Ti
+  Compute Capability: 7.5
+  Total Global Memory: 4095 MB
+  Multiprocessor Count: 16
+  Max Threads Per Block: 1024
+
+  --- L2 Cache ---
+  L2 Cache Size: 1048576 bytes (1 MB)
+  Persisting L2 Cache Max Size: 0 KB
+
+  --- L1 / Shared Memory ---
+  Global L1 Cache Supported: Yes
+  Local L1 Cache Supported: Yes
+  Shared Memory Per Block: 48 KB
+  Shared Memory Per Multiprocessor: 64 KB
+  Reserved Shared Memory Per Block: 0 KB
+
+  --- Register File / Execution Model ---
+  Registers Per Block: 65536
+  Registers Per Multiprocessor: 65536
+  Warp Size: 32
+  Max Threads Per Multiprocessor: 1024
+  Max Blocks Per Multiprocessor: 16
+  Max Threads Dimension: (1024, 1024, 64)
+  Max Grid Size: (2147483647, 65535, 65535)
+
+  --- Memory Hierarchy ---
+  Memory Bus Width: 128 bits
+  Memory Clock Rate: 6001 MHz
+  Theoretical Peak Memory Bandwidth: 192.032 GB/s
+
+  --- Execution & Concurrency ---
+  Concurrent Kernels: Yes
+  Compute Preemption Supported: Yes
+  Cooperative Launch: Yes
+  Cooperative Multi-Device Launch: No

@@ -27,8 +27,6 @@ import subprocess, re, csv, logging
 from pathlib import Path
 from dataclasses import dataclass, asdict
 from typing import Optional, List, Dict, Any
-from scipy.stats import qmc
-import numpy as np
 
 #configure logging
 logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(levelname)s - %(message)s')
@@ -40,10 +38,9 @@ class ExperimentConfig:
     """Configuration for a single experiment run"""
     runtime_seconds: int  # -t, ofc this one will disappear most likely when we use NVIDIA MPS since im letting it run infinetely against the victim
     num_enemy_sms: int    # -m , this will be just a param for the enemy to decide how many sms to use
-    victim_ws_kb: int     # -v (working set in KB)
+    matrix_size: int      # -s (matrix dimension, e.g., 512 creates 512x512 matrices)
     enemy_array_mb: int   # -e
-    victim_grid_x: int    # -vg
-    victim_block_x: int   # -vb
+    victim_block_dim: int # -vb (block dimension for GEMM, e.g., 16 creates 16x16 blocks)
     enemy_block_x: int    # -eb
     
 
@@ -74,7 +71,94 @@ class L2InterferenceRunner:
             raise FileNotFoundError(f" Victim Executable not found: {exe_path}")
         self.output_csv = Path(output_csv)
         self.results: List[MetricsResult] = []
+        
+        # Query GPU properties
+        self.gpu_props = self._get_gpu_properties()
         logger.info(f"Initialized L2InterferenceRunner with exe: {self.exe_path}")
+        logger.info(f"GPU: {self.gpu_props['name']}, SMs: {self.gpu_props['multiProcessorCount']}, "
+                   f"Max threads/block: {self.gpu_props['maxThreadsPerBlock']}, "
+                   f"Max blocks/SM: {self.gpu_props['maxBlocksPerMultiProcessor']}")
+    
+    def _get_gpu_properties(self) -> Dict[str, Any]:
+        """Query GPU device properties using CUDA"""
+        try:
+            # Run a small CUDA program to get device properties
+            query_cmd = [
+                "python", "-c",
+                "import cupy as cp; "
+                "d = cp.cuda.Device(0); "
+                "print(f'{d.attributes[\"MultiProcessorCount\"]};{d.attributes[\"MaxThreadsPerBlock\"]};{d.attributes[\"MaxBlocksPerMultiProcessor\"]};{d.name.decode()}')"
+            ]
+            result = subprocess.run(query_cmd, capture_output=True, text=True, shell=True, timeout=10)
+            if result.returncode == 0:
+                parts = result.stdout.strip().split(';')
+                return {
+                    'multiProcessorCount': int(parts[0]),
+                    'maxThreadsPerBlock': int(parts[1]),
+                    'maxBlocksPerMultiProcessor': int(parts[2]),
+                    'name': parts[3]
+                }
+        except Exception as e:
+            logger.warning(f"Could not query GPU properties via CuPy: {e}")
+        
+        # Fallback: use default conservative values
+        logger.warning("Using default GPU properties (conservative estimates)")
+        return {
+            'multiProcessorCount': 16,
+            'maxThreadsPerBlock': 1024,
+            'maxBlocksPerMultiProcessor': 16,
+            'name': 'NVIDIA GeForce GTX 1650 Ti'
+        }
+    
+    def _is_config_valid(self, config: ExperimentConfig) -> tuple[bool, str]:
+        """
+        Validate if configuration minimizes compute interference (we want L2 interference, not compute interference)
+        
+        Returns:
+            (is_valid, reason) - True if valid, False with reason if invalid
+        """
+        # Check 1: Calculate victim SM occupancy
+        victim_threads_per_block = config.victim_block_dim * config.victim_block_dim
+        victim_blocks_needed = ((config.matrix_size + config.victim_block_dim - 1) // config.victim_block_dim) ** 2
+        
+        # Estimate active victim blocks per SM (simplified, assumes no resource limits except thread count)
+        max_blocks_per_sm = self.gpu_props['maxThreadsPerBlock'] // victim_threads_per_block
+        max_blocks_per_sm = min(max_blocks_per_sm, self.gpu_props['maxBlocksPerMultiProcessor'])
+        
+        # Estimate how many SMs the victim will occupy
+        victim_sms_needed = (victim_blocks_needed + max_blocks_per_sm - 1) // max_blocks_per_sm
+        victim_sms_needed = min(victim_sms_needed, self.gpu_props['multiProcessorCount'])
+        
+        # Check 2: Ensure enemy and victim don't both saturate the GPU (compute interference)
+        total_sms = self.gpu_props['multiProcessorCount']
+        
+        # We want some compute overlap but not full saturation to isolate L2 interference
+        # Allow enemy to use at most 75% of total SMs to leave room for victim
+        if config.num_enemy_sms > int(total_sms * 0.75):
+            return False, f"Enemy uses too many SMs ({config.num_enemy_sms}/{total_sms}), would cause compute interference"
+        
+        # Check 3: Ensure victim + enemy don't oversaturate (want L2 interference, not compute starvation)
+        # If both kernels together would use >90% of SMs, they interfere at compute level
+        estimated_sm_usage = victim_sms_needed + config.num_enemy_sms
+        if estimated_sm_usage > int(total_sms * 0.9):
+            return False, f"Combined SM usage too high ({estimated_sm_usage}/{total_sms}): victim≈{victim_sms_needed} + enemy={config.num_enemy_sms} > 90%, causes compute interference"
+        
+        # Check 4: Victim block dimensions are valid
+        if victim_threads_per_block > self.gpu_props['maxThreadsPerBlock']:
+            return False, f"Victim threads/block ({victim_threads_per_block}) > max ({self.gpu_props['maxThreadsPerBlock']})"
+        
+        # Check 5: Enemy block dimensions are valid
+        if config.enemy_block_x > self.gpu_props['maxThreadsPerBlock']:
+            return False, f"Enemy threads/block ({config.enemy_block_x}) > max ({self.gpu_props['maxThreadsPerBlock']})"
+        
+        # Check 6: Matrix size is reasonable (prevent out-of-memory)
+        matrix_memory_mb = (3 * config.matrix_size * config.matrix_size * 4) / (1024 * 1024)
+        if matrix_memory_mb > 4096:
+            return False, f"Matrix memory ({matrix_memory_mb:.1f} MB) too large (>4GB)"
+        
+        return True, "Valid configuration"
+    
+    
     
     def _build_command(self, config: ExperimentConfig, use_profiler: str = None) -> List[str]:
         """Build command line for experiment"""
@@ -97,16 +181,16 @@ class L2InterferenceRunner:
         base_cmd.append(str(self.exe_path))
         base_cmd.extend([
             "-t", str(config.runtime_seconds),"-m", str(config.num_enemy_sms),
-            "-v", str(config.victim_ws_kb), "-e", str(config.enemy_array_mb), "-vg", str(config.victim_grid_x),
-            "-vb", str(config.victim_block_x), "-eb", str(config.enemy_block_x)])  
+            "-s", str(config.matrix_size), "-e", str(config.enemy_array_mb),
+            "-vb", str(config.victim_block_dim), "-eb", str(config.enemy_block_x)])  
         return base_cmd
     
     #shouldve did it from nsys
     def _parse_timing_output(self, output: str) -> Dict[str, float]:
         """Parse timing information from executable output // the console output"""
         timings = {}
-        #parse victim alone time
-        match = re.search(r'Victim alone completed in ([\d.]+) ms', output)
+        #parse victim alone time (updated for GEMM output)
+        match = re.search(r'Victim.*?completed in ([\d.]+) ms', output)
         if match:
             timings['victim_alone_ms'] = float(match.group(1))
         #parse concurrent victim time
@@ -117,6 +201,8 @@ class L2InterferenceRunner:
         match = re.search(r'Enemy kernel finished in ([\d.]+) ms', output)
         if match:
             timings['enemy_ms'] = float(match.group(1))
+        
+        print("\ntimings information parsed:", timings)
         
         return timings
     
@@ -151,7 +237,13 @@ class L2InterferenceRunner:
         Returns:
             MetricsResult containing all collected metrics
         """
-        logger.info(f"Running experiment: t={config.runtime_seconds}s, "f"m={config.num_enemy_sms}, v={config.victim_ws_kb}KB, "f"e={config.enemy_array_mb}MB")
+        # Validate configuration before running
+        is_valid, reason = self._is_config_valid(config)
+        if not is_valid:
+            logger.warning(f"Skipping invalid configuration: {reason}")
+            raise ValueError(f"Invalid configuration: {reason}")
+        
+        logger.info(f"Running experiment: t={config.runtime_seconds}s, "f"m={config.num_enemy_sms}, s={config.matrix_size}x{config.matrix_size}, "f"e={config.enemy_array_mb}MB")
         # Step 1: run without profiler for accurate timing
         cmd = self._build_command(config, use_profiler=None) #we can replace it with nsys later
         logger.debug(f"Command: {' '.join(cmd)}")
@@ -198,7 +290,7 @@ class L2InterferenceRunner:
         
         Args:
             base_config: Base configuration with fixed values
-            param_name: Name of parameter to sweep (e.g., 'victim_ws_kb')
+            param_name: Name of parameter to sweep (e.g., 'matrix_size')
             param_values: List of values to test
             collect_ncu: Whether to collect NCU metrics
         
@@ -233,8 +325,8 @@ class L2InterferenceRunner:
         fieldnames = [
             #i should add here the name of the benchmark later bc ill have multiple benchmarks, or each one in its file? idk for now
             # configuration parameters
-            'runtime_seconds', 'num_enemy_sms', 'victim_ws_kb', 'enemy_array_mb',
-            'victim_grid_x', 'victim_block_x', 'enemy_block_x',
+            'runtime_seconds', 'num_enemy_sms', 'matrix_size', 'enemy_array_mb',
+            'victim_block_dim', 'enemy_block_x',
             # timing metrics
             'victim_alone_ms', 'victim_concurrent_ms', 'enemy_ms',
             # cache metrics
@@ -259,63 +351,6 @@ class L2InterferenceRunner:
         logger.info(f"Saved {len(self.results)} results to {filename}")
 
 
-def generate_sobol_configs(domains: Dict[str, List[Any]], n_samples: int) -> List[ExperimentConfig]:
-    """
-    Generate Sobol-sampled experiment configurations.
-    
-    domains: dict mapping parameter names -> list of discrete allowed values
-    n_samples: number of Sobol points to generate
-    """
-    dim = len(domains)
-    sampler = qmc.Sobol(d=dim, scramble=True)
-    sobol_points = sampler.random(n_samples)  # génère n_samples points Sobol dans [0,1)^dim
-    param_names = list(domains.keys())
-    configs = []
-    for i in range(n_samples):
-        s = sobol_points[i]
-        config_dict = {}
-        for j, pname in enumerate(param_names):
-            domain = domains[pname]
-            idx = int(np.floor(s[j] * len(domain)))
-            if idx == len(domain):
-                idx -= 1
-            config_dict[pname] = domain[idx]
-        logger.info(f"SOBOL VECTOR: {s}")
-        logger.info(f"MAPPED CONFIG: {config_dict}")
-        configs.append(ExperimentConfig(**config_dict))
-    return configs
-
-
-def main():
-    runner = L2InterferenceRunner(exe_path="enemy.exe", output_csv="l2_contention_dataset.csv")
-    DOMAINS = {
-        'runtime_seconds': [10],
-        'num_enemy_sms': [1, 2, 4, 6, 10, 12, 16],
-        'victim_ws_kb': [64, 128, 256, 384, 768, 1024, 2048, 4096],
-        'enemy_array_mb': [2, 4, 6, 8, 12, 16],
-        'victim_grid_x': [2, 4, 8, 16],
-        'victim_block_x': [64, 128, 256, 512],
-        'enemy_block_x': [32, 64, 256, 512, 1024]
-        #si on fait 7×8×6×4×4×5 = 26 880 
-    }
-    N_SAMPLES = 60  #we choose based on time and computational power
-    logger.info(f"Generating {N_SAMPLES} Sobol configurations over {len(DOMAINS)} dimensions")
-    configs = generate_sobol_configs(DOMAINS, N_SAMPLES)
-    for cfg in configs:
-        try:
-            logger.info(f"RUN START: {cfg}")
-            result = runner.run_experiment(cfg, collect_ncu=True)
-            logger.info(f"RUN END: {cfg}")
-        except Exception as e:
-            logger.error(f"FAILED CONFIG {cfg}: {e}")
-            continue
-    runner.save_results_to_csv()
-    logger.info(f"Total Sobol runs: {len(runner.results)}")
-
-if __name__ == "__main__":
-    main()
-
-'''
 def main():
     # init runner // should be an argument so the first script can inject the executables files names here
     runner = L2InterferenceRunner(exe_path="enemy.exe",output_csv="l2_contention_dataset.csv")
@@ -323,46 +358,62 @@ def main():
     FIXED_VALUES = {
         'runtime_seconds': 10,
         'num_enemy_sms': 8,
-        'victim_ws_kb': 512,
+        'matrix_size': 512,         # Matrix dimension (512x512 matrices)
         'enemy_array_mb': 8,
-        'victim_grid_x': 1,
-        'victim_block_x': 32,
+        'victim_block_dim': 16,     # 16x16 thread blocks for GEMM
         'enemy_block_x': 128
     }
     
     #define sweep ranges for each parameter (values to loop over)
+    #i should add an intelligent function that depending on the gpu target platform decides the ranges and values to test 
+    #of the victim and enemy grid dimensions and working set sizes
     SWEEP_RANGES = {
-        'runtime_seconds': [10],
-        'num_enemy_sms': [1, 2, 4, 6, 10, 12, 16], #depending on the target platform, my gpu now has 16 sms
-        'victim_ws_kb': [64, 128, 256, 384, 768, 1024, 2048, 4096],
-        'enemy_array_mb': [2, 4, 6, 8, 12, 16],
-        'victim_grid_x': [ 2, 4, 8, 16],
-        'victim_block_x': [ 64, 128, 256, 512],
+        'num_enemy_sms': [4, 6,8,10,12],
+        #'num_enemy_sms': [1, 2, 4, 6, 8, 10, 12, 16], #depending on the target platform, my gpu now has 16 sms
+        'matrix_size': [128, 256, 384, 512, 768, 1024, 1536, 2048],  # Matrix dimensions
+        'enemy_array_mb': [2, 4, 6, 12, 16, 24, 32, 48, 64],
+        'victim_block_dim': [8, 16, 32],  # Block dimensions for GEMM (NxN blocks)
         'enemy_block_x': [32, 64, 256, 512, 1024]
     }
-    
     
     #for each parameter, fix all others and sweep over this one
     for param_to_sweep, values_to_test in SWEEP_RANGES.items():
         logger.info(f"SWEEPING: {param_to_sweep}")
         logger.info(f"Fixed values: {FIXED_VALUES}")
         logger.info(f"Testing values: {values_to_test}")
+        
+        valid_count = 0
+        skipped_count = 0
+        
         # loop over values for this single parameter
         for value in values_to_test:
             #create config with this parameter modified
             config_dict = FIXED_VALUES.copy()
             config_dict[param_to_sweep] = value
             config = ExperimentConfig(**config_dict)
+            
+            # Validate configuration before running
+            is_valid, reason = runner._is_config_valid(config)
+            if not is_valid:
+                logger.warning(f"SKIPPED {param_to_sweep}={value}: {reason}")
+                skipped_count += 1
+                continue
+            
             try:
-                # run single experiment
+                # Run single experiment
                 result = runner.run_experiment(config, collect_ncu=True)
                 logger.info(f"\n{param_to_sweep}={value}")
+                valid_count += 1
             except Exception as e:
-                logger.error(f"\n{param_to_sweep}={value}: FAILED - {e}\n")
+                logger.error(f"\n{param_to_sweep}={value}: FAILED - {e}")
                 continue
+        
+        logger.info(f"Completed {param_to_sweep} sweep: {valid_count} valid, {skipped_count} skipped")
+    
     # save all results
     runner.save_results_to_csv()
     logger.info(f"Experiment complete! Total runs: {len(runner.results)}")
     logger.info(f"Results saved to: {runner.output_csv}")
 
-'''
+if __name__ == "__main__":
+    main()
