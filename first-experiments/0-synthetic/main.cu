@@ -163,7 +163,7 @@ int main(int argc, char* argv[]) {
     //par défaut
     int run_seconds = 10;
     int num_enemy_sms = 8; 
-    int victim_working_set_kb = 512;
+    int victim_working_set_kb = 256;
     int enemy_array_mb = 8;
 
     int victim_grid_x = 8; //default was 1 ill change it for now

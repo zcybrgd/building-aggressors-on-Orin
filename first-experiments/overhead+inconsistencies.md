@@ -17,8 +17,22 @@ CUPTI can be pertinent because it can be configured for continuous streaming of 
 5-i shall make results repeatable//reproducible: flush L2 explicitly between runs,fix clocks/power to avoid thermal throttling so frequency and clocks don’t change between runs, do warm-up runs, collect many trials and report statistics (mean ± std / CI).
 6-if the metrics consisted to be noisy we should run each configuration (baseline and contention) for N independent trials (say N ≥ 15), compute mean, variance.
 7-log L2 counters and other counters together and compute derived measures (miss rate = misses / lookups)
-8-in addition to L2 metrics, SM utilization and memory stall counters may be relevant too to correlate misses with performance los
+8-in addition to L2 metrics, SM utilization and memory stall counters may be relevant too to correlate misses with performance loss
+9-NCU's replay mechanism doesn't preserve the concurrent cache pressure
+10- to interesting NCU commands
 
+--cache-control arg (=all)            Control the behavior of the GPU caches during profiling. Allowed values:
+                                          all
+                                          none
+--clock-control arg (=base)           Control the behavior of the GPU clocks during profiling. Allowed values:
+                                          base
+                                          (Lock GPU clocks to base)
+                                          none
+                                          (Don't lock clocks)
+                                          reset
+                                          (Reset GPU clocks and exit)
+
+11-
 
 
 
