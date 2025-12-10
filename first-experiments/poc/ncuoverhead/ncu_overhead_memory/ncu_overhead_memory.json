@@ -1,0 +1,439 @@
+{
+  "kernel_type": "memory",
+  "kernel_name": "memoryKernel",
+  "baseline": {
+    "cuda_events": 0.0124
+  },
+  "profiling_results": [
+    {
+      "num_metrics": 1,
+      "num_passes": 1,
+      "kernel_time_with_ncu_ms": 170.32,
+      "baseline_ms": 0.0124,
+      "ncu_overhead_ms": 170.30759999999998,
+      "overhead_percentage": 1373448.387096774,
+      "total_profiling_time": 0.9159927368164062,
+      "metrics": [
+        "sm__cycles_elapsed.avg"
+      ]
+    },
+    {
+      "num_metrics": 2,
+      "num_passes": 1,
+      "kernel_time_with_ncu_ms": 168.5777,
+      "baseline_ms": 0.0124,
+      "ncu_overhead_ms": 168.56529999999998,
+      "overhead_percentage": 1359397.5806451612,
+      "total_profiling_time": 0.911198616027832,
+      "metrics": [
+        "sm__cycles_elapsed.avg",
+        "sm__cycles_elapsed.sum"
+      ]
+    },
+    {
+      "num_metrics": 3,
+      "num_passes": 1,
+      "kernel_time_with_ncu_ms": 174.3816,
+      "baseline_ms": 0.0124,
+      "ncu_overhead_ms": 174.36919999999998,
+      "overhead_percentage": 1406203.2258064514,
+      "total_profiling_time": 0.8990018367767334,
+      "metrics": [
+        "sm__cycles_elapsed.avg",
+        "sm__cycles_elapsed.sum",
+        "sm__warps_active.avg"
+      ]
+    },
+    {
+      "num_metrics": 4,
+      "num_passes": 1,
+      "kernel_time_with_ncu_ms": 176.0277,
+      "baseline_ms": 0.0124,
+      "ncu_overhead_ms": 176.0153,
+      "overhead_percentage": 1419478.2258064516,
+      "total_profiling_time": 0.9224886894226074,
+      "metrics": [
+        "sm__cycles_elapsed.avg",
+        "sm__cycles_elapsed.sum",
+        "sm__warps_active.avg",
+        "sm__inst_executed.sum"
+      ]
+    },
+    {
+      "num_metrics": 5,
+      "num_passes": 1,
+      "kernel_time_with_ncu_ms": 176.6163,
+      "baseline_ms": 0.0124,
+      "ncu_overhead_ms": 176.60389999999998,
+      "overhead_percentage": 1424224.9999999998,
+      "total_profiling_time": 0.9135487079620361,
+      "metrics": [
+        "sm__cycles_elapsed.avg",
+        "sm__cycles_elapsed.sum",
+        "sm__warps_active.avg",
+        "sm__inst_executed.sum",
+        "dram__bytes_read.sum"
+      ]
+    },
+    {
+      "num_metrics": 6,
+      "num_passes": 1,
+      "kernel_time_with_ncu_ms": 176.5794,
+      "baseline_ms": 0.0124,
+      "ncu_overhead_ms": 176.56699999999998,
+      "overhead_percentage": 1423927.4193548386,
+      "total_profiling_time": 0.9324080944061279,
+      "metrics": [
+        "sm__cycles_elapsed.avg",
+        "sm__cycles_elapsed.sum",
+        "sm__warps_active.avg",
+        "sm__inst_executed.sum",
+        "dram__bytes_read.sum",
+        "dram__bytes_write.sum"
+      ]
+    },
+    {
+      "num_metrics": 7,
+      "num_passes": 1,
+      "kernel_time_with_ncu_ms": 178.3342,
+      "baseline_ms": 0.0124,
+      "ncu_overhead_ms": 178.3218,
+      "overhead_percentage": 1438079.0322580645,
+      "total_profiling_time": 0.9227731227874756,
+      "metrics": [
+        "sm__cycles_elapsed.avg",
+        "sm__cycles_elapsed.sum",
+        "sm__warps_active.avg",
+        "sm__inst_executed.sum",
+        "dram__bytes_read.sum",
+        "dram__bytes_write.sum",
+        "lts__t_sectors_lookup_miss.sum"
+      ]
+    },
+    {
+      "num_metrics": 8,
+      "num_passes": 1,
+      "kernel_time_with_ncu_ms": 175.4762,
+      "baseline_ms": 0.0124,
+      "ncu_overhead_ms": 175.4638,
+      "overhead_percentage": 1415030.6451612904,
+      "total_profiling_time": 0.9353904724121094,
+      "metrics": [
+        "sm__cycles_elapsed.avg",
+        "sm__cycles_elapsed.sum",
+        "sm__warps_active.avg",
+        "sm__inst_executed.sum",
+        "dram__bytes_read.sum",
+        "dram__bytes_write.sum",
+        "lts__t_sectors_lookup_miss.sum",
+        "lts__t_requests_op_read_lookup_miss.sum"
+      ]
+    },
+    {
+      "num_metrics": 9,
+      "num_passes": 1,
+      "kernel_time_with_ncu_ms": 179.7451,
+      "baseline_ms": 0.0124,
+      "ncu_overhead_ms": 179.7327,
+      "overhead_percentage": 1449457.2580645161,
+      "total_profiling_time": 0.9356584548950195,
+      "metrics": [
+        "sm__cycles_elapsed.avg",
+        "sm__cycles_elapsed.sum",
+        "sm__warps_active.avg",
+        "sm__inst_executed.sum",
+        "dram__bytes_read.sum",
+        "dram__bytes_write.sum",
+        "lts__t_sectors_lookup_miss.sum",
+        "lts__t_requests_op_read_lookup_miss.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_ld.sum"
+      ]
+    },
+    {
+      "num_metrics": 10,
+      "num_passes": 1,
+      "kernel_time_with_ncu_ms": 177.3489,
+      "baseline_ms": 0.0124,
+      "ncu_overhead_ms": 177.33649999999997,
+      "overhead_percentage": 1430133.0645161287,
+      "total_profiling_time": 0.9195213317871094,
+      "metrics": [
+        "sm__cycles_elapsed.avg",
+        "sm__cycles_elapsed.sum",
+        "sm__warps_active.avg",
+        "sm__inst_executed.sum",
+        "dram__bytes_read.sum",
+        "dram__bytes_write.sum",
+        "lts__t_sectors_lookup_miss.sum",
+        "lts__t_requests_op_read_lookup_miss.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_ld.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum"
+      ]
+    },
+    {
+      "num_metrics": 11,
+      "num_passes": 1,
+      "kernel_time_with_ncu_ms": 188.355,
+      "baseline_ms": 0.0124,
+      "ncu_overhead_ms": 188.34259999999998,
+      "overhead_percentage": 1518891.9354838708,
+      "total_profiling_time": 0.9627163410186768,
+      "metrics": [
+        "sm__cycles_elapsed.avg",
+        "sm__cycles_elapsed.sum",
+        "sm__warps_active.avg",
+        "sm__inst_executed.sum",
+        "dram__bytes_read.sum",
+        "dram__bytes_write.sum",
+        "lts__t_sectors_lookup_miss.sum",
+        "lts__t_requests_op_read_lookup_miss.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_ld.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum",
+        "l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum"
+      ]
+    },
+    {
+      "num_metrics": 12,
+      "num_passes": 3,
+      "kernel_time_with_ncu_ms": 187.7826,
+      "baseline_ms": 0.0124,
+      "ncu_overhead_ms": 187.7702,
+      "overhead_percentage": 1514275.8064516129,
+      "total_profiling_time": 0.9579722881317139,
+      "metrics": [
+        "sm__cycles_elapsed.avg",
+        "sm__cycles_elapsed.sum",
+        "sm__warps_active.avg",
+        "sm__inst_executed.sum",
+        "dram__bytes_read.sum",
+        "dram__bytes_write.sum",
+        "lts__t_sectors_lookup_miss.sum",
+        "lts__t_requests_op_read_lookup_miss.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_ld.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum",
+        "l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum",
+        "lts__t_sectors.sum"
+      ]
+    },
+    {
+      "num_metrics": 13,
+      "num_passes": 3,
+      "kernel_time_with_ncu_ms": 208.0963,
+      "baseline_ms": 0.0124,
+      "ncu_overhead_ms": 208.0839,
+      "overhead_percentage": 1678095.9677419355,
+      "total_profiling_time": 0.9729459285736084,
+      "metrics": [
+        "sm__cycles_elapsed.avg",
+        "sm__cycles_elapsed.sum",
+        "sm__warps_active.avg",
+        "sm__inst_executed.sum",
+        "dram__bytes_read.sum",
+        "dram__bytes_write.sum",
+        "lts__t_sectors_lookup_miss.sum",
+        "lts__t_requests_op_read_lookup_miss.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_ld.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum",
+        "l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum",
+        "lts__t_sectors.sum",
+        "lts__t_sectors_op_read.sum"
+      ]
+    },
+    {
+      "num_metrics": 14,
+      "num_passes": 3,
+      "kernel_time_with_ncu_ms": 187.7026,
+      "baseline_ms": 0.0124,
+      "ncu_overhead_ms": 187.69019999999998,
+      "overhead_percentage": 1513630.6451612902,
+      "total_profiling_time": 0.9497311115264893,
+      "metrics": [
+        "sm__cycles_elapsed.avg",
+        "sm__cycles_elapsed.sum",
+        "sm__warps_active.avg",
+        "sm__inst_executed.sum",
+        "dram__bytes_read.sum",
+        "dram__bytes_write.sum",
+        "lts__t_sectors_lookup_miss.sum",
+        "lts__t_requests_op_read_lookup_miss.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_ld.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum",
+        "l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum",
+        "lts__t_sectors.sum",
+        "lts__t_sectors_op_read.sum",
+        "lts__t_sectors_op_write.sum"
+      ]
+    },
+    {
+      "num_metrics": 15,
+      "num_passes": 4,
+      "kernel_time_with_ncu_ms": 203.791,
+      "baseline_ms": 0.0124,
+      "ncu_overhead_ms": 203.77859999999998,
+      "overhead_percentage": 1643375.8064516129,
+      "total_profiling_time": 0.9512579441070557,
+      "metrics": [
+        "sm__cycles_elapsed.avg",
+        "sm__cycles_elapsed.sum",
+        "sm__warps_active.avg",
+        "sm__inst_executed.sum",
+        "dram__bytes_read.sum",
+        "dram__bytes_write.sum",
+        "lts__t_sectors_lookup_miss.sum",
+        "lts__t_requests_op_read_lookup_miss.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_ld.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum",
+        "l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum",
+        "lts__t_sectors.sum",
+        "lts__t_sectors_op_read.sum",
+        "lts__t_sectors_op_write.sum",
+        "sm__sass_thread_inst_executed_op_fadd_pred_on.sum"
+      ]
+    },
+    {
+      "num_metrics": 16,
+      "num_passes": 4,
+      "kernel_time_with_ncu_ms": 186.0656,
+      "baseline_ms": 0.0124,
+      "ncu_overhead_ms": 186.05319999999998,
+      "overhead_percentage": 1500429.0322580645,
+      "total_profiling_time": 0.9377169609069824,
+      "metrics": [
+        "sm__cycles_elapsed.avg",
+        "sm__cycles_elapsed.sum",
+        "sm__warps_active.avg",
+        "sm__inst_executed.sum",
+        "dram__bytes_read.sum",
+        "dram__bytes_write.sum",
+        "lts__t_sectors_lookup_miss.sum",
+        "lts__t_requests_op_read_lookup_miss.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_ld.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum",
+        "l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum",
+        "lts__t_sectors.sum",
+        "lts__t_sectors_op_read.sum",
+        "lts__t_sectors_op_write.sum",
+        "sm__sass_thread_inst_executed_op_fadd_pred_on.sum",
+        "sm__sass_thread_inst_executed_op_fmul_pred_on.sum"
+      ]
+    },
+    {
+      "num_metrics": 17,
+      "num_passes": 4,
+      "kernel_time_with_ncu_ms": 189.8225,
+      "baseline_ms": 0.0124,
+      "ncu_overhead_ms": 189.81009999999998,
+      "overhead_percentage": 1530726.6129032257,
+      "total_profiling_time": 0.9399750232696533,
+      "metrics": [
+        "sm__cycles_elapsed.avg",
+        "sm__cycles_elapsed.sum",
+        "sm__warps_active.avg",
+        "sm__inst_executed.sum",
+        "dram__bytes_read.sum",
+        "dram__bytes_write.sum",
+        "lts__t_sectors_lookup_miss.sum",
+        "lts__t_requests_op_read_lookup_miss.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_ld.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum",
+        "l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum",
+        "lts__t_sectors.sum",
+        "lts__t_sectors_op_read.sum",
+        "lts__t_sectors_op_write.sum",
+        "sm__sass_thread_inst_executed_op_fadd_pred_on.sum",
+        "sm__sass_thread_inst_executed_op_fmul_pred_on.sum",
+        "sm__sass_thread_inst_executed_op_ffma_pred_on.sum"
+      ]
+    },
+    {
+      "num_metrics": 18,
+      "num_passes": 4,
+      "kernel_time_with_ncu_ms": 190.851,
+      "baseline_ms": 0.0124,
+      "ncu_overhead_ms": 190.83859999999999,
+      "overhead_percentage": 1539020.9677419355,
+      "total_profiling_time": 0.9379754066467285,
+      "metrics": [
+        "sm__cycles_elapsed.avg",
+        "sm__cycles_elapsed.sum",
+        "sm__warps_active.avg",
+        "sm__inst_executed.sum",
+        "dram__bytes_read.sum",
+        "dram__bytes_write.sum",
+        "lts__t_sectors_lookup_miss.sum",
+        "lts__t_requests_op_read_lookup_miss.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_ld.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum",
+        "l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum",
+        "lts__t_sectors.sum",
+        "lts__t_sectors_op_read.sum",
+        "lts__t_sectors_op_write.sum",
+        "sm__sass_thread_inst_executed_op_fadd_pred_on.sum",
+        "sm__sass_thread_inst_executed_op_fmul_pred_on.sum",
+        "sm__sass_thread_inst_executed_op_ffma_pred_on.sum",
+        "sm__maximum_warps_per_active_cycle_pct"
+      ]
+    },
+    {
+      "num_metrics": 19,
+      "num_passes": 4,
+      "kernel_time_with_ncu_ms": 190.8247,
+      "baseline_ms": 0.0124,
+      "ncu_overhead_ms": 190.8123,
+      "overhead_percentage": 1538808.8709677418,
+      "total_profiling_time": 0.940162181854248,
+      "metrics": [
+        "sm__cycles_elapsed.avg",
+        "sm__cycles_elapsed.sum",
+        "sm__warps_active.avg",
+        "sm__inst_executed.sum",
+        "dram__bytes_read.sum",
+        "dram__bytes_write.sum",
+        "lts__t_sectors_lookup_miss.sum",
+        "lts__t_requests_op_read_lookup_miss.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_ld.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum",
+        "l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum",
+        "lts__t_sectors.sum",
+        "lts__t_sectors_op_read.sum",
+        "lts__t_sectors_op_write.sum",
+        "sm__sass_thread_inst_executed_op_fadd_pred_on.sum",
+        "sm__sass_thread_inst_executed_op_fmul_pred_on.sum",
+        "sm__sass_thread_inst_executed_op_ffma_pred_on.sum",
+        "sm__maximum_warps_per_active_cycle_pct",
+        "sm__warps_launched.sum"
+      ]
+    },
+    {
+      "num_metrics": 20,
+      "num_passes": 4,
+      "kernel_time_with_ncu_ms": 3207.2427,
+      "baseline_ms": 0.0124,
+      "ncu_overhead_ms": 3207.2302999999997,
+      "overhead_percentage": 25864760.48387097,
+      "total_profiling_time": 4.015444993972778,
+      "metrics": [
+        "sm__cycles_elapsed.avg",
+        "sm__cycles_elapsed.sum",
+        "sm__warps_active.avg",
+        "sm__inst_executed.sum",
+        "dram__bytes_read.sum",
+        "dram__bytes_write.sum",
+        "lts__t_sectors_lookup_miss.sum",
+        "lts__t_requests_op_read_lookup_miss.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_ld.sum",
+        "l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum",
+        "l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum",
+        "lts__t_sectors.sum",
+        "lts__t_sectors_op_read.sum",
+        "lts__t_sectors_op_write.sum",
+        "sm__sass_thread_inst_executed_op_fadd_pred_on.sum",
+        "sm__sass_thread_inst_executed_op_fmul_pred_on.sum",
+        "sm__sass_thread_inst_executed_op_ffma_pred_on.sum",
+        "sm__maximum_warps_per_active_cycle_pct",
+        "sm__warps_launched.sum",
+        "dram__sectors_read.sum"
+      ]
+    }
+  ]
+}

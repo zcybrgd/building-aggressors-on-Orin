@@ -31,7 +31,9 @@ Overhead per kernel: ~10-50ms (CUDA API interception + counter setup)
                                           reset
                                           (Reset GPU clocks and exit)
 
-11-
+11-i should find a way to monitor the percentage of the L2 lines that the enemy is evicting.
+12- have to read this entirely : https://gernot-heiser.org/benchmarking-crimes.html
+
 
 
 
