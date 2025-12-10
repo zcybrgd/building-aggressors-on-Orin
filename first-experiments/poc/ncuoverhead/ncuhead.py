@@ -14,7 +14,133 @@ import sys
 import time
 import shutil
 
+
+def load_available_metrics():
+    """Query NCU for all available metrics on the system"""
+    ncu_exe = shutil.which('ncu')
+    if ncu_exe is None:
+        print('[ERROR] ncu not found in PATH')
+        return None
+    try:
+        result = subprocess.run(
+            [ncu_exe, '--query-metrics'],
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+        #parse metric names from the output
+        # Format: "metric_name    Counter    unit    description"
+        metrics = []
+        for line in result.stdout.split('\n'):
+            if not line.strip() or '---' in line or 'Metric Name' in line:
+                continue
+            parts = line.split()
+            if parts:
+                metric_name = parts[0]
+                if '_' in metric_name and not metric_name.startswith('#'):
+                    metrics.append(metric_name)
+        
+        print(f"[INFO] Loaded {len(metrics)} metrics from NCU")
+        return metrics
+    
+    except Exception as e:
+        print(f'[ERROR] Failed to query metrics: {e}')
+        return None
+
+SKIP_PREFIXES = {'fbpa__', 'fe__', 'gpc__', 'gpu__', 'pcie__','gr__','idc__','l1tex__'}
+METRICS_LIST = [
+    "sm__cycles_elapsed.avg",
+    "sm__cycles_elapsed.sum",
+    "sm__cycles_active.avg",
+    "gpu__cycles_elapsed.sum",
+    "gpu__cycles_active.sum",
+    "gpu__time_duration.sum",
+    "sm__warps_active.avg",
+    "sm__warps_active.sum",
+    "sm__warps_launched.sum",
+    "smsp__cycles_active.sum",
+    "smsp__cycles_elapsed.sum",
+    "sm__inst_executed.sum",
+    "smsp__inst_executed.sum",
+    "smsp__inst_issued.sum",
+    "sm__sass_inst_executed.sum",
+    "sm__pipe_alu_cycles_active.sum",
+    "sm__pipe_fma_cycles_active.sum",
+    "sm__pipe_fp64_cycles_active.sum",
+    "sm__pipe_tensor_cycles_active.sum",
+    "sm__sass_inst_executed_op_atom.sum",
+    "smsp__inst_executed_op_branch.sum",
+    "dram__bytes.sum",
+    "dram__bytes_read.sum",
+    "dram__bytes_write.sum",
+    "dram__sectors.sum",
+    "dram__sectors_read.sum",
+    "dram__sectors_write.sum",
+    "dram__cycles_active.sum",
+    "dram__cycles_active_read.sum",
+    "dram__cycles_active_write.sum",
+    "dram__cycles_elapsed.sum",
+    "dram__throughput.avg",
+    "l1tex__t_sectors.sum",
+    "l1tex__t_sectors_lookup_hit.sum",
+    "l1tex__t_sectors_lookup_miss.sum",
+    "l1tex__t_bytes.sum",
+    "l1tex__t_bytes_lookup_hit.sum",
+    "l1tex__t_bytes_lookup_miss.sum",
+    "l1tex__data_bank_conflicts.sum",
+    "l1tex__data_bank_reads.sum",
+    "l1tex__data_bank_writes.sum",
+    "l1tex__throughput.avg",
+    "l1tex__t_requests.sum",
+    "l1tex__t_requests_pipe_lsu.sum",
+    "l1tex__t_requests_pipe_tex.sum",
+    "l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum",
+    "l1tex__t_sectors_pipe_lsu_mem_global_op_st.sum",
+    "l1tex__t_sectors_pipe_lsu_mem_local_op_ld.sum",
+    "l1tex__t_sectors_pipe_lsu_mem_local_op_st.sum",
+    "l1tex__t_sector_hit_rate.avg",
+    "l1tex__t_sector_pipe_lsu_hit_rate.avg",
+    "l1tex__t_sector_pipe_lsu_mem_global_op_ld_hit_rate.avg",
+    "l1tex__t_sector_pipe_lsu_mem_global_op_st_hit_rate.avg",
+    "l1tex__t_set_accesses.sum",
+    "l1tex__t_set_conflicts.sum",
+    "l1tex__t_set_conflicts_pipe_lsu.sum",
+    "lts__t_requests.sum",
+    "lts__t_requests_lookup_hit.sum",
+    "lts__t_requests_lookup_miss.sum",
+    "lts__t_request_hit_rate.avg",
+    "lts__t_requests_op_read.sum",
+    "lts__t_requests_op_read_lookup_hit.sum",
+    "lts__t_requests_op_read_lookup_miss.sum",
+    "lts__t_requests_op_write.sum",
+    "lts__t_requests_op_write_lookup_hit.sum",
+    "lts__t_requests_op_write_lookup_miss.sum",
+    "lts__t_requests_op_atom.sum",
+    "lts__t_requests_op_membar.sum",
+    "lts__t_requests_aperture_device.sum",
+    "lts__t_requests_aperture_device_lookup_hit.sum",
+    "lts__t_requests_aperture_device_lookup_miss.sum",
+    "lts__t_requests_aperture_peer.sum",
+    "lts__t_requests_aperture_sysmem.sum",
+    "lts__t_sectors.sum",
+    "lts__t_sectors_lookup_hit.sum",
+    "lts__t_sectors_lookup_miss.sum",
+    "lts__t_bytes.sum",
+    "idc__requests.sum",
+    "idc__requests_lookup_hit.sum",
+    "idc__requests_lookup_miss.sum",
+    "smsp__average_warp_latency_issue_stalled_long_scoreboard.avg",
+    "smsp__average_warp_latency_issue_stalled_short_scoreboard.avg",
+    "smsp__average_warp_latency_issue_stalled_not_selected.avg",
+    "smsp__average_warp_latency_issue_stalled_barrier.avg",
+    "smsp__average_warp_latency_issue_stalled_no_instruction.avg",
+]
+
+
+
+
 #comprehensive metric list (we add one by one to find threshold)
+'''
 METRICS_LIST = [
     "sm__cycles_elapsed.avg",
     "sm__cycles_elapsed.sum",
@@ -37,7 +163,7 @@ METRICS_LIST = [
     "sm__warps_launched.sum",
     "dram__sectors_read.sum",
     "dram__sectors_write.sum",
-]
+]'''
 
 KERNEL_MAP = {
     'compute': 'computeKernel',
@@ -55,6 +181,7 @@ class NCUOverheadAnalyzer:
         self.kernel_name = KERNEL_MAP[kernel_type]
         self.results = []
         self.baseline_time = None
+        self.failed_metrics = []  # Track metrics that cause failures
         
     def run_baseline(self):
         """Run without NCU profiling to get baseline"""
@@ -80,7 +207,7 @@ class NCUOverheadAnalyzer:
         metrics_str = ','.join(metrics_list)
         num_metrics = len(metrics_list)
         print(f"  [{num_metrics:2d} metrics] Profiling...", end=' ', flush=True)
-        
+
         # ensure ncu is available
         ncu_exe = shutil.which('ncu')
         if ncu_exe is None:
@@ -88,70 +215,89 @@ class NCUOverheadAnalyzer:
             print('  set PATH=%PATH%;"C:\\Program Files\\NVIDIA Corporation\\Nsight Compute <version>"')
             return None
 
-        # constructing the ncu command
-        cmd = [
-            ncu_exe, 
-            "--launch-skip", "1",  #skip the warmup run
-            "--kernel-name", self.kernel_name,
-            "--metrics", metrics_str,
-            str(self.executable),
-            self.kernel_type
-        ]
+        def _exec(metrics_variant):
+            """Execute NCU for the provided metrics list and return tuple ('ok', data) or ('err', info)"""
+            metrics_str_local = ','.join(metrics_variant)
+            cmd = [
+                ncu_exe,
+                "--launch-skip", "1",
+                "--kernel-name", self.kernel_name,
+                "--metrics", metrics_str_local,
+                str(self.executable),
+                self.kernel_type
+            ]
+            try:
+                start_time = time.time()
+                result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+                total_profiling_time = time.time() - start_time
 
-        try:
-            start_time = time.time()
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=120
-            )
-            total_profiling_time = time.time() - start_time
-            num_passes = self._parse_num_passes(result.stdout)
+                if result.returncode != 0:
+                    return ('err', {'type': 'ncu_returncode', 'code': result.returncode, 'stderr': result.stderr, 'stdout': result.stdout})
 
-            #if num_metrics <= :
-            #    print(f"\n{'='*80}")
-            #    print(f"[DEBUG] FULL STDERR for {num_metrics} metrics:")
-            #    print(result.stderr)
-            #    print(f"\n[DEBUG] FULL STDOUT for {num_metrics} metrics:")
-            #    print(result.stdout)
-            #    print(f"{'='*80}\n")
-            
-            #extract kernel duration from the program's stdout
-            kernel_time_with_ncu_ms = self._parse_kernel_duration_from_output(result.stdout)
-            
-            if kernel_time_with_ncu_ms is None:
-                kernel_time_with_ncu_ms = self.baseline_time['cuda_events']
-                print(f"(using baseline)", end=' ')
-            
-            #calculate overhead: kernel time WITH NCU - kernel time WITHOUT NCU (baseline)
-            baseline_ms = self.baseline_time['cuda_events']
-            ncu_overhead_ms = kernel_time_with_ncu_ms - baseline_ms
-            overhead_percentage = (ncu_overhead_ms / baseline_ms) * 100 if baseline_ms > 0 else 0
-            
-            print(f"→ {num_passes} pass(es), Kernel: {kernel_time_with_ncu_ms:.4f}ms")
-            
-            return {
-                'num_metrics': num_metrics,
-                'num_passes': num_passes,
-                'kernel_time_with_ncu_ms': kernel_time_with_ncu_ms,
-                'baseline_ms': baseline_ms,
-                'ncu_overhead_ms': ncu_overhead_ms,
-                'overhead_percentage': overhead_percentage,
-                'total_profiling_time': total_profiling_time,
-                'metrics': metrics_list.copy()
-            }
-            
-        except subprocess.TimeoutExpired:
-            print(f"[TIMEOUT]")
+                num_passes = self._parse_num_passes(result.stdout)
+                kernel_time_with_ncu_ms = self._parse_kernel_duration_from_output(result.stdout)
+
+                if kernel_time_with_ncu_ms is None:
+                    return ('err', {'type': 'no_output', 'stdout': result.stdout, 'stderr': result.stderr})
+
+                baseline_ms = self.baseline_time['cuda_events']
+                ncu_overhead_ms = kernel_time_with_ncu_ms - baseline_ms
+                overhead_percentage = (ncu_overhead_ms / baseline_ms) * 100 if baseline_ms > 0 else 0
+
+                return ('ok', {
+                    'num_metrics': len(metrics_variant),
+                    'num_passes': num_passes,
+                    'kernel_time_with_ncu_ms': kernel_time_with_ncu_ms,
+                    'baseline_ms': baseline_ms,
+                    'ncu_overhead_ms': ncu_overhead_ms,
+                    'overhead_percentage': overhead_percentage,
+                    'total_profiling_time': total_profiling_time,
+                    'metrics': metrics_variant.copy()
+                })
+
+            except subprocess.TimeoutExpired:
+                return ('err', {'type': 'timeout'})
+            except FileNotFoundError as e:
+                return ('err', {'type': 'file_not_found', 'exc': str(e)})
+            except Exception as e:
+                return ('err', {'type': 'exception', 'exc': str(e)})
+
+        # First attempt with the provided metrics
+        first_attempt = _exec(metrics_list)
+        if first_attempt[0] == 'ok':
+            data = first_attempt[1]
+            print(f"→ {data['num_passes']} pass(es), Kernel: {data['kernel_time_with_ncu_ms']:.4f}ms")
+            return data
+
+        # If it failed and we have at least one metric, try appending .avg/.sum to the last metric
+        if num_metrics > 0:
+            failing_metric = metrics_list[-1]
+            # only try suffixes if metric doesn't already end with .avg or .sum
+            suffixes = ['.avg', '.sum']
+            tried = []
+            for suf in suffixes:
+                if failing_metric.endswith(suf):
+                    continue
+                tried_metric = failing_metric + suf
+                tried.append(tried_metric)
+                test_metrics = metrics_list[:-1] + [tried_metric]
+                print(f"\n  [Retry] Trying metric variant: {tried_metric}...", end=' ', flush=True)
+                attempt = _exec(test_metrics)
+                if attempt[0] == 'ok':
+                    data = attempt[1]
+                    print(f"→ {data['num_passes']} pass(es), Kernel: {data['kernel_time_with_ncu_ms']:.4f}ms (succeeded with suffix {suf})")
+                    return data
+                else:
+                    # continue trying other suffix
+                    print("failed")
+
+            # If we reach here, all suffix attempts failed -> mark original metric as incompatible
+            print(f"[NO OUTPUT / ERROR after retries] Marking '{failing_metric}' as incompatible")
+            self.failed_metrics.append(failing_metric)
             return None
-        except FileNotFoundError as e:
-            print(f"[ERROR] Executable not found when running ncu: {e}")
-            print("Make sure `ncu` is installed and available in PATH, or provide full path.")
-            return None
-        except Exception as e:
-            print(f"[ERROR: {str(e)}]")
-            return None
+
+        # If no metrics to blame, just return None
+        return None
     
     def _parse_num_passes(self, ncu_output):
         """Extract number of passes from NCU output (stdout)"""
@@ -187,20 +333,38 @@ class NCUOverheadAnalyzer:
         print(f"{'='*60}\n")
         
         results = []
+        valid_metrics = []  # Track which metrics actually work
         
         for i in range(1, min(max_metrics + 1, len(METRICS_LIST) + 1)):
-            metrics_subset = METRICS_LIST[:i]
-            result = self.run_with_metrics(metrics_subset)
+            # Build metric list, skipping known failures
+            current_metric = METRICS_LIST[i-1]
+            
+            # Skip if this metric was flagged as problematic
+            if current_metric in self.failed_metrics:
+                print(f"  [Skipping known bad metric: {current_metric}]")
+                continue
+            
+            # Try adding this metric to our valid list
+            test_metrics = valid_metrics + [current_metric]
+            result = self.run_with_metrics(test_metrics)
             
             if result:
+                # Success! This metric works
+                valid_metrics.append(current_metric)
                 results.append(result)
-                if i > 1 and result['num_passes'] > results[-2]['num_passes']:
-                    print(f"PASS TRANSITION DETECTED at {i} metrics!")
+                if len(results) > 1 and result['num_passes'] > results[-2]['num_passes']:
+                    print(f"PASS TRANSITION DETECTED at {len(valid_metrics)} metrics!")
             else:
-                print(f"Stopping analysis due to failure")
-                break
+                # This metric caused failure - skip it and continue with next
+                print(f"  [Skipping problematic metric, continuing...]")
+                continue
         
         self.results = results
+        
+        # Report on failed metrics
+        if self.failed_metrics:
+            print(f"\n[INFO] Skipped {len(self.failed_metrics)} incompatible metrics")
+        
         return results
     
     def generate_report(self, output_dir="."):
@@ -211,7 +375,8 @@ class NCUOverheadAnalyzer:
             'kernel_type': self.kernel_type,
             'kernel_name': self.kernel_name,
             'baseline': self.baseline_time,
-            'profiling_results': self.results
+            'profiling_results': self.results,
+            'failed_metrics': self.failed_metrics  # Include failed metrics in report
         }
         
         json_path = output_dir / f'ncu_overhead_{self.kernel_type}.json'
@@ -323,6 +488,13 @@ class NCUOverheadAnalyzer:
             f.write("\n\nBASELINE REFERENCE\n")
             f.write("="*70 + "\n")
             f.write(f"Baseline (no NCU): {self.baseline_time['cuda_events']:.4f} ms\n")
+            
+            # Add section for failed metrics
+            if self.failed_metrics:
+                f.write("\n\nINCOMPATIBLE METRICS (SKIPPED)\n")
+                f.write("="*70 + "\n")
+                for metric in self.failed_metrics:
+                    f.write(f"  - {metric}\n")
         
         print(f"Summary saved: {report_path}")
 
