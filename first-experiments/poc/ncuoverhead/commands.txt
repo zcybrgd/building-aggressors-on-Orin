@@ -1,0 +1,14 @@
+nvcc -o main.exe main.cu
+
+main.exe
+
+nsys profile --stats=true main.exe 
+
+ncu --kernel-name computeKernel --metrics sm__cycles_elapsed,sm__inst_executed.sum,sm__warps_active.avg,lts__t_sectors_lookup_miss,lts__t_requests_op_read_lookup_miss,dram__bytes_read,dram__bytes_write,l1tex__t_bytes_pipe_lsu_mem_global_op_ld.sum,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum,l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum,lts__t_sectors.sum,lts__t_sectors_op_read.sum,lts__t_sectors_op_write.sum ncuhead.exe compute
+
+
+python -m venv env #for virtual env
+
+python interferenceL2ofat.py
+
+python ofat.py l2_contention_dataset.csv (will be found on /plots)

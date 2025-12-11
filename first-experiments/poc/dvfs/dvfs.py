@@ -88,9 +88,9 @@ if __name__ == "__main__":
 
     mode = sys.argv[1]
     if mode == "monitor":
-        monitor_gpu(duration_s=60, interval_s=2)
+        monitor_gpu(duration_s=600, interval_s=2)
     elif mode == "benchmark":
-        run_kernel(reps=10, iters=4000)
+        run_kernel(reps=int(sys.argv[2]) if len(sys.argv) > 2 else 10, iters= int(sys.argv[3]) if len(sys.argv) > 3 else 4000)
     else:
         print(f"Unknown mode: {mode}")
         print("Use 'monitor' or 'benchmark'")

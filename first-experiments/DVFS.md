@@ -43,3 +43,7 @@ nvidia-smi -q -d CLOCK
 sudo nvidia-smi -rgc
 sudo nvidia-smi -rmc
 ```
+
+resources :
+
+https://www.microway.com/hpc-tech-tips/nvidia-smi_control-your-gpus/

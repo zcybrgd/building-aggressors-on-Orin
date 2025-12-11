@@ -1,0 +1,44 @@
+nvidia-smi -pm 1                         # enable persistence (if supported)
+nvidia-smi -lgc 900,900                  # lock SM/core clock to 900 MHz
+nvidia-smi -lmc 3500,3500                # lock memory clock to 3500 MHz
+
+nvidia-smi -rgc
+nvidia-smi -rmc
+to reset later
+
+
+Baseline (default DVFS)
+
+Make sure no locks: nvidia-smi -rgc and -rmc in admin shell.​
+
+Start monitor: python dvfs_poc.py monitor
+
+In another terminal: python dvfs_poc.py benchmark
+
+Observe:
+
+Average SM/MEM clocks
+
+Temperature curve
+
+Kernel times printed by DLL
+
+Locked low clocks (DVFS reduced)
+
+In admin PowerShell: nvidia-smi -lgc 600,600 and optionally -lmc to a lower mem clock.​
+
+Repeat monitor + benchmark.
+
+Expect: lower clocks, longer kernel time, lower temp/power.
+
+Locked high clocks
+
+E.g. nvidia-smi -lgc 1600,1600 if supported by your GPU.​
+
+Repeat, compare exec time and reported clocks.
+
+Thermal throttling exploration
+
+Use a slightly heavier iters (e.g. 10000) and/or repeated runs to heat the GPU.
+
+Watch temperature and SM clock: you should see the SM clock step down automatically once a thermal or power limit is hit (DVFS throttling).

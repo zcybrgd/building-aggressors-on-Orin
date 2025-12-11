@@ -16,6 +16,7 @@ import shutil
 
 # i cant profile over 184 metrics because past this, the windows command line length limit is exceeded and ncu fails to run
 # so i will query ncu for available metrics and filter them
+#and also all the set of metrics take 30 passes
 
 def load_available_metrics():
     """Query NCU for all available metrics on the system"""
@@ -44,7 +45,9 @@ def load_available_metrics():
         print(f'[ERROR] Failed to query metrics: {e}')
         return None
 
-SKIP_PREFIXES = {'fbpa__', 'fe__', 'gpc__'
+SKIP_PREFIXES = {'fbpa__', #Frame Buffer Path Adapter (connects GPU to external framebuffer)
+                  'fe__', #Frontend (graphics pipeline entry)
+                  'gpc__' #Graphics Processing Cluster	
                  , 'gpu__'
                  , 'pcie__','gr__','idc__'
                  ,'l1tex__data_pipe','l1tex__texin','l1tex__t_set_conflicts','l1tex__t_set_accesses'
