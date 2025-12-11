@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 NCU Overhead Analysis - Proof of Concept
-Measures the overhead introduced by NCU profiling as metrics are added one-by-one
+Measures the overhead introduced by NCU profiling as metrics are added one-by-one progressively
 """
 
 import subprocess
@@ -14,6 +14,8 @@ import sys
 import time
 import shutil
 
+# i cant profile over 184 metrics because past this, the windows command line length limit is exceeded and ncu fails to run
+# so i will query ncu for available metrics and filter them
 
 def load_available_metrics():
     """Query NCU for all available metrics on the system"""
@@ -22,12 +24,7 @@ def load_available_metrics():
         print('[ERROR] ncu not found in PATH')
         return None
     try:
-        result = subprocess.run(
-            [ncu_exe, '--query-metrics'],
-            capture_output=True,
-            text=True,
-            timeout=30
-        )
+        result = subprocess.run([ncu_exe, '--query-metrics'], capture_output=True, text=True,timeout=30)
         #parse metric names from the output
         # Format: "metric_name    Counter    unit    description"
         metrics = []
@@ -164,7 +161,7 @@ class NCUOverheadAnalyzer:
         self.kernel_name = KERNEL_MAP[kernel_type]
         self.results = []
         self.baseline_time = None
-        self.failed_metrics = []  # Track metrics that cause failures
+        self.failed_metrics = []  #track metrics that cause failures
         
     def run_baseline(self):
         """Run without NCU profiling to get baseline"""
@@ -195,7 +192,6 @@ class NCUOverheadAnalyzer:
         ncu_exe = shutil.which('ncu')
         if ncu_exe is None:
             print('\n[ERROR] Nsight Compute CLI `ncu` not found in PATH. Provide its full path or add it to PATH.')
-            print('  set PATH=%PATH%;"C:\\Program Files\\NVIDIA Corporation\\Nsight Compute <version>"')
             return None
 
         def _exec(metrics_variant):
@@ -203,7 +199,7 @@ class NCUOverheadAnalyzer:
             metrics_str_local = ','.join(metrics_variant)
             cmd = [
                 ncu_exe,
-                "--launch-skip", "1",
+                "--launch-skip", "1", #we skip the warmup run
                 "--kernel-name", self.kernel_name,
                 "--metrics", metrics_str_local,
                 str(self.executable),
@@ -215,14 +211,16 @@ class NCUOverheadAnalyzer:
                 total_profiling_time = time.time() - start_time
 
                 if result.returncode != 0:
+                    #just for debugging purposes
+                    #print(f"[DEBUG] NCU FAILED!")
+                    #print(f"[DEBUG] STDERR (first 500 chars):\n{result.stderr[:500]}")
+                    #print(f"[DEBUG] STDOUT (first 500 chars):\n{result.stdout[:500]}")
                     return ('err', {'type': 'ncu_returncode', 'code': result.returncode, 'stderr': result.stderr, 'stdout': result.stdout})
 
                 num_passes = self._parse_num_passes(result.stdout)
                 kernel_time_with_ncu_ms = self._parse_kernel_duration_from_output(result.stdout)
-
                 if kernel_time_with_ncu_ms is None:
                     return ('err', {'type': 'no_output', 'stdout': result.stdout, 'stderr': result.stderr})
-
                 baseline_ms = self.baseline_time['cuda_events']
                 ncu_overhead_ms = kernel_time_with_ncu_ms - baseline_ms
                 overhead_percentage = (ncu_overhead_ms / baseline_ms) * 100 if baseline_ms > 0 else 0
@@ -294,7 +292,7 @@ class NCUOverheadAnalyzer:
     
     def _parse_kernel_duration_from_output(self, program_stdout):
         """Extract kernel duration from the program's own output (CUDA events timing)"""
-        # Look for: COMPUTE_KERNEL_TIMING,565.5785 or MEMORY_KERNEL_TIMING,12.345
+        # Look for stuff like: COMPUTE_KERNEL_TIMING,565.5785 or MEMORY_KERNEL_TIMING,12.345
         timing_key = f"{self.kernel_type.upper()}_KERNEL_TIMING"
         
         for line in program_stdout.split('\n'):
@@ -311,25 +309,19 @@ class NCUOverheadAnalyzer:
         """Add metrics one by one and measure overhead"""
         if max_metrics is None:
             max_metrics = len(METRICS_LIST)
-        
         print(f"\n{'='*60}")
         print(f"INCREMENTAL ANALYSIS: {self.kernel_type.upper()} KERNEL")
         print(f"{'='*60}\n")
-        
         results = []
-        valid_metrics = []  # Track which metrics actually work
-        
+        valid_metrics = []  #track which metrics actually work
         for i in range(1, min(max_metrics + 1, len(METRICS_LIST) + 1)):
-            # Build metric list, skipping known failures
+            #build metric list, skipping known failures
             current_metric = METRICS_LIST[i-1]
-            
-            # Skip if this metric was flagged as problematic
             if current_metric in self.failed_metrics:
                 print(f"  [Skipping known bad metric: {current_metric}]")
                 continue
             test_metrics = valid_metrics + [current_metric]
             result = self.run_with_metrics(test_metrics)
-            
             if result:
                 #valid_metrics.append(current_metric)
                 successful_metric = result['metrics'][-1]  #get the actual metric name that worked
@@ -339,12 +331,10 @@ class NCUOverheadAnalyzer:
                     print(f"PASS TRANSITION DETECTED at {len(valid_metrics)} metrics!")
             else:
                 print(f"  [Skipping problematic metric, continuing...]")
-                print(f"  Previous {len(valid_metrics)} metrics: {valid_metrics}")
+                #print(f"  Previous {len(valid_metrics)} metrics: {valid_metrics}")
                 continue
         
         self.results = results
-        
-        # Report on failed metrics
         if self.failed_metrics:
             print(f"\n[INFO] Skipped {len(self.failed_metrics)} incompatible metrics")
         
@@ -359,7 +349,7 @@ class NCUOverheadAnalyzer:
             'kernel_name': self.kernel_name,
             'baseline': self.baseline_time,
             'profiling_results': self.results,
-            'failed_metrics': self.failed_metrics  # Include failed metrics in report
+            'failed_metrics': self.failed_metrics 
         }
         
         json_path = output_dir / f'ncu_overhead_{self.kernel_type}.json'
@@ -372,18 +362,16 @@ class NCUOverheadAnalyzer:
       
     
     def _plot_combined(self, output_dir):
-        """Create two separate plots: metrics vs passes and metrics vs kernel execution time"""
-
+        """create 2 separate plots: metrics vs passes and metrics vs kernel execution time"""
         if not self.results:
             return
-
         num_metrics = [r['num_metrics'] for r in self.results]
         num_passes = [r['num_passes'] for r in self.results]
         kernel_times = [r['kernel_time_with_ncu_ms'] for r in self.results]
         baseline = self.baseline_time['cuda_events']
 
-        # Plot 1: Metrics vs Passes (Staircase)
-        fig1, ax1 = plt.subplots(figsize=(30, 6))
+        # Plot 1: Metrics vs Passes 
+        fig1, ax1 = plt.subplots(figsize=(30, 15))
         ax1.step(num_metrics, num_passes, where='post', linewidth=2.5, label='NCU Passes', color='#e74c3c')
         ax1.scatter(num_metrics, num_passes, s=80, color='#c0392b', zorder=5, alpha=0.7)
         ax1.set_xlabel('Number of Metrics', fontsize=12, fontweight='bold')
@@ -402,7 +390,7 @@ class NCUOverheadAnalyzer:
         plt.close(fig1)
 
         # Plot 2: Metrics vs Kernel Execution Time
-        fig2, ax2 = plt.subplots(figsize=(30, 6))
+        fig2, ax2 = plt.subplots(figsize=(30, 15))
         ax2.plot(num_metrics, kernel_times, 'o-', linewidth=2.5, markersize=8, color='#2ecc71', label='Kernel Time with NCU')
         ax2.axhline(y=baseline, color='#3498db', linestyle='--', linewidth=2, label=f'Baseline (no NCU): {baseline:.2f}ms')
         ax2.set_xlabel('Number of Metrics', fontsize=12, fontweight='bold')
@@ -460,8 +448,6 @@ class NCUOverheadAnalyzer:
             f.write("\n\nBASELINE REFERENCE\n")
             f.write("="*70 + "\n")
             f.write(f"Baseline (no NCU): {self.baseline_time['cuda_events']:.4f} ms\n")
-            
-            # Add section for failed metrics
             if self.failed_metrics:
                 f.write("\n\nINCOMPATIBLE METRICS (SKIPPED)\n")
                 f.write("="*70 + "\n")
