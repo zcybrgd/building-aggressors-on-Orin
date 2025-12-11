@@ -47,7 +47,14 @@ def load_available_metrics():
         print(f'[ERROR] Failed to query metrics: {e}')
         return None
 
-SKIP_PREFIXES = {'fbpa__', 'fe__', 'gpc__', 'gpu__', 'pcie__','gr__','idc__','l1tex__'}
+SKIP_PREFIXES = {'fbpa__', 'fe__', 'gpc__'
+                 , 'gpu__'
+                 , 'pcie__','gr__','idc__'
+                 ,'l1tex__data_pipe','l1tex__texin','l1tex__t_set_conflicts','l1tex__t_set_accesses'
+                 ,'l1tex__f_tex2sm_cycles','l1tex__f_wavefronts'
+                 }
+METRICS_LIST = [m for m in load_available_metrics() if not any(m.startswith(p) for p in SKIP_PREFIXES)]
+'''
 METRICS_LIST = [
     "sm__cycles_elapsed.avg",
     "sm__cycles_elapsed.sum",
@@ -135,35 +142,11 @@ METRICS_LIST = [
     "smsp__average_warp_latency_issue_stalled_barrier.avg",
     "smsp__average_warp_latency_issue_stalled_no_instruction.avg",
 ]
-
-
-
-
-#comprehensive metric list (we add one by one to find threshold)
 '''
-METRICS_LIST = [
-    "sm__cycles_elapsed.avg",
-    "sm__cycles_elapsed.sum",
-    "sm__warps_active.avg",
-    "sm__inst_executed.sum",
-    "dram__bytes_read.sum",
-    "dram__bytes_write.sum",
-    "lts__t_sectors_lookup_miss.sum",
-    "lts__t_requests_op_read_lookup_miss.sum",
-    "l1tex__t_bytes_pipe_lsu_mem_global_op_ld.sum",
-    "l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum",
-    "l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum",
-    "lts__t_sectors.sum",
-    "lts__t_sectors_op_read.sum",
-    "lts__t_sectors_op_write.sum",
-    "sm__sass_thread_inst_executed_op_fadd_pred_on.sum",
-    "sm__sass_thread_inst_executed_op_fmul_pred_on.sum",
-    "sm__sass_thread_inst_executed_op_ffma_pred_on.sum",
-    "sm__maximum_warps_per_active_cycle_pct",
-    "sm__warps_launched.sum",
-    "dram__sectors_read.sum",
-    "dram__sectors_write.sum",
-]'''
+
+
+
+
 
 KERNEL_MAP = {
     'compute': 'computeKernel',
@@ -256,24 +239,27 @@ class NCUOverheadAnalyzer:
                 })
 
             except subprocess.TimeoutExpired:
+                print(f"[DEBUG] NCU TIMEOUT after 120 seconds!")
                 return ('err', {'type': 'timeout'})
             except FileNotFoundError as e:
+                print(f"[DEBUG] FILE NOT FOUND: {e}")
                 return ('err', {'type': 'file_not_found', 'exc': str(e)})
             except Exception as e:
+                print(f"[DEBUG] EXCEPTION: {type(e).__name__}: {e}")
                 return ('err', {'type': 'exception', 'exc': str(e)})
 
-        # First attempt with the provided metrics
+        #first attempt with the provided metrics
         first_attempt = _exec(metrics_list)
         if first_attempt[0] == 'ok':
             data = first_attempt[1]
             print(f"→ {data['num_passes']} pass(es), Kernel: {data['kernel_time_with_ncu_ms']:.4f}ms")
             return data
 
-        # If it failed and we have at least one metric, try appending .avg/.sum to the last metric
+        #if it failed and we have at least one metric, we try appending suffixes to the last metric
         if num_metrics > 0:
             failing_metric = metrics_list[-1]
-            # only try suffixes if metric doesn't already end with .avg or .sum
-            suffixes = ['.avg', '.sum']
+            # only try suffixes if metric doesn't already end with a suffix
+            suffixes = ['.avg', '.sum','.pct']
             tried = []
             for suf in suffixes:
                 if failing_metric.endswith(suf):
@@ -291,12 +277,10 @@ class NCUOverheadAnalyzer:
                     # continue trying other suffix
                     print("failed")
 
-            # If we reach here, all suffix attempts failed -> mark original metric as incompatible
+            #if we reach here, all suffix attempts failed -> mark original metric as incompatible
             print(f"[NO OUTPUT / ERROR after retries] Marking '{failing_metric}' as incompatible")
             self.failed_metrics.append(failing_metric)
             return None
-
-        # If no metrics to blame, just return None
         return None
     
     def _parse_num_passes(self, ncu_output):
@@ -343,20 +327,19 @@ class NCUOverheadAnalyzer:
             if current_metric in self.failed_metrics:
                 print(f"  [Skipping known bad metric: {current_metric}]")
                 continue
-            
-            # Try adding this metric to our valid list
             test_metrics = valid_metrics + [current_metric]
             result = self.run_with_metrics(test_metrics)
             
             if result:
-                # Success! This metric works
-                valid_metrics.append(current_metric)
+                #valid_metrics.append(current_metric)
+                successful_metric = result['metrics'][-1]  #get the actual metric name that worked
+                valid_metrics.append(successful_metric)
                 results.append(result)
                 if len(results) > 1 and result['num_passes'] > results[-2]['num_passes']:
                     print(f"PASS TRANSITION DETECTED at {len(valid_metrics)} metrics!")
             else:
-                # This metric caused failure - skip it and continue with next
                 print(f"  [Skipping problematic metric, continuing...]")
+                print(f"  Previous {len(valid_metrics)} metrics: {valid_metrics}")
                 continue
         
         self.results = results
@@ -389,60 +372,49 @@ class NCUOverheadAnalyzer:
       
     
     def _plot_combined(self, output_dir):
-        """Create combined plot: metrics vs passes AND metrics vs kernel execution time"""
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
-        
+        """Create two separate plots: metrics vs passes and metrics vs kernel execution time"""
+
         if not self.results:
             return
-        
+
         num_metrics = [r['num_metrics'] for r in self.results]
         num_passes = [r['num_passes'] for r in self.results]
         kernel_times = [r['kernel_time_with_ncu_ms'] for r in self.results]
         baseline = self.baseline_time['cuda_events']
-        
+
         # Plot 1: Metrics vs Passes (Staircase)
-        ax1.step(num_metrics, num_passes, where='post', linewidth=2.5, 
-                label='NCU Passes', color='#e74c3c')
-        ax1.scatter(num_metrics, num_passes, s=80, color='#c0392b', 
-                   zorder=5, alpha=0.7)
-        
+        fig1, ax1 = plt.subplots(figsize=(30, 6))
+        ax1.step(num_metrics, num_passes, where='post', linewidth=2.5, label='NCU Passes', color='#e74c3c')
+        ax1.scatter(num_metrics, num_passes, s=80, color='#c0392b', zorder=5, alpha=0.7)
         ax1.set_xlabel('Number of Metrics', fontsize=12, fontweight='bold')
         ax1.set_ylabel('Number of NCU Passes', fontsize=12, fontweight='bold')
-        ax1.set_title(f'Metrics vs Passes\n{self.kernel_name}', 
-                     fontsize=14, fontweight='bold')
+        ax1.set_title(f'Metrics vs Passes\n{self.kernel_name}', fontsize=14, fontweight='bold')
         ax1.grid(True, alpha=0.3, linestyle='--')
         ax1.legend(fontsize=10)
         ax1.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
-        
-        # Annotate pass transitions
         for i in range(1, len(num_passes)):
             if num_passes[i] > num_passes[i-1]:
-                ax1.annotate(f'Pass ↑',
-                           xy=(num_metrics[i], num_passes[i]),
-                           xytext=(num_metrics[i] + 0.5, num_passes[i] + 0.2),
-                           arrowprops=dict(arrowstyle='->', color='red', lw=1.5),
-                           fontsize=9, color='red', fontweight='bold')
-        
+                ax1.annotate('Pass ↑', xy=(num_metrics[i], num_passes[i]), xytext=(num_metrics[i] + 0.5, num_passes[i] + 0.2), arrowprops=dict(arrowstyle='->', color='red', lw=1.5), fontsize=9, color='red', fontweight='bold')
+        plot_path1 = output_dir / f'ncu_overhead_{self.kernel_type}_passes.png'
+        fig1.tight_layout()
+        fig1.savefig(plot_path1, dpi=300, bbox_inches='tight')
+        print(f"Plot saved: {plot_path1}")
+        plt.close(fig1)
+
         # Plot 2: Metrics vs Kernel Execution Time
-        ax2.plot(num_metrics, kernel_times, 'o-', linewidth=2.5, markersize=8,
-                color='#2ecc71', label='Kernel Time with NCU')
-        
-        # Add baseline reference line
-        ax2.axhline(y=baseline, color='#3498db', linestyle='--', linewidth=2,
-                   label=f'Baseline (no NCU): {baseline:.2f}ms')
-        
+        fig2, ax2 = plt.subplots(figsize=(30, 6))
+        ax2.plot(num_metrics, kernel_times, 'o-', linewidth=2.5, markersize=8, color='#2ecc71', label='Kernel Time with NCU')
+        ax2.axhline(y=baseline, color='#3498db', linestyle='--', linewidth=2, label=f'Baseline (no NCU): {baseline:.2f}ms')
         ax2.set_xlabel('Number of Metrics', fontsize=12, fontweight='bold')
         ax2.set_ylabel('Kernel Execution Time (ms)', fontsize=12, fontweight='bold')
-        ax2.set_title(f'Metrics vs Kernel Execution Time\n{self.kernel_name}', 
-                     fontsize=14, fontweight='bold')
+        ax2.set_title(f'Metrics vs Kernel Execution Time\n{self.kernel_name}', fontsize=14, fontweight='bold')
         ax2.grid(True, alpha=0.3, linestyle='--')
         ax2.legend(fontsize=10)
-        
-        plt.tight_layout()
-        plot_path = output_dir / f'ncu_overhead_{self.kernel_type}.png'
-        plt.savefig(plot_path, dpi=300, bbox_inches='tight')
-        print(f"Plot saved: {plot_path}")
-        plt.close()
+        plot_path2 = output_dir / f'ncu_overhead_{self.kernel_type}_kernel_time.png'
+        fig2.tight_layout()
+        fig2.savefig(plot_path2, dpi=300, bbox_inches='tight')
+        print(f"Plot saved: {plot_path2}")
+        plt.close(fig2)
     
     def _write_summary_report(self, output_dir):
         """Write text summary report"""
