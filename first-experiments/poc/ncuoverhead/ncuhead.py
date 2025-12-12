@@ -53,7 +53,7 @@ SKIP_PREFIXES = {'fbpa__', #Frame Buffer Path Adapter (connects GPU to external 
                  ,'l1tex__data_pipe','l1tex__texin','l1tex__t_set_conflicts','l1tex__t_set_accesses'
                  ,'l1tex__f_tex2sm_cycles','l1tex__f_wavefronts'
                  }
-METRICS_LIST = [m for m in load_available_metrics() if not any(m.startswith(p) for p in SKIP_PREFIXES)]
+METRICS_LIST = ['gpu__time_duration'] + [m for m in load_available_metrics() if not any(m.startswith(p) for p in SKIP_PREFIXES) and m != 'gpu__time_duration']
 '''
 METRICS_LIST = [
     "sm__cycles_elapsed.avg",
@@ -184,6 +184,33 @@ class NCUOverheadAnalyzer:
         print(f"CUDA Events:  {self.baseline_time['cuda_events']:.4f} ms")
         return self.baseline_time
     
+    def _parse_ncu_metric_value(self, ncu_output, metric_name):
+        """Parse a specific metric value from NCU output and return in milliseconds"""
+        for line in ncu_output.split('\n'):
+            if metric_name in line and not line.strip().startswith('#'):
+                parts = line.split()
+                for i, part in enumerate(parts):
+                    if part == metric_name:
+                        if i + 2 < len(parts):
+                            try:
+                                value_str = parts[i + 2].replace(',', '')
+                                value = float(value_str)
+                            
+                                if i + 1 < len(parts):
+                                    unit = parts[i + 1]
+                                    if unit == 'us':
+                                        return value / 1000  # us to ms
+                                    elif unit == 'ms':
+                                        return value
+                                    elif unit == 'ns':
+                                        return value / 1e6  # ns to ms
+                                return value
+                            except (ValueError, IndexError):
+                                continue
+        return None
+
+
+
     
     def run_with_metrics(self, metrics_list):
         """Run NCU with specified metrics"""
@@ -222,6 +249,7 @@ class NCUOverheadAnalyzer:
 
                 num_passes = self._parse_num_passes(result.stdout)
                 kernel_time_with_ncu_ms = self._parse_kernel_duration_from_output(result.stdout)
+                ncu_reported_time_ms = self._parse_ncu_metric_value(result.stdout + result.stderr, 'gpu__time_duration.avg') 
                 if kernel_time_with_ncu_ms is None:
                     return ('err', {'type': 'no_output', 'stdout': result.stdout, 'stderr': result.stderr})
                 baseline_ms = self.baseline_time['cuda_events']
@@ -232,6 +260,7 @@ class NCUOverheadAnalyzer:
                     'num_metrics': len(metrics_variant),
                     'num_passes': num_passes,
                     'kernel_time_with_ncu_ms': kernel_time_with_ncu_ms,
+                    'ncu_reported_time_ms': ncu_reported_time_ms,
                     'baseline_ms': baseline_ms,
                     'ncu_overhead_ms': ncu_overhead_ms,
                     'overhead_percentage': overhead_percentage,
@@ -253,7 +282,9 @@ class NCUOverheadAnalyzer:
         first_attempt = _exec(metrics_list)
         if first_attempt[0] == 'ok':
             data = first_attempt[1]
-            print(f"→ {data['num_passes']} pass(es), Kernel: {data['kernel_time_with_ncu_ms']:.4f}ms")
+            ncu_time_str = f", NCU: {data['ncu_reported_time_ms']:.4f}ms" if data.get('ncu_reported_time_ms') else ""
+            print(f"→ {data['num_passes']} pass(es), Kernel: {data['kernel_time_with_ncu_ms']:.4f}ms{ncu_time_str}")
+
             return data
 
         #if it failed and we have at least one metric, we try appending suffixes to the last metric
@@ -395,6 +426,11 @@ class NCUOverheadAnalyzer:
         # Plot 2: Metrics vs Kernel Execution Time
         fig2, ax2 = plt.subplots(figsize=(30, 15))
         ax2.plot(num_metrics, kernel_times, 'o-', linewidth=2.5, markersize=8, color='#2ecc71', label='Kernel Time with NCU')
+        ncu_reported_times = [r.get('ncu_reported_time_ms') for r in self.results]
+        valid_ncu_times = [(m, t) for m, t in zip(num_metrics, ncu_reported_times) if t is not None]
+        if valid_ncu_times:
+            ncu_metrics, ncu_times = zip(*valid_ncu_times)
+            ax2.plot(ncu_metrics, ncu_times, 's-', linewidth=2.5, markersize=8, color='#9b59b6', label='NCU gputimeduration', alpha=0.8)
         ax2.axhline(y=baseline, color='#3498db', linestyle='--', linewidth=2, label=f'Baseline (no NCU): {baseline:.2f}ms')
         ax2.set_xlabel('Number of Metrics', fontsize=12, fontweight='bold')
         ax2.set_ylabel('Kernel Execution Time (ms)', fontsize=12, fontweight='bold')
@@ -424,14 +460,16 @@ class NCUOverheadAnalyzer:
             else:
                 f.write("INCREMENTAL PROFILING RESULTS\n")
                 f.write("="*90 + "\n")
-                f.write(f"{'Metrics':<10} {'Passes':<10} {'Kernel Time (ms)':<20}\n")
+                f.write(f"{'Metrics':<10} {'Passes':<10} {'CUDA Events (ms)':<20} {'NCU Time (ms)':<20}\n")
                 f.write("-" * 90 + "\n")
 
                 prev_passes = 0
                 for r in self.results:
                     marker = " " if r['num_passes'] > prev_passes and prev_passes > 0 else "   "
+                    ncu_time_str = f"{r['ncu_reported_time_ms']:.4f}" if r.get('ncu_reported_time_ms') else "N/A"
                     f.write(f"{marker}{r['num_metrics']:<7} {r['num_passes']:<10} "
-                           f"{r['kernel_time_with_ncu_ms']:<20.4f}\n")
+                      f"{r['kernel_time_with_ncu_ms']:<20.4f} {ncu_time_str:<20}\n")
+
                     prev_passes = r['num_passes']
             f.write("\n\nPASS THRESHOLDS DETECTED\n")
             f.write("="*70 + "\n")
@@ -486,6 +524,8 @@ def main():
         # Step 2: Incremental analysis
         analyzer.run_incremental_analysis(max_metrics=max_metrics)
         # Step 3: Generate report
+        #1. Y-axis: Nombre de passes vs X-axis: nombre de métriques
+        # 2. Y-axis: Temps d'exécution du kernel vs X-axis: nombre de métriques
         analyzer.generate_report(output_dir=f"ncu_overhead_{kernel_type}")
         print("\nAnalysis complete")
         print(f"Results in: ncu_overhead_{kernel_type}/")
