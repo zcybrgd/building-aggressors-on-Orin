@@ -1,0 +1,851 @@
+Iteration,Metric_Name,Metric_Value,Metric_Unit
+1,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 69805,byte/s
+1,lts__t_bytes.min,34 816,byte
+1,lts__t_request_hit_rate.ratio,046,
+1,lts__t_requests.max,288,request
+1,lts__t_requests.min,278,request
+1,lts__t_requests.sum,1 128,request
+1,lts__t_sector_hit_rate.pct,4994,%
+1,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+1,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62724,sector/s
+1,lts__t_sectors_op_read.sum.per_second,2 62724,sector/s
+1,lts__t_sectors_op_write.sum.per_second,2 44348,sector/s
+1,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9986,%
+1,smsp__inst_executed_op_global_ld.sum,512,inst
+1,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+1,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+1,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+1,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+2,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 67685,byte/s
+2,lts__t_bytes.min,35 072,byte
+2,lts__t_request_hit_rate.ratio,046,
+2,lts__t_requests.max,285,request
+2,lts__t_requests.min,280,request
+2,lts__t_requests.sum,1 128,request
+2,lts__t_sector_hit_rate.pct,4994,%
+2,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+2,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62652,sector/s
+2,lts__t_sectors_op_read.sum.per_second,2 62652,sector/s
+2,lts__t_sectors_op_write.sum.per_second,2 44281,sector/s
+2,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9994,%
+2,smsp__inst_executed_op_global_ld.sum,512,inst
+2,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+2,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+2,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+2,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+3,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 68692,byte/s
+3,lts__t_bytes.min,34 816,byte
+3,lts__t_request_hit_rate.ratio,046,
+3,lts__t_requests.max,287,request
+3,lts__t_requests.min,278,request
+3,lts__t_requests.sum,1 128,request
+3,lts__t_sector_hit_rate.pct,4994,%
+3,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+3,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62686,sector/s
+3,lts__t_sectors_op_read.sum.per_second,2 62686,sector/s
+3,lts__t_sectors_op_write.sum.per_second,2 44313,sector/s
+3,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9988,%
+3,smsp__inst_executed_op_global_ld.sum,512,inst
+3,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+3,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+3,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+3,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+4,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 68331,byte/s
+4,lts__t_bytes.min,34 816,byte
+4,lts__t_request_hit_rate.ratio,046,
+4,lts__t_requests.max,288,request
+4,lts__t_requests.min,278,request
+4,lts__t_requests.sum,1 128,request
+4,lts__t_sector_hit_rate.pct,4994,%
+4,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+4,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62674,sector/s
+4,lts__t_sectors_op_read.sum.per_second,2 62674,sector/s
+4,lts__t_sectors_op_write.sum.per_second,2 44301,sector/s
+4,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9992,%
+4,smsp__inst_executed_op_global_ld.sum,512,inst
+4,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+4,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+4,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+4,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+5,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 69944,byte/s
+5,lts__t_bytes.min,35 072,byte
+5,lts__t_request_hit_rate.ratio,046,
+5,lts__t_requests.max,284,request
+5,lts__t_requests.min,280,request
+5,lts__t_requests.sum,1 128,request
+5,lts__t_sector_hit_rate.pct,4994,%
+5,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+5,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62729,sector/s
+5,lts__t_sectors_op_read.sum.per_second,2 62729,sector/s
+5,lts__t_sectors_op_write.sum.per_second,2 44352,sector/s
+5,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9994,%
+5,smsp__inst_executed_op_global_ld.sum,512,inst
+5,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+5,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+5,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+5,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+6,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 68665,byte/s
+6,lts__t_bytes.min,34 848,byte
+6,lts__t_request_hit_rate.ratio,046,
+6,lts__t_requests.max,286,request
+6,lts__t_requests.min,279,request
+6,lts__t_requests.sum,1 128,request
+6,lts__t_sector_hit_rate.pct,4994,%
+6,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+6,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62686,sector/s
+6,lts__t_sectors_op_read.sum.per_second,2 62686,sector/s
+6,lts__t_sectors_op_write.sum.per_second,2 44312,sector/s
+6,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9989,%
+6,smsp__inst_executed_op_global_ld.sum,512,inst
+6,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+6,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+6,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+6,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+7,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 72550,byte/s
+7,lts__t_bytes.min,34 944,byte
+7,lts__t_request_hit_rate.ratio,046,
+7,lts__t_requests.max,284,request
+7,lts__t_requests.min,281,request
+7,lts__t_requests.sum,1 128,request
+7,lts__t_sector_hit_rate.pct,4994,%
+7,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+7,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62817,sector/s
+7,lts__t_sectors_op_read.sum.per_second,2 62817,sector/s
+7,lts__t_sectors_op_write.sum.per_second,2 44434,sector/s
+7,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9995,%
+7,smsp__inst_executed_op_global_ld.sum,512,inst
+7,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+7,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+7,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+7,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+8,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 68348,byte/s
+8,lts__t_bytes.min,34 816,byte
+8,lts__t_request_hit_rate.ratio,046,
+8,lts__t_requests.max,289,request
+8,lts__t_requests.min,278,request
+8,lts__t_requests.sum,1 128,request
+8,lts__t_sector_hit_rate.pct,4994,%
+8,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+8,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62675,sector/s
+8,lts__t_sectors_op_read.sum.per_second,2 62675,sector/s
+8,lts__t_sectors_op_write.sum.per_second,2 44302,sector/s
+8,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9992,%
+8,smsp__inst_executed_op_global_ld.sum,512,inst
+8,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+8,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+8,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+8,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+9,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 68925,byte/s
+9,lts__t_bytes.min,35 072,byte
+9,lts__t_request_hit_rate.ratio,046,
+9,lts__t_requests.max,283,request
+9,lts__t_requests.min,280,request
+9,lts__t_requests.sum,1 128,request
+9,lts__t_sector_hit_rate.pct,4994,%
+9,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+9,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62694,sector/s
+9,lts__t_sectors_op_read.sum.per_second,2 62694,sector/s
+9,lts__t_sectors_op_write.sum.per_second,2 44320,sector/s
+9,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9992,%
+9,smsp__inst_executed_op_global_ld.sum,512,inst
+9,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+9,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+9,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+9,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+10,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 68144,byte/s
+10,lts__t_bytes.min,35 072,byte
+10,lts__t_request_hit_rate.ratio,046,
+10,lts__t_requests.max,285,request
+10,lts__t_requests.min,280,request
+10,lts__t_requests.sum,1 128,request
+10,lts__t_sector_hit_rate.pct,4994,%
+10,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+10,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62668,sector/s
+10,lts__t_sectors_op_read.sum.per_second,2 62668,sector/s
+10,lts__t_sectors_op_write.sum.per_second,2 44295,sector/s
+10,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9989,%
+10,smsp__inst_executed_op_global_ld.sum,512,inst
+10,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+10,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+10,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+10,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+11,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 70194,byte/s
+11,lts__t_bytes.min,34 816,byte
+11,lts__t_request_hit_rate.ratio,046,
+11,lts__t_requests.max,288,request
+11,lts__t_requests.min,278,request
+11,lts__t_requests.sum,1 128,request
+11,lts__t_sector_hit_rate.pct,4994,%
+11,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+11,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62737,sector/s
+11,lts__t_sectors_op_read.sum.per_second,2 62737,sector/s
+11,lts__t_sectors_op_write.sum.per_second,2 44360,sector/s
+11,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9994,%
+11,smsp__inst_executed_op_global_ld.sum,512,inst
+11,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+11,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+11,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+11,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+12,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 71749,byte/s
+12,lts__t_bytes.min,34 816,byte
+12,lts__t_request_hit_rate.ratio,046,
+12,lts__t_requests.max,287,request
+12,lts__t_requests.min,278,request
+12,lts__t_requests.sum,1 128,request
+12,lts__t_sector_hit_rate.pct,4994,%
+12,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+12,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62790,sector/s
+12,lts__t_sectors_op_read.sum.per_second,2 62790,sector/s
+12,lts__t_sectors_op_write.sum.per_second,2 44409,sector/s
+12,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9988,%
+12,smsp__inst_executed_op_global_ld.sum,512,inst
+12,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+12,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+12,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+12,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+13,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 71163,byte/s
+13,lts__t_bytes.min,35 072,byte
+13,lts__t_request_hit_rate.ratio,046,
+13,lts__t_requests.max,285,request
+13,lts__t_requests.min,280,request
+13,lts__t_requests.sum,1 128,request
+13,lts__t_sector_hit_rate.pct,4994,%
+13,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+13,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62770,sector/s
+13,lts__t_sectors_op_read.sum.per_second,2 62770,sector/s
+13,lts__t_sectors_op_write.sum.per_second,2 44390,sector/s
+13,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9992,%
+13,smsp__inst_executed_op_global_ld.sum,512,inst
+13,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+13,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+13,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+13,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+14,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 71432,byte/s
+14,lts__t_bytes.min,35 072,byte
+14,lts__t_request_hit_rate.ratio,046,
+14,lts__t_requests.max,285,request
+14,lts__t_requests.min,280,request
+14,lts__t_requests.sum,1 128,request
+14,lts__t_sector_hit_rate.pct,4994,%
+14,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+14,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62779,sector/s
+14,lts__t_sectors_op_read.sum.per_second,2 62779,sector/s
+14,lts__t_sectors_op_write.sum.per_second,2 44399,sector/s
+14,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9994,%
+14,smsp__inst_executed_op_global_ld.sum,512,inst
+14,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+14,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+14,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+14,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+15,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 71719,byte/s
+15,lts__t_bytes.min,34 816,byte
+15,lts__t_request_hit_rate.ratio,046,
+15,lts__t_requests.max,289,request
+15,lts__t_requests.min,278,request
+15,lts__t_requests.sum,1 128,request
+15,lts__t_sector_hit_rate.pct,4994,%
+15,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+15,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62789,sector/s
+15,lts__t_sectors_op_read.sum.per_second,2 62789,sector/s
+15,lts__t_sectors_op_write.sum.per_second,2 44408,sector/s
+15,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9991,%
+15,smsp__inst_executed_op_global_ld.sum,512,inst
+15,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+15,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+15,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+15,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+16,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 68189,byte/s
+16,lts__t_bytes.min,35 072,byte
+16,lts__t_request_hit_rate.ratio,046,
+16,lts__t_requests.max,283,request
+16,lts__t_requests.min,280,request
+16,lts__t_requests.sum,1 128,request
+16,lts__t_sector_hit_rate.pct,4994,%
+16,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+16,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62669,sector/s
+16,lts__t_sectors_op_read.sum.per_second,2 62669,sector/s
+16,lts__t_sectors_op_write.sum.per_second,2 44297,sector/s
+16,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9994,%
+16,smsp__inst_executed_op_global_ld.sum,512,inst
+16,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+16,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+16,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+16,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+17,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 72428,byte/s
+17,lts__t_bytes.min,35 072,byte
+17,lts__t_request_hit_rate.ratio,046,
+17,lts__t_requests.max,284,request
+17,lts__t_requests.min,280,request
+17,lts__t_requests.sum,1 128,request
+17,lts__t_sector_hit_rate.pct,4994,%
+17,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+17,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62813,sector/s
+17,lts__t_sectors_op_read.sum.per_second,2 62813,sector/s
+17,lts__t_sectors_op_write.sum.per_second,2 44430,sector/s
+17,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9992,%
+17,smsp__inst_executed_op_global_ld.sum,512,inst
+17,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+17,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+17,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+17,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+18,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 67424,byte/s
+18,lts__t_bytes.min,35 072,byte
+18,lts__t_request_hit_rate.ratio,046,
+18,lts__t_requests.max,285,request
+18,lts__t_requests.min,280,request
+18,lts__t_requests.sum,1 128,request
+18,lts__t_sector_hit_rate.pct,4994,%
+18,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+18,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62644,sector/s
+18,lts__t_sectors_op_read.sum.per_second,2 62644,sector/s
+18,lts__t_sectors_op_write.sum.per_second,2 44273,sector/s
+18,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9990,%
+18,smsp__inst_executed_op_global_ld.sum,512,inst
+18,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+18,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+18,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+18,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+19,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 69904,byte/s
+19,lts__t_bytes.min,34 816,byte
+19,lts__t_request_hit_rate.ratio,046,
+19,lts__t_requests.max,285,request
+19,lts__t_requests.min,278,request
+19,lts__t_requests.sum,1 128,request
+19,lts__t_sector_hit_rate.pct,4994,%
+19,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+19,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62727,sector/s
+19,lts__t_sectors_op_read.sum.per_second,2 62727,sector/s
+19,lts__t_sectors_op_write.sum.per_second,2 44351,sector/s
+19,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9993,%
+19,smsp__inst_executed_op_global_ld.sum,512,inst
+19,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+19,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+19,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+19,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+20,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 73802,byte/s
+20,lts__t_bytes.min,35 072,byte
+20,lts__t_request_hit_rate.ratio,046,
+20,lts__t_requests.max,286,request
+20,lts__t_requests.min,280,request
+20,lts__t_requests.sum,1 128,request
+20,lts__t_sector_hit_rate.pct,4994,%
+20,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+20,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62859,sector/s
+20,lts__t_sectors_op_read.sum.per_second,2 62859,sector/s
+20,lts__t_sectors_op_write.sum.per_second,2 44473,sector/s
+20,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9991,%
+20,smsp__inst_executed_op_global_ld.sum,512,inst
+20,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+20,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+20,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+20,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+21,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 68369,byte/s
+21,lts__t_bytes.min,35 072,byte
+21,lts__t_request_hit_rate.ratio,046,
+21,lts__t_requests.max,285,request
+21,lts__t_requests.min,280,request
+21,lts__t_requests.sum,1 128,request
+21,lts__t_sector_hit_rate.pct,4994,%
+21,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+21,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62676,sector/s
+21,lts__t_sectors_op_read.sum.per_second,2 62676,sector/s
+21,lts__t_sectors_op_write.sum.per_second,2 44303,sector/s
+21,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9991,%
+21,smsp__inst_executed_op_global_ld.sum,512,inst
+21,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+21,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+21,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+21,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+22,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 70829,byte/s
+22,lts__t_bytes.min,35 072,byte
+22,lts__t_request_hit_rate.ratio,046,
+22,lts__t_requests.max,285,request
+22,lts__t_requests.min,280,request
+22,lts__t_requests.sum,1 128,request
+22,lts__t_sector_hit_rate.pct,4994,%
+22,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+22,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62759,sector/s
+22,lts__t_sectors_op_read.sum.per_second,2 62759,sector/s
+22,lts__t_sectors_op_write.sum.per_second,2 44380,sector/s
+22,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9989,%
+22,smsp__inst_executed_op_global_ld.sum,512,inst
+22,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+22,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+22,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+22,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+23,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 71168,byte/s
+23,lts__t_bytes.min,35 072,byte
+23,lts__t_request_hit_rate.ratio,046,
+23,lts__t_requests.max,287,request
+23,lts__t_requests.min,280,request
+23,lts__t_requests.sum,1 128,request
+23,lts__t_sector_hit_rate.pct,4994,%
+23,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+23,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62770,sector/s
+23,lts__t_sectors_op_read.sum.per_second,2 62770,sector/s
+23,lts__t_sectors_op_write.sum.per_second,2 44391,sector/s
+23,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9985,%
+23,smsp__inst_executed_op_global_ld.sum,512,inst
+23,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+23,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+23,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+23,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+24,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 70594,byte/s
+24,lts__t_bytes.min,34 816,byte
+24,lts__t_request_hit_rate.ratio,046,
+24,lts__t_requests.max,287,request
+24,lts__t_requests.min,278,request
+24,lts__t_requests.sum,1 128,request
+24,lts__t_sector_hit_rate.pct,4994,%
+24,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+24,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62751,sector/s
+24,lts__t_sectors_op_read.sum.per_second,2 62751,sector/s
+24,lts__t_sectors_op_write.sum.per_second,2 44372,sector/s
+24,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9992,%
+24,smsp__inst_executed_op_global_ld.sum,512,inst
+24,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+24,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+24,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+24,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+25,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 72023,byte/s
+25,lts__t_bytes.min,35 072,byte
+25,lts__t_request_hit_rate.ratio,046,
+25,lts__t_requests.max,285,request
+25,lts__t_requests.min,280,request
+25,lts__t_requests.sum,1 128,request
+25,lts__t_sector_hit_rate.pct,4994,%
+25,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+25,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62799,sector/s
+25,lts__t_sectors_op_read.sum.per_second,2 62799,sector/s
+25,lts__t_sectors_op_write.sum.per_second,2 44417,sector/s
+25,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9994,%
+25,smsp__inst_executed_op_global_ld.sum,512,inst
+25,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+25,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+25,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+25,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+26,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 72181,byte/s
+26,lts__t_bytes.min,34 944,byte
+26,lts__t_request_hit_rate.ratio,046,
+26,lts__t_requests.max,284,request
+26,lts__t_requests.min,281,request
+26,lts__t_requests.sum,1 128,request
+26,lts__t_sector_hit_rate.pct,4994,%
+26,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+26,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62804,sector/s
+26,lts__t_sectors_op_read.sum.per_second,2 62804,sector/s
+26,lts__t_sectors_op_write.sum.per_second,2 44422,sector/s
+26,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9990,%
+26,smsp__inst_executed_op_global_ld.sum,512,inst
+26,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+26,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+26,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+26,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+27,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 68640,byte/s
+27,lts__t_bytes.min,34 816,byte
+27,lts__t_request_hit_rate.ratio,046,
+27,lts__t_requests.max,287,request
+27,lts__t_requests.min,278,request
+27,lts__t_requests.sum,1 128,request
+27,lts__t_sector_hit_rate.pct,4994,%
+27,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+27,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62685,sector/s
+27,lts__t_sectors_op_read.sum.per_second,2 62685,sector/s
+27,lts__t_sectors_op_write.sum.per_second,2 44311,sector/s
+27,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9988,%
+27,smsp__inst_executed_op_global_ld.sum,512,inst
+27,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+27,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+27,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+27,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+28,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 69986,byte/s
+28,lts__t_bytes.min,34 816,byte
+28,lts__t_request_hit_rate.ratio,046,
+28,lts__t_requests.max,285,request
+28,lts__t_requests.min,278,request
+28,lts__t_requests.sum,1 128,request
+28,lts__t_sector_hit_rate.pct,4994,%
+28,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+28,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62730,sector/s
+28,lts__t_sectors_op_read.sum.per_second,2 62730,sector/s
+28,lts__t_sectors_op_write.sum.per_second,2 44353,sector/s
+28,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9992,%
+28,smsp__inst_executed_op_global_ld.sum,512,inst
+28,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+28,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+28,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+28,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+29,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 71638,byte/s
+29,lts__t_bytes.min,35 072,byte
+29,lts__t_request_hit_rate.ratio,046,
+29,lts__t_requests.max,285,request
+29,lts__t_requests.min,280,request
+29,lts__t_requests.sum,1 128,request
+29,lts__t_sector_hit_rate.pct,4994,%
+29,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+29,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62786,sector/s
+29,lts__t_sectors_op_read.sum.per_second,2 62786,sector/s
+29,lts__t_sectors_op_write.sum.per_second,2 44405,sector/s
+29,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9994,%
+29,smsp__inst_executed_op_global_ld.sum,512,inst
+29,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+29,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+29,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+29,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+30,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 72259,byte/s
+30,lts__t_bytes.min,35 072,byte
+30,lts__t_request_hit_rate.ratio,046,
+30,lts__t_requests.max,284,request
+30,lts__t_requests.min,280,request
+30,lts__t_requests.sum,1 128,request
+30,lts__t_sector_hit_rate.pct,4994,%
+30,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+30,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62807,sector/s
+30,lts__t_sectors_op_read.sum.per_second,2 62807,sector/s
+30,lts__t_sectors_op_write.sum.per_second,2 44425,sector/s
+30,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9988,%
+30,smsp__inst_executed_op_global_ld.sum,512,inst
+30,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+30,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+30,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+30,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+31,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 71806,byte/s
+31,lts__t_bytes.min,35 072,byte
+31,lts__t_request_hit_rate.ratio,046,
+31,lts__t_requests.max,284,request
+31,lts__t_requests.min,280,request
+31,lts__t_requests.sum,1 128,request
+31,lts__t_sector_hit_rate.pct,4994,%
+31,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+31,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62792,sector/s
+31,lts__t_sectors_op_read.sum.per_second,2 62792,sector/s
+31,lts__t_sectors_op_write.sum.per_second,2 44411,sector/s
+31,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9994,%
+31,smsp__inst_executed_op_global_ld.sum,512,inst
+31,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+31,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+31,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+31,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+32,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 69169,byte/s
+32,lts__t_bytes.min,35 072,byte
+32,lts__t_request_hit_rate.ratio,046,
+32,lts__t_requests.max,284,request
+32,lts__t_requests.min,280,request
+32,lts__t_requests.sum,1 128,request
+32,lts__t_sector_hit_rate.pct,4994,%
+32,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+32,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62703,sector/s
+32,lts__t_sectors_op_read.sum.per_second,2 62703,sector/s
+32,lts__t_sectors_op_write.sum.per_second,2 44328,sector/s
+32,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9995,%
+32,smsp__inst_executed_op_global_ld.sum,512,inst
+32,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+32,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+32,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+32,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+33,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 69540,byte/s
+33,lts__t_bytes.min,34 944,byte
+33,lts__t_request_hit_rate.ratio,046,
+33,lts__t_requests.max,284,request
+33,lts__t_requests.min,280,request
+33,lts__t_requests.sum,1 128,request
+33,lts__t_sector_hit_rate.pct,4994,%
+33,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+33,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62715,sector/s
+33,lts__t_sectors_op_read.sum.per_second,2 62715,sector/s
+33,lts__t_sectors_op_write.sum.per_second,2 44339,sector/s
+33,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9989,%
+33,smsp__inst_executed_op_global_ld.sum,512,inst
+33,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+33,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+33,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+33,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+34,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 71185,byte/s
+34,lts__t_bytes.min,35 072,byte
+34,lts__t_request_hit_rate.ratio,046,
+34,lts__t_requests.max,285,request
+34,lts__t_requests.min,280,request
+34,lts__t_requests.sum,1 128,request
+34,lts__t_sector_hit_rate.pct,4994,%
+34,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+34,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62771,sector/s
+34,lts__t_sectors_op_read.sum.per_second,2 62771,sector/s
+34,lts__t_sectors_op_write.sum.per_second,2 44391,sector/s
+34,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9993,%
+34,smsp__inst_executed_op_global_ld.sum,512,inst
+34,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+34,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+34,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+34,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+35,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 69163,byte/s
+35,lts__t_bytes.min,35 072,byte
+35,lts__t_request_hit_rate.ratio,046,
+35,lts__t_requests.max,284,request
+35,lts__t_requests.min,280,request
+35,lts__t_requests.sum,1 128,request
+35,lts__t_sector_hit_rate.pct,4994,%
+35,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+35,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62702,sector/s
+35,lts__t_sectors_op_read.sum.per_second,2 62702,sector/s
+35,lts__t_sectors_op_write.sum.per_second,2 44327,sector/s
+35,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9993,%
+35,smsp__inst_executed_op_global_ld.sum,512,inst
+35,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+35,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+35,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+35,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+36,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 70302,byte/s
+36,lts__t_bytes.min,34 976,byte
+36,lts__t_request_hit_rate.ratio,046,
+36,lts__t_requests.max,284,request
+36,lts__t_requests.min,280,request
+36,lts__t_requests.sum,1 128,request
+36,lts__t_sector_hit_rate.pct,4994,%
+36,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+36,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62741,sector/s
+36,lts__t_sectors_op_read.sum.per_second,2 62741,sector/s
+36,lts__t_sectors_op_write.sum.per_second,2 44363,sector/s
+36,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9989,%
+36,smsp__inst_executed_op_global_ld.sum,512,inst
+36,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+36,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+36,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+36,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+37,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 70037,byte/s
+37,lts__t_bytes.min,35 104,byte
+37,lts__t_request_hit_rate.ratio,046,
+37,lts__t_requests.max,283,request
+37,lts__t_requests.min,281,request
+37,lts__t_requests.sum,1 128,request
+37,lts__t_sector_hit_rate.pct,4994,%
+37,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+37,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62732,sector/s
+37,lts__t_sectors_op_read.sum.per_second,2 62732,sector/s
+37,lts__t_sectors_op_write.sum.per_second,2 44355,sector/s
+37,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9994,%
+37,smsp__inst_executed_op_global_ld.sum,512,inst
+37,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+37,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+37,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+37,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+38,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 67076,byte/s
+38,lts__t_bytes.min,34 816,byte
+38,lts__t_request_hit_rate.ratio,046,
+38,lts__t_requests.max,284,request
+38,lts__t_requests.min,278,request
+38,lts__t_requests.sum,1 128,request
+38,lts__t_sector_hit_rate.pct,4994,%
+38,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+38,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62632,sector/s
+38,lts__t_sectors_op_read.sum.per_second,2 62632,sector/s
+38,lts__t_sectors_op_write.sum.per_second,2 44262,sector/s
+38,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9992,%
+38,smsp__inst_executed_op_global_ld.sum,512,inst
+38,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+38,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+38,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+38,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+39,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 66276,byte/s
+39,lts__t_bytes.min,34 848,byte
+39,lts__t_request_hit_rate.ratio,046,
+39,lts__t_requests.max,285,request
+39,lts__t_requests.min,279,request
+39,lts__t_requests.sum,1 128,request
+39,lts__t_sector_hit_rate.pct,4994,%
+39,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+39,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62605,sector/s
+39,lts__t_sectors_op_read.sum.per_second,2 62605,sector/s
+39,lts__t_sectors_op_write.sum.per_second,2 44237,sector/s
+39,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9995,%
+39,smsp__inst_executed_op_global_ld.sum,512,inst
+39,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+39,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+39,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+39,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+40,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 65842,byte/s
+40,lts__t_bytes.min,34 816,byte
+40,lts__t_request_hit_rate.ratio,046,
+40,lts__t_requests.max,288,request
+40,lts__t_requests.min,278,request
+40,lts__t_requests.sum,1 128,request
+40,lts__t_sector_hit_rate.pct,4994,%
+40,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+40,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62590,sector/s
+40,lts__t_sectors_op_read.sum.per_second,2 62590,sector/s
+40,lts__t_sectors_op_write.sum.per_second,2 44223,sector/s
+40,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9995,%
+40,smsp__inst_executed_op_global_ld.sum,512,inst
+40,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+40,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+40,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+40,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+41,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 68165,byte/s
+41,lts__t_bytes.min,34 816,byte
+41,lts__t_request_hit_rate.ratio,046,
+41,lts__t_requests.max,287,request
+41,lts__t_requests.min,278,request
+41,lts__t_requests.sum,1 128,request
+41,lts__t_sector_hit_rate.pct,4994,%
+41,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+41,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62669,sector/s
+41,lts__t_sectors_op_read.sum.per_second,2 62669,sector/s
+41,lts__t_sectors_op_write.sum.per_second,2 44296,sector/s
+41,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9994,%
+41,smsp__inst_executed_op_global_ld.sum,512,inst
+41,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+41,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+41,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+41,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+42,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 68620,byte/s
+42,lts__t_bytes.min,35 072,byte
+42,lts__t_request_hit_rate.ratio,046,
+42,lts__t_requests.max,283,request
+42,lts__t_requests.min,280,request
+42,lts__t_requests.sum,1 128,request
+42,lts__t_sector_hit_rate.pct,4994,%
+42,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+42,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62684,sector/s
+42,lts__t_sectors_op_read.sum.per_second,2 62684,sector/s
+42,lts__t_sectors_op_write.sum.per_second,2 44310,sector/s
+42,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9992,%
+42,smsp__inst_executed_op_global_ld.sum,512,inst
+42,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+42,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+42,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+42,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+43,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 65349,byte/s
+43,lts__t_bytes.min,34 848,byte
+43,lts__t_request_hit_rate.ratio,046,
+43,lts__t_requests.max,285,request
+43,lts__t_requests.min,279,request
+43,lts__t_requests.sum,1 128,request
+43,lts__t_sector_hit_rate.pct,4994,%
+43,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+43,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62573,sector/s
+43,lts__t_sectors_op_read.sum.per_second,2 62573,sector/s
+43,lts__t_sectors_op_write.sum.per_second,2 44208,sector/s
+43,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9993,%
+43,smsp__inst_executed_op_global_ld.sum,512,inst
+43,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+43,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+43,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+43,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+44,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 67551,byte/s
+44,lts__t_bytes.min,35 104,byte
+44,lts__t_request_hit_rate.ratio,046,
+44,lts__t_requests.max,283,request
+44,lts__t_requests.min,281,request
+44,lts__t_requests.sum,1 128,request
+44,lts__t_sector_hit_rate.pct,4994,%
+44,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+44,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62648,sector/s
+44,lts__t_sectors_op_read.sum.per_second,2 62648,sector/s
+44,lts__t_sectors_op_write.sum.per_second,2 44277,sector/s
+44,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9987,%
+44,smsp__inst_executed_op_global_ld.sum,512,inst
+44,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+44,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+44,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+44,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+45,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 67076,byte/s
+45,lts__t_bytes.min,35 072,byte
+45,lts__t_request_hit_rate.ratio,046,
+45,lts__t_requests.max,283,request
+45,lts__t_requests.min,280,request
+45,lts__t_requests.sum,1 128,request
+45,lts__t_sector_hit_rate.pct,4994,%
+45,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+45,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62632,sector/s
+45,lts__t_sectors_op_read.sum.per_second,2 62632,sector/s
+45,lts__t_sectors_op_write.sum.per_second,2 44262,sector/s
+45,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9992,%
+45,smsp__inst_executed_op_global_ld.sum,512,inst
+45,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+45,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+45,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+45,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+46,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 66446,byte/s
+46,lts__t_bytes.min,35 072,byte
+46,lts__t_request_hit_rate.ratio,046,
+46,lts__t_requests.max,286,request
+46,lts__t_requests.min,280,request
+46,lts__t_requests.sum,1 128,request
+46,lts__t_sector_hit_rate.pct,4994,%
+46,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+46,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62611,sector/s
+46,lts__t_sectors_op_read.sum.per_second,2 62611,sector/s
+46,lts__t_sectors_op_write.sum.per_second,2 44242,sector/s
+46,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9992,%
+46,smsp__inst_executed_op_global_ld.sum,512,inst
+46,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+46,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+46,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+46,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+47,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 65677,byte/s
+47,lts__t_bytes.min,34 816,byte
+47,lts__t_request_hit_rate.ratio,046,
+47,lts__t_requests.max,287,request
+47,lts__t_requests.min,278,request
+47,lts__t_requests.sum,1 128,request
+47,lts__t_sector_hit_rate.pct,4994,%
+47,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+47,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62585,sector/s
+47,lts__t_sectors_op_read.sum.per_second,2 62585,sector/s
+47,lts__t_sectors_op_write.sum.per_second,2 44218,sector/s
+47,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9990,%
+47,smsp__inst_executed_op_global_ld.sum,512,inst
+47,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+47,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+47,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+47,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+48,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 65696,byte/s
+48,lts__t_bytes.min,35 072,byte
+48,lts__t_request_hit_rate.ratio,046,
+48,lts__t_requests.max,283,request
+48,lts__t_requests.min,280,request
+48,lts__t_requests.sum,1 128,request
+48,lts__t_sector_hit_rate.pct,4994,%
+48,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+48,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62585,sector/s
+48,lts__t_sectors_op_read.sum.per_second,2 62585,sector/s
+48,lts__t_sectors_op_write.sum.per_second,2 44218,sector/s
+48,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9986,%
+48,smsp__inst_executed_op_global_ld.sum,512,inst
+48,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+48,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+48,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+48,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+49,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 63718,byte/s
+49,lts__t_bytes.min,35 072,byte
+49,lts__t_request_hit_rate.ratio,046,
+49,lts__t_requests.max,283,request
+49,lts__t_requests.min,280,request
+49,lts__t_requests.sum,1 128,request
+49,lts__t_sector_hit_rate.pct,4994,%
+49,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+49,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62518,sector/s
+49,lts__t_sectors_op_read.sum.per_second,2 62518,sector/s
+49,lts__t_sectors_op_write.sum.per_second,2 44156,sector/s
+49,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9990,%
+49,smsp__inst_executed_op_global_ld.sum,512,inst
+49,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+49,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+49,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+49,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%
+50,l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second,77 65792,byte/s
+50,lts__t_bytes.min,34 944,byte
+50,lts__t_request_hit_rate.ratio,046,
+50,lts__t_requests.max,285,request
+50,lts__t_requests.min,280,request
+50,lts__t_requests.sum,1 128,request
+50,lts__t_sector_hit_rate.pct,4994,%
+50,lts__t_sectors.avg.pct_of_peak_sustained_elapsed,000,%
+50,lts__t_sectors_aperture_sysmem_op_read.sum.per_second,2 62588,sector/s
+50,lts__t_sectors_op_read.sum.per_second,2 62588,sector/s
+50,lts__t_sectors_op_write.sum.per_second,2 44221,sector/s
+50,smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9992,%
+50,smsp__inst_executed_op_global_ld.sum,512,inst
+50,smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,000,%
+50,smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346,%
+50,smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,000,%
+50,smsp__warp_issue_stalled_misc_per_warp_active.pct,000,%

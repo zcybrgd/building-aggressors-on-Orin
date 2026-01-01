@@ -1,0 +1,12 @@
+Metric_Name,Min,Max,Average,Std_Dev,Range,CV_Percent,Samples
+lts__t_request_hit_rate.ratio,46.000000,46.000000,46.000000,0.000000,0.000000,0.00,50
+lts__t_requests.max,283.000000,289.000000,285.200000,1.673320,6.000000,0.59,50
+lts__t_requests.min,278.000000,281.000000,279.420000,1.001798,3.000000,0.36,50
+lts__t_sector_hit_rate.pct,4994.000000,4994.000000,4994.000000,0.000000,0.000000,0.00,50
+lts__t_sectors.avg.pct_of_peak_sustained_elapsed,0.000000,0.000000,0.000000,0.000000,0.000000,0.00,50
+smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,9985.000000,9995.000000,9991.400000,2.592296,10.000000,0.03,50
+smsp__inst_executed_op_global_ld.sum,512.000000,512.000000,512.000000,0.000000,0.000000,0.00,50
+smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active,0.000000,0.000000,0.000000,0.000000,0.000000,0.00,50
+smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct,346.000000,346.000000,346.000000,0.000000,0.000000,0.00,50
+smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct,0.000000,0.000000,0.000000,0.000000,0.000000,0.00,50
+smsp__warp_issue_stalled_misc_per_warp_active.pct,0.000000,0.000000,0.000000,0.000000,0.000000,0.00,50
