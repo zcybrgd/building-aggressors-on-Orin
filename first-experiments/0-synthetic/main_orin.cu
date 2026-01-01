@@ -1,7 +1,7 @@
 /*
 here we have a cache contention experiment that demonstrates how concurrent GPU kernels can interfere with 
 each other's performance by competing for L2 cache resources
-victim : unoptimized GEMM kernel that repeatedly accesses the same data, causing high L2 cache pressure
+Victim kernel: A workload that repeatedly accesses a small working set
 Enemy kernel: An adversarial workload using pointer chasing to thrash the cache
 */
 #include <cstdio>
@@ -18,31 +18,49 @@ Enemy kernel: An adversarial workload using pointer chasing to thrash the cache
     } \
 }
 
-// Unoptimized GEMM victim kernel: C = A * B
-// Performs naive matrix multiplication with no optimizations
-// This creates predictable memory access patterns and L2 cache pressure
-__global__ void victimKernel(float* d_A, float* d_B, float* d_C,
-                             int M, int N, int K) {
+//ce kernel victim 
+//comme argument on a un tableau d'entiers non signés (d_victim_array) que la victime lit (une suite de mots de 32 bits)
+//un tableau de flottants (d_result)        
+//la taille du tableau en octets (array_size_bytes) pour calculer le nombre de lignes de cache couvertes.
+__global__ void victimKernel(unsigned int* d_victim_array, float* d_result,
+                             int array_size_bytes, unsigned long long n_iters) {
     /*
-     Unoptimized GEMM: each thread computes one element of C
-     - No shared memory usage
-     - No tiling
-     - Poor memory coalescing
-     - Repeatedly accesses same rows of A and columns of B from L2
+ it repeatedly reads from a small working set d_victim_array
+ accesses the same cache lines over and over in each iteration
+ runs for a fixed number of iterations 
     */
-    int row = blockIdx.y * blockDim.y + threadIdx.y;
-    int col = blockIdx.x * blockDim.x + threadIdx.x;
-    
-    if (row >= M || col >= N) return;
-    float sum = 0.0f;
-        sum = 0.0f;
-        // Unoptimized inner loop: no blocking, reads A and B from global memory
-        for (int k = 0; k < K; ++k) {
-            sum += d_A[row * K + k] * d_B[k * N + col];
+    const int line_size = 128;
+    int num_lines = array_size_bytes / line_size;
+    if (num_lines <= 0) {
+        if (threadIdx.x==0 && blockIdx.x==0) { d_result[0]=0.0f; d_result[1]=0.0f; }
+        return;
+    }
+    int tid = blockIdx.x * blockDim.x + threadIdx.x;
+    int stride = 1;
+    int line_idx = tid % num_lines;
+    volatile unsigned int* v = (volatile unsigned int*) d_victim_array; //to force memory reads not from registers
+    unsigned long long iterations = 0;
+    unsigned int local_sum = 0;
+
+    for (unsigned long long iter = 0; iter < n_iters; ++iter) {
+        //lz victim réutilise les mm 16 lignes à chaque itération donc si on perd cces lignes on perd bcp de perf
+        //they shouldnt tenir in registers psk on a mis volatile nor L1
+        //le working set should be bigger ig 
+        //we are here repeatedly loading data from L2
+        for (int k = 0; k < 16; ++k) {               // k tunable 
+            int idx_line = (line_idx + k * stride) % num_lines; //calcule le num de la ligne a lire
+            int idx = idx_line * (line_size / sizeof(unsigned int));
+            local_sum += v[idx];
+            // occasional write: uncomment/tune if desired
+            // if ((iter & 0x3F) == 0) ((unsigned int*)v)[idx] = local_sum;
         }
-    
-    // Write final result
-    d_C[row * N + col] = sum;
+        iterations++;
+    }
+
+    if (threadIdx.x == 0 && blockIdx.x == 0) {
+        d_result[0] = (float)iterations;
+        d_result[1] = (float)local_sum;
+    }
 }
 
 //le kernel enemy qui fait du pointer chasing the goal is to evict the victim's cache lines from L2
@@ -116,24 +134,46 @@ unsigned long long estimateVictimIters(int run_seconds, const cudaDeviceProp &pr
     return total_cycles / cycles_per_iter;
 }
 
+// L2 cache flush kernel
+__global__ void flushL2(unsigned int* flush_array, int array_size_bytes) {
+    int tid = blockIdx.x * blockDim.x + threadIdx.x;
+    int stride = blockDim.x * gridDim.x;
+    int num_words = array_size_bytes / sizeof(unsigned int);
+    
+    volatile unsigned int* v = (volatile unsigned int*)flush_array;
+    unsigned int sum = 0;
+    
+    // Read through the entire array to flush L2
+    for (int i = tid; i < num_words; i += stride) {
+        sum += v[i];
+    }
+    
+    // Write the sum to prevent optimization
+    if (tid == 0) {
+        v[0] = sum;
+    }
+}
+
 
 
 int main(int argc, char* argv[]) {
     //par défaut
     int run_seconds = 10;
     int num_enemy_sms = 2;
-    int matrix_size = 256;  // Matrix dimension (creates 512x512 matrices)
-    int enemy_array_mb = 16;
+    int victim_working_set_kb = 256;
+    int enemy_array_mb = 2;
 
-    int victim_block_dim = 16;  // Use 16x16 thread blocks for GEMM
+    int victim_grid_x = 1;
+    int victim_block_x = 32;
     int enemy_threads_per_block = 128;
 
     for (int i = 1; i < argc; ++i) {
         if (strcmp(argv[i], "-t") == 0 && i + 1 < argc) run_seconds = atoi(argv[++i]);
         else if (strcmp(argv[i], "-m") == 0 && i + 1 < argc) num_enemy_sms = atoi(argv[++i]);
-        else if (strcmp(argv[i], "-s") == 0 && i + 1 < argc) matrix_size = atoi(argv[++i]);  // Matrix size
+        else if (strcmp(argv[i], "-v") == 0 && i + 1 < argc) victim_working_set_kb = atoi(argv[++i]);
         else if (strcmp(argv[i], "-e") == 0 && i + 1 < argc) enemy_array_mb = atoi(argv[++i]);
-        else if (strcmp(argv[i], "-vb") == 0 && i + 1 < argc) victim_block_dim = atoi(argv[++i]);
+        else if (strcmp(argv[i], "-vg") == 0 && i + 1 < argc) victim_grid_x = atoi(argv[++i]);
+        else if (strcmp(argv[i], "-vb") == 0 && i + 1 < argc) victim_block_x = atoi(argv[++i]);
         else if (strcmp(argv[i], "-eb") == 0 && i + 1 < argc) enemy_threads_per_block = atoi(argv[++i]);
     }
 
@@ -141,29 +181,24 @@ int main(int argc, char* argv[]) {
     cudaDeviceProp prop;
     CHECK_CUDA(cudaGetDeviceProperties(&prop, 0));
 
-    // GEMM matrices: A (M x K), B (K x N), C (M x N)
-    int M = matrix_size, N = matrix_size, K = matrix_size;
-    size_t size_A = M * K * sizeof(float);
-    size_t size_B = K * N * sizeof(float);
-    size_t size_C = M * N * sizeof(float);
-    
-    printf("Matrix sizes: A=%dx%d, B=%dx%d, C=%dx%d\n", M, K, K, N, M, N);
-    printf("Memory: A=%.2f MB, B=%.2f MB, C=%.2f MB, Total=%.2f MB\n",
-           size_A/1e6, size_B/1e6, size_C/1e6, (size_A+size_B+size_C)/1e6);
-
+    int victim_size = victim_working_set_kb * 1024;
     //plus le tableau est très grand plus on augmente les chances de couvrir toute la L2
     int enemy_size = enemy_array_mb * 1024 * 1024;
 
-    float* d_A = nullptr;
-    float* d_B = nullptr;
-    float* d_C = nullptr;
+    // Allocate L2 flush array (large enough to flush L2 cache)
+    // Typically L2 cache is several MB, allocating sufficient size
+    int flush_size = 3 * 1024 * 1024; // 16 MB to ensure L2 flush
+    unsigned int* d_flush_array = nullptr;
+    CHECK_CUDA(cudaMalloc(&d_flush_array, flush_size));
+
+    unsigned int* d_victim_array = nullptr;
     unsigned int* d_enemy_array = nullptr;
+    float* d_victim_result = nullptr;
     int* d_enemy_result = nullptr;
 
-    CHECK_CUDA(cudaMalloc(&d_A, size_A));
-    CHECK_CUDA(cudaMalloc(&d_B, size_B));
-    CHECK_CUDA(cudaMalloc(&d_C, size_C));
+    CHECK_CUDA(cudaMalloc(&d_victim_array, victim_size));
     CHECK_CUDA(cudaMalloc(&d_enemy_array, enemy_size));
+    CHECK_CUDA(cudaMalloc(&d_victim_result, 2 * sizeof(float)));
     CHECK_CUDA(cudaMalloc(&d_enemy_result, 2 * sizeof(int)));
 
     unsigned int* h_enemy = (unsigned int*)malloc(enemy_size);
@@ -173,15 +208,11 @@ int main(int argc, char* argv[]) {
     CHECK_CUDA(cudaMemcpy(d_enemy_array, h_enemy, enemy_size, cudaMemcpyHostToDevice));
     free(h_enemy);
 
-    // Initialize matrices A and B on host
-    float* h_A = (float*)malloc(size_A);
-    float* h_B = (float*)malloc(size_B);
-    for (int i = 0; i < M * K; ++i) h_A[i] = 1.0f;  // Simple initialization
-    for (int i = 0; i < K * N; ++i) h_B[i] = 1.0f;
-    CHECK_CUDA(cudaMemcpy(d_A, h_A, size_A, cudaMemcpyHostToDevice));
-    CHECK_CUDA(cudaMemcpy(d_B, h_B, size_B, cudaMemcpyHostToDevice));
-    free(h_A);
-    free(h_B);
+    unsigned int* h_victim = (unsigned int*)malloc(victim_size);
+    int victim_words = victim_size / sizeof(unsigned int);
+    for (int i = 0; i < victim_words; ++i) h_victim[i] = i;
+    CHECK_CUDA(cudaMemcpy(d_victim_array, h_victim, victim_size, cudaMemcpyHostToDevice));
+    free(h_victim);
 
     cudaStream_t enemy_stream, victim_stream;
     CHECK_CUDA(cudaStreamCreate(&enemy_stream));
@@ -199,13 +230,11 @@ int main(int argc, char* argv[]) {
     dim3 enemyGrid(enemy_blocks);
     dim3 enemyBlock(enemy_threads_per_block);
     // paramètre d'itérations 
-    //unsigned long long n_iters = 100ULL; //number of GEMM iterations (reduced since GEMM is expensive)
+    unsigned long long n_iters = 100000ULL; //number of iterations for victim kernel
     unsigned long long run_time_cycles = compute_run_cycles(run_seconds, prop);
 
-    // 2D grid for GEMM
-    dim3 victimBlock(victim_block_dim, victim_block_dim);
-    dim3 victimGrid((N + victimBlock.x - 1) / victimBlock.x, 
-                    (M + victimBlock.y - 1) / victimBlock.y);
+    dim3 victimGrid(victim_grid_x);
+    dim3 victimBlock(victim_block_x);
 
     //create CUDA events for precise GPU timing
     cudaEvent_t start_victim, stop_victim, start_enemy, stop_enemy;
@@ -214,18 +243,43 @@ int main(int argc, char* argv[]) {
     CHECK_CUDA(cudaEventCreate(&start_enemy));
     CHECK_CUDA(cudaEventCreate(&stop_enemy));
 
-    printf("\n=== SCENARIO 1: Victim unoptimized GEMM alone ===\n");
+    // Setup for L2 flush kernel
+    int flush_blocks = prop.multiProcessorCount * 2;
+    int flush_threads = 256;
+
+    printf("\n=== SCENARIO 1: Victim alone ===\n");
+    // Flush L2 cache before experiment 1
+    printf("Flushing L2 cache...\n");
+    flushL2<<<flush_blocks, flush_threads>>>(d_flush_array, flush_size);
+    CHECK_CUDA(cudaDeviceSynchronize());
+    
     CHECK_CUDA(cudaEventRecord(start_victim, victim_stream));
     victimKernel<<<victimGrid, victimBlock, 0, victim_stream>>>(
-        d_A, d_B, d_C, M, N, K);
+        d_victim_array, d_victim_result, victim_size, n_iters);
     CHECK_CUDA(cudaEventRecord(stop_victim, victim_stream));
     CHECK_CUDA(cudaEventSynchronize(stop_victim));
 
     float t_victim_alone_ms = 0.0f;
     CHECK_CUDA(cudaEventElapsedTime(&t_victim_alone_ms, start_victim, stop_victim));
     printf("Victim alone completed in %.2f ms (baseline)\n", t_victim_alone_ms);
+    //i added this just to test
+    //CHECK_CUDA(cudaEventRecord(start_victim, victim_stream));
+    //victimKernel<<<victimGrid, victimBlock, 0, victim_stream>>>(
+      //  d_victim_array, d_victim_result, victim_size, n_iters);
+    //CHECK_CUDA(cudaEventRecord(stop_victim, victim_stream));
+    //CHECK_CUDA(cudaEventSynchronize(stop_victim));
 
+    //t_victim_alone_ms = 0.0f;
+    //CHECK_CUDA(cudaEventElapsedTime(&t_victim_alone_ms, start_victim, stop_victim));
+
+
+    //printf("Victim alone 2 completed in %.2f ms (baseline)\n", t_victim_alone_ms);
+     // finish that test
     printf("\n=== SCENARIO 2: Victim + Enemy concurrent ===\n");
+    //printf("Flushing L2 cache...\n");
+    //flushL2<<<flush_blocks, flush_threads>>>(d_flush_array, flush_size);
+    CHECK_CUDA(cudaDeviceSynchronize());
+    
     CHECK_CUDA(cudaEventRecord(start_enemy, enemy_stream));
     enemyPointerChase<<<enemyGrid, enemyBlock, 0, enemy_stream>>>(
         d_enemy_array, d_enemy_result, enemy_size, run_time_cycles);
@@ -235,7 +289,7 @@ int main(int argc, char* argv[]) {
     //launching the victim after some time; histoire de laisser l'enemy take over the lts a little bit
     CHECK_CUDA(cudaEventRecord(start_victim, victim_stream));
     victimKernel<<<victimGrid, victimBlock, 0, victim_stream>>>(
-        d_A, d_B, d_C, M, N, K);
+        d_victim_array, d_victim_result, victim_size, n_iters);
     CHECK_CUDA(cudaEventRecord(stop_victim, victim_stream));
 
     CHECK_CUDA(cudaEventSynchronize(stop_victim));
@@ -247,11 +301,11 @@ int main(int argc, char* argv[]) {
 
     printf("Enemy kernel finished in %.2f ms\n", t_enemy_ms);
     printf("Victim kernel finished in %.2f ms (concurrent scenario)\n", t_victim_concurrent_ms);
-
-    CHECK_CUDA(cudaFree(d_A));
-    CHECK_CUDA(cudaFree(d_B));
-    CHECK_CUDA(cudaFree(d_C));
+    
+    CHECK_CUDA(cudaFree(d_flush_array));
+    CHECK_CUDA(cudaFree(d_victim_array));
     CHECK_CUDA(cudaFree(d_enemy_array));
+    CHECK_CUDA(cudaFree(d_victim_result));
     CHECK_CUDA(cudaFree(d_enemy_result));
     CHECK_CUDA(cudaStreamDestroy(victim_stream));
     CHECK_CUDA(cudaStreamDestroy(enemy_stream));
@@ -262,8 +316,4 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-
-
-
-
 
