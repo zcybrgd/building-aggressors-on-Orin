@@ -129,7 +129,7 @@ int main(int argc, char** argv) {
     // config for lightweight execution
     int blocks = 64; // 64/16Sms de mon gpu = 4 blocks per SM , we can replace it by 32 for a lighter test
     int threads = 256; // 256 * 4 = 1024 threads per SM
-    int compute_iterations = 100;  // lightweight to avoid overheating
+    int compute_iterations = 1000000;  // lightweight to avoid overheating
     int memory_stride = 16;
     printf("Configuration: %d blocks x %d threads\n", blocks, threads);
 

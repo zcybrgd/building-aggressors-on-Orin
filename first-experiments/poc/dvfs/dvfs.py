@@ -24,7 +24,6 @@ def run_kernel(reps=10, iters=4000):
     print(f"{'='*50}\n")
 
 def monitor_gpu(duration_s=60, interval_s=2):
-    """Monitor GPU using nvidia-smi CLI (no NVML library needed)"""
     print(f"\n{'='*60}")
     print(f"GPU MONITORING STARTED (Duration: {duration_s}s, Interval: {interval_s}s)")
     print(f"{'='*60}\n")
