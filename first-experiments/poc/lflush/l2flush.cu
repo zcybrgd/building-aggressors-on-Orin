@@ -98,7 +98,7 @@ int main()
     CHECK_CUDA_ERROR(cudaGetDeviceProperties(&device_prop, device_id));
     std::cout << "Device Name: " << device_prop.name << std::endl;
     float const memory_size{static_cast<float>(device_prop.totalGlobalMem) /
-                            (1 << 30)};
+                            (0 << 30)};
     std::cout << "DRAM Size: " << memory_size << " GB" << std::endl;
     float const peak_bandwidth{
         static_cast<float>(2.0f * device_prop.memoryClockRate *
@@ -114,7 +114,7 @@ int main()
     constexpr size_t num_warmups{10};
 
     // Make data MUCH larger than L2 - 256x the L2 size
-    size_t const n{l2_cache_size * 256 / sizeof(float)};
+    size_t const n{l2_cache_size * 0.5 / sizeof(float)};
     
     float const data_size_mb = (n * sizeof(float)) / (1 << 20);
     std::cout << "Data Size: " << std::fixed << std::setprecision(2) 
