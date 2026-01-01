@@ -173,27 +173,25 @@ void buildPointerChaseArray(unsigned int* h_array, int array_size_bytes) {
 // Green Context Setup
 // ============================================================================
 
-CUcontext createGreenContext(int smCount, int numQueues) {
+// ============================================================================
+// Green Context Setup (Jetson Orin Nano compatible)
+// ============================================================================
+
+CUcontext createGreenContext(int smCount) {
     CUcontext greenCtx;
     
-    // Step 1: Create SM resource descriptor
+    // Create SM resource descriptor
     CUexecAffinityParam smParam;
     smParam.type = CU_EXEC_AFFINITY_TYPE_SM_COUNT;
     smParam.param.smCount.val = smCount;
     
-    // Step 2: Create work queue resource descriptor
-    CUexecAffinityParam queueParam;
-    queueParam.type = CU_EXEC_AFFINITY_TYPE_QUEUE_COUNT;
-    queueParam.param.queueCount.val = numQueues;
-    
-    // Step 3: Combine into resource descriptor
-    CUexecAffinityParam params[2] = {smParam, queueParam};
-    
-    // Step 4: Create green context
-    CHECK_CU(cuCtxCreate_v3(&greenCtx, params, 2, 0, 0));
+    // Create green context with SM affinity only
+    // Note: Queue count affinity not available on JetPack 5.x
+    CHECK_CU(cuCtxCreate_v3(&greenCtx, &smParam, 1, 0, 0));
     
     return greenCtx;
 }
+
 
 // ============================================================================
 // Main
@@ -251,8 +249,8 @@ int main(int argc, char* argv[]) {
     CHECK_CUDA(cudaSetDevice(0));
     
     // Create green contexts
-    CUcontext victimCtx = createGreenContext(victim_sm_count, 4);
-    CUcontext enemyCtx = createGreenContext(enemy_sm_count, 8);
+    CUcontext victimCtx = createGreenContext(victim_sm_count);
+    CUcontext enemyCtx = createGreenContext(enemy_sm_count);
     
     printf("✓ Green contexts created\n\n");
     
@@ -290,7 +288,7 @@ int main(int argc, char* argv[]) {
     CHECK_CU(cuCtxSetCurrent(enemyCtx));
     CHECK_CUDA(cudaStreamCreate(&enemyStream));
     
-    printf("✓ Streams created\n\n");
+    printf("Streams created\n\n");
     
     // Calculate enemy run cycles
     unsigned long long enemy_cycles = 
