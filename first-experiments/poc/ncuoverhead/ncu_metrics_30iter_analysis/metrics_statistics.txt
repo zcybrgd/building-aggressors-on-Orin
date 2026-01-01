@@ -8,24 +8,24 @@ Total Metrics: 17
 --------------------------------------------------------------------------------
 Metric: l1tex__t_bytes_pipe_lsu_mem_global_op_st.sum.per_second
 --------------------------------------------------------------------------------
-  Minimum:    188059.300000
-  Maximum:    189652.930000
-  Average:    189038.717333
-  Std Dev:    604.824171
-  Range:      1593.630000
-  CV (%):     0.32
-  Samples:    60
+  Minimum:    188236.750000
+  Maximum:    190104.790000
+  Average:    188987.485000
+  Std Dev:    630.329357
+  Range:      1868.040000
+  CV (%):     0.33
+  Samples:    30
 
 --------------------------------------------------------------------------------
 Metric: lts__t_bytes.min
 --------------------------------------------------------------------------------
-  Minimum:    157408.000000
-  Maximum:    265472.000000
-  Average:    197318.933333
-  Std Dev:    22575.788020
-  Range:      108064.000000
-  CV (%):     11.44
-  Samples:    60
+  Minimum:    151520.000000
+  Maximum:    248416.000000
+  Average:    194227.200000
+  Std Dev:    21756.577927
+  Range:      96896.000000
+  CV (%):     11.20
+  Samples:    30
 
 --------------------------------------------------------------------------------
 Metric: lts__t_request_hit_rate.ratio
@@ -36,51 +36,51 @@ Metric: lts__t_request_hit_rate.ratio
   Std Dev:    0.000000
   Range:      0.000000
   CV (%):     0.00
-  Samples:    60
+  Samples:    30
 
 --------------------------------------------------------------------------------
 Metric: lts__t_requests.max
 --------------------------------------------------------------------------------
-  Minimum:    2054249.000000
-  Maximum:    2182718.000000
-  Average:    2105344.750000
-  Std Dev:    36363.078921
-  Range:      128469.000000
-  CV (%):     1.73
-  Samples:    60
+  Minimum:    2053320.000000
+  Maximum:    2179873.000000
+  Average:    2119164.133333
+  Std Dev:    33009.566949
+  Range:      126553.000000
+  CV (%):     1.56
+  Samples:    30
 
 --------------------------------------------------------------------------------
 Metric: lts__t_requests.min
 --------------------------------------------------------------------------------
-  Minimum:    1235.000000
-  Maximum:    2080.000000
-  Average:    1547.816667
-  Std Dev:    176.431242
-  Range:      845.000000
-  CV (%):     11.40
-  Samples:    60
+  Minimum:    1189.000000
+  Maximum:    1948.000000
+  Average:    1523.500000
+  Std Dev:    169.847137
+  Range:      759.000000
+  CV (%):     11.15
+  Samples:    30
 
 --------------------------------------------------------------------------------
 Metric: lts__t_requests.sum
 --------------------------------------------------------------------------------
-  Minimum:    2064156.000000
-  Maximum:    2197651.000000
-  Average:    2118222.266667
-  Std Dev:    37048.141077
-  Range:      133495.000000
-  CV (%):     1.75
-  Samples:    60
+  Minimum:    2063752.000000
+  Maximum:    2191358.000000
+  Average:    2131934.833333
+  Std Dev:    32881.441940
+  Range:      127606.000000
+  CV (%):     1.54
+  Samples:    30
 
 --------------------------------------------------------------------------------
 Metric: lts__t_sector_hit_rate.pct
 --------------------------------------------------------------------------------
-  Minimum:    98.280000
-  Maximum:    101.040000
-  Average:    99.718333
-  Std Dev:    0.671206
-  Range:      2.760000
+  Minimum:    98.460000
+  Maximum:    100.850000
+  Average:    99.611333
+  Std Dev:    0.664814
+  Range:      2.390000
   CV (%):     0.67
-  Samples:    60
+  Samples:    30
 
 --------------------------------------------------------------------------------
 Metric: lts__t_sectors.avg.pct_of_peak_sustained_elapsed
@@ -91,51 +91,51 @@ Metric: lts__t_sectors.avg.pct_of_peak_sustained_elapsed
   Std Dev:    0.000000
   Range:      0.000000
   CV (%):     0.00
-  Samples:    60
+  Samples:    30
 
 --------------------------------------------------------------------------------
 Metric: lts__t_sectors_aperture_sysmem_op_read.sum.per_second
 --------------------------------------------------------------------------------
-  Minimum:    5935530.790000
-  Maximum:    6257976.220000
-  Average:    6067520.038500
-  Std Dev:    103901.215163
-  Range:      322445.430000
-  CV (%):     1.71
-  Samples:    60
+  Minimum:    5937202.480000
+  Maximum:    6308635.560000
+  Average:    6105990.080333
+  Std Dev:    92327.774159
+  Range:      371433.080000
+  CV (%):     1.51
+  Samples:    30
 
 --------------------------------------------------------------------------------
 Metric: lts__t_sectors_op_read.sum.per_second
 --------------------------------------------------------------------------------
-  Minimum:    6007285.640000
-  Maximum:    6470791.700000
-  Average:    6219775.443333
-  Std Dev:    111530.007084
-  Range:      463506.060000
-  CV (%):     1.79
-  Samples:    60
+  Minimum:    6084177.550000
+  Maximum:    6900714.390000
+  Average:    6267020.237667
+  Std Dev:    148661.186269
+  Range:      816536.840000
+  CV (%):     2.37
+  Samples:    30
 
 --------------------------------------------------------------------------------
 Metric: lts__t_sectors_op_write.sum.per_second
 --------------------------------------------------------------------------------
-  Minimum:    16276.410000
-  Maximum:    28357.190000
-  Average:    21789.242667
-  Std Dev:    2854.504639
-  Range:      12080.780000
-  CV (%):     13.10
-  Samples:    60
+  Minimum:    17057.670000
+  Maximum:    50145.590000
+  Average:    22216.789000
+  Std Dev:    5730.514555
+  Range:      33087.920000
+  CV (%):     25.79
+  Samples:    30
 
 --------------------------------------------------------------------------------
 Metric: smsp__cycles_active.avg.pct_of_peak_sustained_elapsed
 --------------------------------------------------------------------------------
-  Minimum:    98.970000
-  Maximum:    99.800000
-  Average:    99.450667
-  Std Dev:    0.308884
+  Minimum:    98.920000
+  Maximum:    99.750000
+  Average:    99.368667
+  Std Dev:    0.316972
   Range:      0.830000
-  CV (%):     0.31
-  Samples:    60
+  CV (%):     0.32
+  Samples:    30
 
 --------------------------------------------------------------------------------
 Metric: smsp__inst_executed_op_global_ld.sum
@@ -146,7 +146,7 @@ Metric: smsp__inst_executed_op_global_ld.sum
   Std Dev:    0.000000
   Range:      0.000000
   CV (%):     0.00
-  Samples:    60
+  Samples:    30
 
 --------------------------------------------------------------------------------
 Metric: smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active
@@ -157,18 +157,18 @@ Metric: smsp__inst_executed_pipe_lsu.avg.pct_of_peak_sustained_active
   Std Dev:    0.000000
   Range:      0.000000
   CV (%):     0.00
-  Samples:    60
+  Samples:    30
 
 --------------------------------------------------------------------------------
 Metric: smsp__warp_issue_stalled_dispatch_stall_per_warp_active.pct
 --------------------------------------------------------------------------------
   Minimum:    0.550000
   Maximum:    0.560000
-  Average:    0.554000
-  Std Dev:    0.004899
+  Average:    0.552667
+  Std Dev:    0.004422
   Range:      0.010000
-  CV (%):     0.88
-  Samples:    60
+  CV (%):     0.80
+  Samples:    30
 
 --------------------------------------------------------------------------------
 Metric: smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct
@@ -179,7 +179,7 @@ Metric: smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct
   Std Dev:    0.000000
   Range:      0.000000
   CV (%):     0.00
-  Samples:    60
+  Samples:    30
 
 --------------------------------------------------------------------------------
 Metric: smsp__warp_issue_stalled_misc_per_warp_active.pct
@@ -190,5 +190,5 @@ Metric: smsp__warp_issue_stalled_misc_per_warp_active.pct
   Std Dev:    0.000000
   Range:      0.000000
   CV (%):     0.00
-  Samples:    60
+  Samples:    30
 

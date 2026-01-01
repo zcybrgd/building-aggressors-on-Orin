@@ -64,7 +64,7 @@ for ($i = 1; $i -le $Iterations; $i++) {
     # Run with NCU profiling
     $NCU_TEMP_FILE = "$TEMP_NCU_DIR\run_$i.csv"
     Write-Host "  Running NCU profiling..."
-    & ncu --metrics $NCU_METRICS --csv --log-file $NCU_TEMP_FILE ".\$EXECUTABLE" $COMMAND 2>&1 | Out-Null
+    & ncu --launch-skip 1 --metrics $NCU_METRICS --csv --log-file $NCU_TEMP_FILE ".\$EXECUTABLE" $COMMAND 2>&1 | Out-Null
     
     # Run without NCU to get clean timing
     $output = & ".\$EXECUTABLE" $COMMAND 2>&1 | Out-String
