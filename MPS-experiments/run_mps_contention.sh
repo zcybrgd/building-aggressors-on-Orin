@@ -35,7 +35,7 @@ echo "  SCENARIO 1: Victim Alone (with NCU)"
 echo "========================================"
 echo ""
 
-sudo $(which ncu) --metrics $NCU_METRICS \
+sudo $(which ncu) --metrics $NCU_METRICS --launch-skip 1\
     --kernel-name victimKernel \
     --csv \
     --log-file ncu_victim_alone.log \
@@ -63,7 +63,7 @@ sleep 3
 
 # Profile victim
 echo "Profiling victim with NCU (enemy running)..."
-sudo $(which ncu) --metrics $NCU_METRICS \
+sudo $(which ncu) --metrics $NCU_METRICS --launch-skip 1 \
     --kernel-name victimKernel \
     --csv \
     --log-file ncu_victim_concurrent.log \
