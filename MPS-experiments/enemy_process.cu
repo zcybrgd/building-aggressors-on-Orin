@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
     unsigned int* h_chase = (unsigned int*)malloc(size);
     int num_words = size / sizeof(unsigned int);
     for (int i = 0; i < num_words; i++) {
-        h_chase[i] = (i * 1234567) % num_words;
+        h_chase[i] = ((unsigned long long) i * 1234567) % num_words;
     }
     cudaMemcpy(d_chase, h_chase, size, cudaMemcpyHostToDevice);
     free(h_chase);

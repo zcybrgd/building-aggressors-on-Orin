@@ -1,0 +1,8 @@
+[VICTIM] Configuration:
+  Working set: 262144 elements (1.05 MB)
+  Iterations: 50000
+  Grid: 256 blocks x 256 threads = 65536 total threads
+[VICTIM] Warming up...
+[VICTIM] Starting main execution...
+[VICTIM] Completed in 4093.28 ms
+[VICTIM] Performance: 9.61 GFLOPS
