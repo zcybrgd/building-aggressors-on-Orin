@@ -58,10 +58,10 @@ int main(int argc, char* argv[]) {
     free(h_data);
     
     //warm up (important for consistent profiling)
-    printf("[VICTIM] Warming up...\n");
-    victimKernel<<<256, 256>>>(d_data, N, 100);
-    cudaDeviceSynchronize();
-    printf("[VICTIM] Starting main execution...\n");
+    //printf("[VICTIM] Warming up...\n");
+    //victimKernel<<<256, 256>>>(d_data, N, 100);
+    //cudaDeviceSynchronize();
+    //printf("[VICTIM] Starting main execution...\n");
     // Create events for timing
     cudaEvent_t start, stop;
     cudaEventCreate(&start);

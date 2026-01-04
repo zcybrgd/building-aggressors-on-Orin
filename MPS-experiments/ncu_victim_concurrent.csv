@@ -4,5 +4,5 @@
   Grid: 256 blocks x 256 threads = 65536 total threads
 [VICTIM] Warming up...
 [VICTIM] Starting main execution...
-[VICTIM] Completed in 10167.72 ms
-[VICTIM] Performance: 3.87 GFLOPS
+[VICTIM] Completed in 10273.18 ms
+[VICTIM] Performance: 3.83 GFLOPS
