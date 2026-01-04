@@ -51,9 +51,9 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 # Kill any existing MPS as root first
-sudo pkill -9 nvidia-cuda-mps-control 2>/dev/null || true
-sudo pkill -9 nvidia-cuda-mps-server 2>/dev/null || true
-sudo rm -rf /tmp/nvidia-mps /tmp/nvidia-log
+pkill -9 nvidia-cuda-mps-control 2>/dev/null || true
+pkill -9 nvidia-cuda-mps-server 2>/dev/null || true
+rm -rf /tmp/nvidia-mps /tmp/nvidia-log
 sleep 1
 
 echo "[info] Starting MPS control daemon as USER (no sudo)."
