@@ -1,0 +1,31 @@
+Non-MPS:     Context switch overhead (per-process state)
+MPS:         Shared context → lower launch latency
+             Better scheduler → higher occupancy
+             No process isolation overhead
+
+=== Starting MPS Daemon ===
+CUDA_MPS_PIPE_DIRECTORY=/tmp/nvidia-mps
+CUDA_MPS_LOG_DIRECTORY=/tmp/nvidia-log
+MPS Control Daemon is running
+MPS Control Daemon ready
+  (MPS Server will start on first CUDA application)
+
+========================================
+  SCENARIO 1: Victim Alone
+========================================
+
+73.27 ms  RESULT=41577335770491793
+ Victim alone complete
+
+========================================
+  SCENARIO 2: Victim + Enemy (MPS)
+========================================
+
+Launching enemy in background...
+Enemy PID: 4195
+Running victim (enemy running)...
+40.30 ms  RESULT=41577335770491793
+ Victim concurrent complete
+
+Terminating enemy (PID: 4195)...
+ Enemy terminated
