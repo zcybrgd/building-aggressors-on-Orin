@@ -17,7 +17,7 @@ echo "Compilation done"
 echo ""
 
 # Start MPS
-./setup_mps.sh
+./setup_mps_nosudo.sh
 
 if [ $? -ne 0 ]; then
     echo "MPS setup failed!"
@@ -73,7 +73,7 @@ echo "========================================"
 echo ""
 echo "Stopping MPS..."
 
-echo quit | sudo sh -c "CUDA_MPS_PIPE_DIRECTORY=$CUDA_MPS_PIPE_DIRECTORY nvidia-cuda-mps-control"
+echo quit | sh -c "CUDA_MPS_PIPE_DIRECTORY=$CUDA_MPS_PIPE_DIRECTORY nvidia-cuda-mps-control"
 
 # Cleanup
 rm -rf $CUDA_MPS_PIPE_DIRECTORY
