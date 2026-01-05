@@ -1,0 +1,1000 @@
+   50  cd u
+   51  cd utils/
+   52  ls
+   53  nvcc -o props props.cu 
+   54  ls
+   55  ./props 
+   56  nvcc -o props device_props.cu 
+   57  ./props
+   58  ncu --version
+   59  nsys --version
+   60  free -h
+   61  cat /proc/meminfo
+   62  jtop
+   63  df -h
+   64  lsblk
+   65  cat /proc/device-tree/model
+   66  ls
+   67  cd ..
+   68  sudo cat /sys/devices/gpu.0/devfreq/17000000.ga10b/cur_freq
+   69  sudo tegrastats
+   70  sudo tegrastats | grep GR3D_FREQ
+   71  sudo nvpmodel -q
+   72  sudo nvpmodel -q --verbose
+   73  uname -a
+   74  cd building-aggressors-on-Orin/
+   75  ls
+   76  cd first-experiments/
+   77  ls
+   78  cd poc/
+   79  ls
+   80  cd dvfs/
+   81  ls
+   82  cat commands.txt 
+   83  cd ..
+   84  ls
+   85  cd ncuoverhead/
+   86  ls
+   87  cat commands.txt 
+   88  cls
+   89  clear
+   90  cd ..
+   91  sudo shutdown now
+   92  cd building-aggressors-on-Orin/
+   93  git fetch origin
+   94  git pull
+   95  cd first-experiments/poc/ncuoverhead/
+   96  ls
+   97  nvcc -o ncuhead ncuhead.cu 
+   98  ls
+   99  ./ncuhead
+  100  ./ncuhead compute
+  101  chmod +x measure.sh
+  102  cat /sys/devices/platform/17000000.gpu/devfreq/17000000.gpu/cur_freq
+  103  ./measure.sh 50
+  104  ls
+  105  python -m venv env
+  106  python3 -m venv env
+  107  sudo apt install python3.10-venv
+  108  python3 -m venv env
+  109  source env/bin/activate
+  110  python ncu_csv_cleaner.py ncu_metrics_50iter.csv 
+  111  cat benchmark_results_30iter.txt 
+  112  ls
+  113  cat benchmark_results_50iter.txt 
+  114  cd ncu_metrics_50iter_analysis/
+  115  ls
+  116  cd ..
+  117  python ncu_csv_cleaner.py ncu_metrics_50iter.csv 
+  118  head -20 ncu_metrics_50iter.csv
+  119  which ncu
+  120  ncu --metrics smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,lts__t_sector_hit_rate.pct ./ncuhead compute
+  121  sudo ncu --metrics smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,lts__t_sector_hit_rate.pct ./ncuhead compute
+  122  sudo $(which ncu) --metrics smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,lts__t_sector_hit_rate.pct ./ncuhead compute
+  123  sudo $(which ncu) --launch-skip 1 --metrics smsp__cycles_active.avg.pct_of_peak_sustained_elapsed,lts__t_sector_hit_rate.pct ./ncuhead compute
+  124  vi measure.sh 
+  125  vi measure.sh
+  126  ./measure.sh 50
+  127  python ncu_csv_cleaner.py ncu_metrics_50iter.csv
+  128  ls
+  129  cd ncu_metrics_50iter_analysis/
+  130  ls
+  131  cat metrics_statistics.txt 
+  132  ncu --query-metrics > orin_nano_metrics.txt
+  133  git commit -m "results of first tests on orin"
+  134  git add .
+  135  git commit -m "results of first tests on orin"
+  136  git config --global user.name "zcybrgd"
+  137  git commit -m "results of first tests on orin"
+  138  git config --global user.name "zcybrgd"
+  139  git commit -m "results of first tests on orin"
+  140  git config --global user.email "lz_boukhetala@esi.dz"
+  141  git commit -m "results of first tests on orin"
+  142  git push
+  143  sudo $(which ncu) --query-metrics > orin_nano_metrics.txt
+  144  git add .
+  145  git commit -m "metrics list"
+  146  git push
+  147  ls
+  148  cd ..
+  149  cd lflush/
+  150  ls
+  151  cat l2flush.cu 
+  152  nvcc -o lflush l2flush.cu 
+  153  ./lflush 
+  154  vi lflush.cu
+  155  ls
+  156  vi l2flush.cu 
+  157  rm lflush.cu 
+  158  vi l2flush.cu
+  159  nvcc -o lflush l2flush.cu
+  160  ./lflush
+  161  git add .
+  162  git commit -m "modified l2flushing script on orin nano and it workeddd"
+  163  git push
+  164  cat /sys/devices/17000000.ga10b/devfreq/17000000.ga10b/cur_freq
+  165  # GPU Frequency
+  166  cat /sys/devices/platform/17000000.gpu/devfreq/17000000.gpu/cur_freq
+  167  # Available frequencies
+  168  cat /sys/devices/platform/17000000.gpu/devfreq/17000000.gpu/available_frequencies
+  169  # Governor
+  170  cat /sys/devices/platform/17000000.gpu/devfreq/17000000.gpu/governor
+  171  # Min/Max frequencies
+  172  cat /sys/devices/platform/17000000.gpu/devfreq/17000000.gpu/min_freq
+  173  cat /sys/devices/platform/17000000.gpu/devfreq/17000000.gpu/max_freq
+  174  # Memory frequency (avec sudo)
+  175  sudo cat /sys/kernel/debug/bpmp/debug/clk/emc/rate
+  176  # Temperature
+  177  cat /sys/devices/virtual/thermal/thermal_zone0/temp
+  178  # GPU Frequency
+  179  cat /sys/devices/platform/17000000.gpu/devfreq/17000000.gpu/cur_freq
+  180  # Available frequencies
+  181  cat /sys/devices/platform/17000000.gpu/devfreq/17000000.gpu/available_frequencies
+  182  # Governor
+  183  cat /sys/devices/platform/17000000.gpu/devfreq/17000000.gpu/governor
+  184  # Min/Max frequencies
+  185  cat /sys/devices/platform/17000000.gpu/devfreq/17000000.gpu/min_freq
+  186  cat /sys/devices/platform/17000000.gpu/devfreq/17000000.gpu/max_freq
+  187  # Memory frequency (avec sudo)
+  188  sudo cat /sys/kernel/debug/bpmp/debug/clk/emc/rate
+  189  # Temperature
+  190  cat /sys/devices/virtual/thermal/thermal_zone0/temp
+  191  git fetch origin
+  192  git pull
+  193  cd ..
+  194  cd 1-unoptGEMM/
+  195  ls
+  196  nvcc -o main main.cu 
+  197  ./main
+  198  sudo $(which ncu) --kernel-name victimKernel --metrics lts__t_sectors_lookup_miss,lts__t_requests_op_read_lookup_miss,dram__bytes_read
+  199  sudo $(which ncu) --kernel-name victimKernel --metrics lts__t_sectors_lookup_miss,lts__t_requests_op_read_lookup_miss,dram__bytes_read ./main
+  200  sudo $(which ncu) --kernel-name victimKernel --metrics lts__t_sectors_lookup_miss,lts__t_requests_op_read_lookup_miss,dram__bytes_read.avg ./main
+  201  sudo $(which ncu) --replay-mode application --kernel-name victimKernel --metrics lts__t_sectors_lookup_miss,lts__t_requests_op_read_lookup_miss,dram__bytes_read.avg ./main
+  202  sudo $(which ncu)   --replay-mode application   --kernel-name victimKernel   --metrics gpu__time_duration.avg,sm__cycles_elapsed.avg,smsp__average_warps_issue_stalled_long_scoreboard_per_issue_active.pct,smsp__average_warps_issue_stalled_short_scoreboard_per_issue_active.pct,smsp__average_warps_issue_stalled_drain_per_issue_active.pct,l1tex__average_t_sectors_per_request_pipe_lsu_mem_global_op_ld.ratio   ./main
+  203  sudo $(which ncu)   --replay-mode application   --kernel-name victimKernel   --metrics gpu__time_duration.avg,sm__cycles_elapsed.avg,smsp__average_warps_issue_stalled_long_scoreboard_per_issue_active.pct,smsp__average_warps_issue_stalled_short_scoreboard_per_issue_active.pct,smsp__average_warps_issue_stalled_drain_per_issue_active.pct,l1tex__average_t_sectors_per_request_pipe_lsu_mem_global_op_ld.ratio   ./main -s 512
+  204  git fetch origin
+  205  git pull
+  206  cd ..
+  207  cd 3-green-context/
+  208  ls
+  209  nvcc -arch=sm_87 -O3 -lcuda -o green_context_contention green_context.cu
+  210  nvcc -arch=sm_87 -O3 -lcuda -o green_context_contention green_context_contention.cu 
+  211  git fetch origin
+  212  git pull
+  213  nvcc -arch=sm_87 -O3 -lcuda -o green_context_contention green_context_contention.cu
+  214  ./green_context_contention
+  215  nvcc --version
+  216  cat /usr/local/cuda/version.txt 2>/dev/null || cat /usr/local/cuda/version.json
+  217  nvidia-smi
+  218  cat /proc/driver/nvidia/version
+  219  cat /etc/nv_tegra_release
+  220  nvcc -arch=sm_87 -O3 -lcuda -o green_context_contention green_context_contention.cu
+  221  ldd green_context_contention
+  222  vi test.cu
+  223  nvcc -lcuda -o test_minimal test.cu
+  224  ./test_minimal 
+  225  dpkg -l | grep nvidia-jetpack
+  226  cat /etc/nv_tegra_release
+  227  apt-cache show nvidia-jetpack
+  228  which nvidia-cuda-mps-control
+  229  nvidia-cuda-mps-control --version
+  230  cat /proc/driver/nvidia/capabilities/mps/control
+  231  sudo shutdown -h now
+  232  ls
+  233  cd building-aggressors-on-Orin/
+  234  git fetch origin
+  235  git pull
+  236  cd MPS-experiments/
+  237  ls
+  238  chmod +x setup_mps.sh run_mps_contention.sh
+  239  ./run_mps_contention.sh
+  240  ls
+  241  ./victim_process 
+  242  cat /tmp/nvidia-log/control.log
+  243  ps aux | grep mps
+  244  ./run_mps_contention.sh
+  245  ls
+  246  cat ncu_victim_alone.
+  247  cat ncu_victim_alone.csv 
+  248  cat ncu_victim_concurrent.csv 
+  249  cat ncu_victim_concurrent.log
+  250  vi run_mps_contention.sh 
+  251  ./run_mps_contention.sh
+  252  ls
+  253  vi setup_mps.sh 
+  254  cat ncu_victim_concurrent.
+  255  cat ncu_victim_concurrent.log 
+  256  ls
+  257  ./run_mps_contention.sh
+  258  cat ncu_victim_concurrent.log 
+  259  rm *.csv
+  260  rm *.log
+  261  ls
+  262  cat enemy_log.txt 
+  263  ps aux | grep mps
+  264  ./run_mps_contention.sh
+  265  ps aux | grep mps
+  266  ls
+  267  cat ncu_victim_alone.log 
+  268  cat ncu_victim_concurrent.log 
+  269  cd ..
+  270  cd first-experiments/poc/ncuoverhead/
+  271  ls
+  272  cp ncu_csv_cleaner.py ../../../MPS-experiments/
+  273  cd ../../../MPS-experiments/
+  274  ls
+  275  python3 -m venv env
+  276  ls
+  277  source env/bin/activate
+  278  cat ncu_victim_concurrent.
+  279  cat ncu_victim_concurrent.csv
+  280  cat ncu_victim_alone.csv 
+  281  python ncu_csv_cleaner.py ncu_victim_alone.log 
+  282  echo get_server_list | nvidia-cuda-mps-control
+  283  # Ajoute à ton ~/.bashrc
+  284  echo 'export CUDA_MPS_PIPE_DIRECTORY=/tmp/nvidia-mps' >> ~/.bashrc
+  285  echo 'export CUDA_MPS_LOG_DIRECTORY=/tmp/nvidia-log' >> ~/.bashrc
+  286  # Recharge
+  287  source ~/.bashrc
+  288  echo get_server_list | nvidia-cuda-mps-control
+  289  ./run_mps_contention.sh
+  290  ps aux | grep mps
+  291  cat run_mps_contention.sh 
+  292  cat setup_mps.sh 
+  293  vi enemy_process.cu 
+  294  nano run_mps_contention.sh 
+  295  vi run_mps_contention.sh 
+  296  ./run_mps_contention.sh 
+  297  rm setup_mps.sh 
+  298  vi setup_mps.sh 
+  299  rm run_mps_contention.sh 
+  300  nano run_mps_contention.sh 
+  301  vi run_mps_contention.sh 
+  302  chmod +x run_mps_contention.sh setup_mps.sh 
+  303  ls
+  304  rm *.csv *.log *.txt
+  305  rm ncu_victim_alone_analysis/
+  306  rmv -rf  ncu_victim_alone_analysis/
+  307  rm -rf  ncu_victim_alone_analysis/
+  308  ls
+  309  ./run_mps_contention
+  310  ./run_mps_contention.sh
+  311  ps aux | grep mps
+  312  rm setup_mps.sh
+  313  vi setup_mps.sh
+  314  ps aux | grep mps
+  315  ./run_mps_contention.sh
+  316  chmod +x setup_mps.sh 
+  317  ls
+  318  ./run_mps_contention.sh
+  319  ls
+  320  cat *.log
+  321  cat *.csv
+  322  cat ncu_victim_alone.log
+  323  cat ncu_victim_concurrent.log
+  324  vi run_mps_contention.sh 
+  325  rm *.csv
+  326  rm *.log
+  327  rm *.txt
+  328  ./run_mps_contention.sh
+  329  ls
+  330  cat *.csv
+  331  cat *.log
+  332  ps aux | grep mps
+  333  vi run_mps_contention.sh 
+  334  git add .
+  335  git commit -m "ig i got a result?"
+  336  git restore --staged .env
+  337  git restore --staged .
+  338  ls
+  339  git reset --soft HEAD~1
+  340  git restore --staged env/
+  341  echo "env/" >> .gitignore
+  342  git add .
+  343  git commit -m "ig i got a result?"
+  344  git push
+  345  ncu --version
+  346  nsys --version
+  347  vi run_mps_contention.sh 
+  348  rm *.csv *.log
+  349  ls enemy_log.txt 
+  350  cat enemy_log.txt 
+  351  ./run_mps_contention.sh 
+  352  ls
+  353  cat *.log
+  354  cat *.csv
+  355  mv ncu_victim_alone.csv ncu_victim_alone2.csv
+  356  mv ncu_victim_concurrent.csv ncu_victim_concurrent2.csv
+  357  mv ncu_victim_alone.log ncu_victim_alone2.
+  358  mv ncu_victim_concurrent.long ncu_victim_concurrent2.log
+  359  mv ncu_victim_concurrent.log ncu_victim_concurrent2.log
+  360  git add .
+  361  git commit -m "psuh second test"
+  362  git push
+  363  ls
+  364  ls /opt/nvidia/nsight-systems/
+  365  ps aux | grep mps
+  366  which nsys
+  367  find / -name nsys 2>/dev/null
+  368  ls /usr/bin/nsys
+  369  find /usr -name "*nsight*" 2>/dev/null
+  370  dpkg -l | grep nsight
+  371  apt list --installed | grep nsight
+  372  apt-cache show nvidia-jetpack
+  373  apt search nsight-systems
+  374  ls
+  375  ps aux 
+  376  ps aux | grep zaineb
+  377  git add .
+  378  git commit -m "ya rien"
+  379  cd ..
+  380  sudo shutdown -h now
+  381  ls
+  382  nsys --version
+  383  which nsys
+  384  sudo apt install nvidia-nsight-systems-cli
+  385  sudo apt-cache show nvidia-jetpack
+  386  ls -la /opt/nvidia/nsight-systems/
+  387  find /opt -name nsys 2>/dev/null
+  388  ls -la /opt/nvidia/nsight-systems/
+  389  dpkg -L nvidia-jetpack-dev | grep nsight
+  390  apt search nsight
+  391  cd building-aggressors-on-Orin/MPS-experiments/
+  392  ls
+  393  ls run_mps_contention.sh 
+  394  ls
+  395  ./run_mps_contention.sh 
+  396  cat *.log
+  397  cat *.csv
+  398  ls
+  399  cat ncu_victim_alone.csv
+  400  cat ncu_victim_concurrent.csv
+  401  cat ncu_victim_alone.l
+  402  cat ncu_victim_concurrent.log
+  403  nsys --version
+  404  cd ..
+  405  wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/arm64/3bf863cc.pub
+  406  sudo apt-key add 3bf863cc.pub
+  407  ls
+  408  rm 3bf863cc.pub 
+  409  ls
+  410  lsblk
+  411  nvidia-smi
+  412  wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/arm64/3bf863cc.pub
+  413  sudo apt-key add 3bf863cc.pub
+  414  sudo add-apt-repository "deb https://developer.download.nvidia.com/devtools/repos/ubuntu2204/arm64/ /"
+  415  ls
+  416  rm 3bf863cc.pub 
+  417  sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/devtools/repos/ubuntu2204/arm64/7fa2af80.pub
+  418  ls
+  419  wget https://developer.download.nvidia.com/devtools/repos/ubuntu2204/arm64/nsight-systems-cli-2025.6.1_2025.6.1.190-1_arm64.deb
+  420  ls
+  421  sudo dpkg -i nsight-systems-cli-2025.6.1_2025.6.1.190-1_arm64.deb 
+  422  nsys --version
+  423  which nsys
+  424  ls
+  425  rm nsight-systems-cli-2025.6.1_2025.6.1.190-1_arm64.deb 
+  426  ls
+  427  cd building-aggressors-on-Orin/MPS-experiments/
+  428  ls
+  429  nsys profile -o /home/zaineb/mps_profile   --trace=cuda   --cuda-memory-usage=true   --sample=none   --cpuctxsw=none   /home/zaineb/building-aggressors-on-Orin/MPS-experiments/run_mps_contention.sh
+  430  cd ..
+  431  ls
+  432  rm mps_profile.nsys-rep 
+  433  rm /tmp/nsys-report-c2b1.nsys-rep 
+  434  ls
+  435  cd building-aggressors-on-Orin/MPS-experiments/
+  436  ls
+  437  sudo nsys profile -o /home/zaineb/mps_profile   --trace=cuda   --cuda-memory-usage=true   --sample=none   --cpuctxsw=none   --force-overwrite=true   /home/zaineb/building-aggressors-on-Orin/MPS-experiments/run_mps_contention.sh
+  438  ls
+  439  cat ncu_victim_alone.csv 
+  440  cat ncu_victim_concurrent.csv
+  441  cd ..
+  442  ls
+  443  rm mps_profile.nsys-rep 
+  444  ls
+  445  cd building-aggressors-on-Orin/MPS-experiments/
+  446  ls
+  447  sudo -E env "PATH=$PATH" nsys profile -o /home/zaineb/mps_profile   --trace=cuda   --cuda-memory-usage=true   --sample=none   --cpuctxsw=none   --force-overwrite=true   /home/zaineb/building-aggressors-on-Orin/MPS-experiments/run_mps_contention.sh
+  448  git add .
+  449  git commit -m "one new run"
+  450  git push
+  451  cd ..
+  452  ls
+  453  rm mps_profile.nsys-rep 
+  454  cd building-aggressors-on-Orin/MPS-experiments/
+  455  ls
+  456  vi run_mps_contention.sh 
+  457  sudo -E env "PATH=$PATH" nsys profile -o /home/zaineb/mps_profile   --trace=cuda   --cuda-memory-usage=true   --sample=none   --cpuctxsw=none   --force-overwrite=true   /home/zaineb/building-aggressors-on-Orin/MPS-experiments/run_mps_contention.sh
+  458  vi run_mps_contention.sh 
+  459  cd ..
+  460  rm mps_profile.nsys-rep 
+  461  cd building-aggressors-on-Orin/MPS-experiments/
+  462  ls
+  463  cat run_mps_contention.sh | grep sudo
+  464  cat setup_mps.sh | grep sudo
+  465  ps aux | grep mps
+  466  vi setup_mps.sh 
+  467  sudo -E env "PATH=$PATH" nsys profile -o /home/zaineb/mps_profile   --trace=cuda   --cuda-memory-usage=true   --sample=none   --cpuctxsw=none   --force-overwrite=true   /home/zaineb/building-aggressors-on-Orin/MPS-experiments/run_mps_contention.sh
+  468  rm ~/mps_profile.nsys-rep 
+  469  ls
+  470  sudo -E env "PATH=$PATH" nsys profile -o /home/zaineb/mps_profile   --trace=cuda  --sample=none  /home/zaineb/building-aggressors-on-Orin/MPS-experiments/run_mps_contention.sh
+  471  ls
+  472  cat ncu_victim_alone.log
+  473  cat ncu_victim_alone.csv
+  474  cat ncu_victim_concurrent.csv
+  475  cat ncu_victim_concurrent.log
+  476  cat ncu_victim_concurrent.csv
+  477  nsys stats /home/zaineb/mps_profile.nsys-rep
+  478  cd ..
+  479  ls
+  480  rm mps_profile.sqlite 
+  481  ls
+  482  rm mps_profile.nsys-rep 
+  483  cd building-aggressors-on-Orin/MPS-experiments/
+  484  ls
+  485  sudo ./run_mps_contention.sh 
+  486  sudo -E env "PATH=$PATH" ./run_mps_contention.sh 
+  487  ls
+  488  cat ncu_victim_alone.log
+  489  ps aux | grep mps
+  490  sudo -E env "PATH=$PATH" ./run_mps_contention.sh 
+  491  vi setup_mps.sh 
+  492  vi r 
+  493  ls
+  494  vi run_mps_contention.sh 
+  495  ./run_mps_contention.sh
+  496  ls
+  497  cat *.log
+  498  cat *.csv
+  499  rm ncu_victim_alone.csv
+  500  rm ncu_victim_alone.log
+  501  rm ncu_victim_concurrent.log
+  502  rm ncu_victim_concurrent.csv
+  503  ls
+  504  ./run_mps_contention.sh
+  505  ls
+  506  cat ncu_victim_alone.csv
+  507  cat ncu_victim_concurrent.csv
+  508  cat ncu_victim_alone.log
+  509  cat ncu_victim_concurrent.log
+  510  vi no_profiling.sh
+  511  cp setup_mps.sh setup_mps_noprof.sh 
+  512  vi setup_mps_noprof.sh 
+  513  vi no_profiling.sh
+  514  cd ..
+  515  ls
+  516  cd building-aggressors-on-Orin/MPS-experiments/
+  517  ls
+  518  chmod +x no_profiling.sh 
+  519  ls
+  520  sudo -E env "PATH=$PATH" nsys profile -o /home/zaineb/mps_profile   --trace=cuda   --sample=none   --cpuctxsw=none   --force-overwrite=true   ./no_profiling.sh
+  521  vi no_profiling.sh 
+  522  sudo -E env "PATH=$PATH" nsys profile -o /home/zaineb/mps_profile   --trace=cuda   --sample=none   --cpuctxsw=none   --force-overwrite=true   ./no_profiling.sh
+  523  sudo pkill -9 nsys
+  524  pkill -9 victim_process
+  525  echo quit | nvidia-cuda-mps-control
+  526  ./run_mps_contention.sh
+  527  cat ncy_victim_alone.csv
+  528  cat ncu_victim_alone.csv
+  529  cat ncu_victim_concurrent.csv
+  530  cat ncu_victim_concurrent.log
+  531  cat ncu_victim_alone.log
+  532  ls
+  533  sudo pkill -9 nsys
+  534  sudo pkill -9 victim_process  
+  535  sudo pkill -9 enemy_process
+  536  echo quit | sudo nvidia-cuda-mps-control
+  537  sudo rm -rf /tmp/nvidia-mps /tmp/nvidia-log
+  538  sudo pkill -9 nsys
+  539  sudo pkill -9 victim_process  
+  540  sudo pkill -9 enemy_process
+  541  echo quit | sudo nvidia-cuda-mps-control
+  542  sudo rm -rf /tmp/nvidia-mps /tmp/nvidia-log
+  543  sudo pkill -9 nsys
+  544  sudo pkill -9 victim_process  
+  545  sudo pkill -9 enemy_process
+  546  echo quit | sudo nvidia-cuda-mps-control
+  547  sudo rm -rf /tmp/nvidia-mps /tmp/nvidia-log
+  548  sudo pkill -9 victim_process
+  549  sudo pkill -9 enemy_process
+  550  echo quit | sudo nvidia-cuda-mps-control
+  551  sudo rm -rf /tmp/nvidia-mps /tmp/nvidia-log sudo pkill -9 nsys
+  552  sudo pkill -9 victim_process
+  553  sudo pkill -9 enemy_process
+  554  echo quit | sudo nvidia-cuda-mps-control
+  555  sudo rm -rf /tmp/nvidia-mps /tmp/nvidia-log
+  556  ps aux | grep victim
+  557  ps aux | grep mps
+  558  echo quit | sudo nvidia-cuda-mps-control
+  559  sudo rm -rf /tmp/nvidia-mps /tmp/nvidia-log
+  560  ps aux | grep mps
+  561  ps aux | grep -E "victim|enemy|nsys|cuda-mps"
+  562  sudo cat /proc/$(pgrep victim)/stack
+  563  sudo pkill -9 nvidia-cuda-mps-server
+  564  sudo pkill -9 nvidia-cuda-mps-control
+  565  ps aux | grep mps
+  566  sudo rm -rf /tmp/nvidia-mps /tmp/nvidia-log
+  567  ps aux | grep -E "victim|enemy|nsys|cuda-mps"
+  568  nvidia-smi
+  569  ps aux | grep mps
+  570  ls
+  571  sudo kill -9 8527 8528 8529
+  572  ps aux | grep mps
+  573  kill -9 8640 8651
+  574  echo quit | nvidia-cuda-mps-control
+  575  sudo rm -rf /tmp/nvidia-mps /tmp/nvidia-log
+  576  ls
+  577  ps aux | grep -E "nsys|mps|victim|enemy"
+  578  ls
+  579  cd building-aggressors-on-Orin/
+  580  cd MPS-experiments/
+  581  ls
+  582  nano ncu_victim_alone.csv
+  583  nvidia-smi
+  584  pkill -9 enemy_process
+  585  ls
+  586  cat setup_mps_noprof.sh 
+  587  cat no_profiling.sh 
+  588  ls ~/
+  589  rm ~/mps_profile.nsys-rep 
+  590  sudo -E env "PATH=$PATH" nsys profile -o /home/zaineb/mps_profile   --trace=cuda --trace-fork-before-exec=true
+  591  ./run_mps_contention.sh 
+  592  cat ncu_victim_alone.csv
+  593  cat ncu_victim_concurrent.csv
+  594  cat ncu_victim_alone.log
+  595  cat ncu_victim_concurrent.log
+  596  cat run_mps_contention.sh 
+  597  cat no_profiling.sh 
+  598  vi no_profiling_timestamp.sh 
+  599  chmod +x no_profiling_timestamp.sh 
+  600  ./no_profiling_timestamp.sh 
+  601  ls
+  602  vi enemy_process.cu 
+  603  vi victim_process.cu 
+  604  ./no_profiling_timestamp.sh
+  605  sudo nsys profile -o mps_profile   --trace=cuda,nvtx   --cuda-memory-usage=false   --force-overwrite=true   ./no_profiling.sh
+  606  sudo reboot
+  607  ps aux | grep mps
+  608  lx
+  609  ls
+  610  cd building-aggressors-on-Orin/
+  611  cd MPS-experiments/
+  612  ls
+  613  ./no_profiling
+  614  ./no_profiling.sh
+  615  nano no_profiling.sh
+  616  cat no_profiling.sh
+  617  ls
+  618  rm no_profiling_timestamp.sh 
+  619  ls
+  620  git add .
+  621  git commit -m "nsys validation not solved yet"
+  622  git push
+  623  vi no_profiling.sh 
+  624  ./no_profiling.sh
+  625  ./run_mps_contention.sh 
+  626  mkdir simpleexperiment
+  627  ls
+  628  cd simpleexperiment/
+  629  code .
+  630  cd ..
+  631  rm -rf simpleexperiment/
+  632  ls
+  633  git fetch origin
+  634  git pull
+  635  ls
+  636  cd simpleexperiments/
+  637  ls
+  638  chmod +x MPS-experiments/simpleexperiments/run_mps_dual_clients.sh
+  639  chmod +x run_mps_dual_clients.sh
+  640  ./run_mps_dual_clients.sh 
+  641  ps aux | grep mps
+  642  sudo killall nvidia-cuda-mps-control
+  643  sudo killall nvidia-cuda-mps-server 2>/dev/null
+  644  ps aux | grep mps
+  645  ./run_mps_dual_clients.sh MEM_ITERS=200000 COMP_ITERS=200000
+  646  ps aux | grep mps
+  647  echo quit | sudo nvidia-cuda-mps-control
+  648  ps aux | grep mps
+  649  sudo ls -la /tmp/ | grep nvidia
+  650  export CUDA_MPS_PIPE_DIRECTORY=/tmp/nvidia-mps
+  651  echo quit | sudo nvidia-cuda-mps-control
+  652  sudo killall nvidia-cuda-mps-server 2>/dev/null
+  653  ps aux | grep mps
+  654  git fetch origin
+  655  git pull
+  656  git restore MPS-experiments/simpleexperiments/run_mps_dual_clients.sh
+  657  git fetch origin
+  658  git pull
+  659  git restore run_mps_dual_clients.sh
+  660  git pull
+  661  chmod +x run_mps_dual_clients.sh 
+  662  MEM_ITERS=100000 MEM_ELEMS=1048576 COMP_ITERS=100000 COMP_ELEMS=524288 nsys profile -o mps_overlap --trace=cuda,nvtx --cuda-memory-usage=false --force-overwrite=true --stats=true ./run_mps_dual_clients.sh
+  663  ls
+  664  rm mps_overlap.*
+  665  ls
+  666  MEM_ITERS=100000 MEM_ELEMS=1048576 COMP_ITERS=100000 COMP_ELEMS=524288 ./run_mps_dual_clients.sh
+  667  sudo MEM_ITERS=100000 MEM_ELEMS=1048576 COMP_ITERS=100000 COMP_ELEMS=524288 nsys profile -o mps_overlap --trace=cuda,nvtx --cuda-memory-usage=false --force-overwrite=true --stats=true ./run_mps_dual_clients.sh
+  668  vi run_mps_dual_clients.sh 
+  669  sudo MEM_ITERS=100000 MEM_ELEMS=1048576 COMP_ITERS=100000 COMP_ELEMS=524288 nsys profile -o mps_overlap --trace=cuda,nvtx --cuda-memory-usage=false --force-overwrite=true --stats=true ./run_mps_dual_clients.sh
+  670  ls
+  671  git add .
+  672  git commit -m "looking for nsys overlapping results"
+  673  git push
+  674  lsblk
+  675  free -h
+  676  cd ..
+  677  vi no_profiling.sh 
+  678  ./no_profiling.sh 
+  679  vi no_profiling.sh 
+  680  vi enemy_process.sh
+  681  rm ncu_victim_alone.csv
+  682  rm ncu_victim_concurrent.csv
+  683  rm ncu_victim_concurrent.l
+  684  rm ncu_victim_alone.log
+  685  vi enemy_process.cu 
+  686  ./run_mps_contention.sh 
+  687  ps aux | grep mps
+  688  ./run_mps_contention.sh 
+  689  cat ncu_victim_alone.log
+  690  ls
+  691  cat ncu_victim_alone.csv
+  692  cat ncu_victim_concurrent.csv
+  693  vi run_mps_contention.sh 
+  694  ./run_mps_contention.sh 
+  695  cat ncu_victim_alone.csv
+  696  cat ncu_victim_concurrent.csv
+  697  cat ncu_victim_alone.log
+  698  cat ncu_victim_concurrent.log
+  699  ps aux | grep mps
+  700  ./run_mps_contention.sh
+  701  cat ncu_victim_alone.log
+  702  cat ncu_victim_concurrent.log
+  703  cat ncu_victim_alone.c
+  704  cat ncu_victim_concurrent.csv
+  705  ./no_profiling.sh 
+  706  cat enemy_log.txt
+  707  sudo nsys profile -o mps_overlap --trace=cuda,nvtx --cuda-memory-usage=false --force-overwrite=true --stats=true ./run_mps_contention.sh
+  708  sudo -E env "PATH=$PATH" nsys profile -o mps_overlap --trace=cuda,nvtx --cuda-memory-usage=false --force-overwrite=true --stats=true ./run_mps_contention.sh
+  709  vi run_mps_contention.sh 
+  710  ps aux | grep mps
+  711  sudo -E env "PATH=$PATH" nsys profile -o mps_overlap --trace=cuda,nvtx --cuda-memory-usage=false --force-overwrite=true --stats=true ./run_mps_contention.sh
+  712  ps aux | grep mps
+  713  vi setup_mps
+  714  vi setup_mps.s
+  715  vi setup_mps.sh
+  716  sudo -E env "P./run_mps_contention.sh
+  717  ls
+  718  git add mps_overlap.*
+  719  git commit -m "add nsys with profiling on to display it on gui"
+  720  git push
+  721  cat run_mps_contention.sh 
+  722  sudo -E env "PATH=$PATH"./run_mps_contention.sh
+  723  sudo -E env "PATH=$PATH" ./run_mps_contention.sh
+  724  cat ncu_victim_alone.csv
+  725  cat ncu_victim_concurrent.csv
+  726  ls
+  727  ps aux | grep mps
+  728  ./run_mps_contention.sh
+  729  cat ncu_victim_concurrent.csv
+  730  cat ncu_victim_alone.csv
+  731  vi run_mps_contention.sh
+  732  vi setup_mps.sh
+  733  ./run_mps_contention.sh 
+  734  cat ncu_victim_alone.csv
+  735  cat ncu_victim_concurrent.csv
+  736  cat ncu_victim_concurrent.log
+  737  cat ncu_victim_alone.log
+  738  rm no_profiling.sh 
+  739  rm setup_mps_noprof.sh 
+  740  ls
+  741  rm mps_overlap.*
+  742  ls
+  743  vi run_nsys.sh
+  744  chmod +x run_nsys.sh 
+  745  ./run_nsys.sh 
+  746  ls
+  747  rm run_nsys.sh 
+  748  vi nsysrun.sh
+  749  chmod +x nsysrun.sh 
+  750  ./nsysrun.sh 
+  751  ls
+  752  vi nsysrun.sh 
+  753  ./nsysrun.sh 
+  754  ps aux | grep mps
+  755  ls
+  756  cd ..
+  757  ls
+  758  sudo shutdown -h now
+  759  sudo pkill -9 nsys
+  760  sudo pkill -9 victim_process  
+  761  sudo pkill -9 enemy_process
+  762  echo quit | sudo nvidia-cuda-mps-control
+  763  sudo rm -rf /tmp/nvidia-mps /tmp/nvidia-log
+  764  ps aux | grep mps
+  765  export CUDA_MPS_PIPE_DIRECTORY=/tmp/nvidia-mps
+  766  export CUDA_MPS_LOG_DIRECTORY=/tmp/nvidia-log
+  767  echo quit | nvidia-cuda-mps-control
+  768  ps aux | grep mps
+  769  sudo pkill nvidia-cuda-mps-server
+  770  sudo pkill nvidia-cuda-mps-control
+  771  sudo rm -rf /tmp/nvidia-mps /tmp/nvidia-log
+  772  ps aux | grep mps
+  773  sudo kill -9 2071
+  774  sudo kill -9 2078
+  775  ps aux | grep mps
+  776  sudo pkill -9 nsys
+  777  sudo pkill -9 victim_process  
+  778  sudo pkill -9 enemy_process
+  779  echo quit | sudo nvidia-cuda-mps-control
+  780  sudo rm -rf /tmp/nvidia-mps /tmp/nvidia-log
+  781  ps aux | grep mps
+  782  sudo kill -9 2440
+  783  sudo kill -9 2447
+  784  ps aux | grep mps
+  785  sudo tegrastats --interval 100
+  786  sudo tegrastats --interval 1000
+  787  sudo tegrastats --interval 100
+  788  sudo pkill -9 nsys
+  789  sudo pkill -9 victim_process  
+  790  sudo pkill -9 enemy_process
+  791  echo quit | sudo nvidia-cuda-mps-control
+  792  sudo rm -rf /tmp/nvidia-mps /tmp/nvidia-log
+  793  ps aux | grep mps
+  794  sudo kill -9 4339
+  795  sudo kill -9 4346
+  796  ps aux | grep mps
+  797  nvidia-smi
+  798  sudo tegrastats --interval 100
+  799  ls
+  800  ms
+  801  ls
+  802  cd building-aggressors-on-Orin/
+  803  cd MPS-experiments/
+  804  ls
+  805  vi enemy_process.cu 
+  806  ./run_mps_contention.sh 
+  807  cat *.csv
+  808  cat ncu_victim_alone.csv
+  809  cat ncu_victim_concurrent.csv
+  810  cat ncu_victim_alone.log
+  811  cat ncu_victim_concurrent.log
+  812  ls
+  813  vi run2.sh
+  814  chmod +x run2.sh
+  815  ./run2.sh 
+  816  vi run2.sh
+  817  vi enemy_process.cu
+  818  ./run2.sh 
+  819  vi run2.sh
+  820  ./run2.sh 
+  821  vi enemy_process.cu
+  822  ls
+  823  sudo pkill -9 enemy_process
+  824  sudo pkill -9 nsys
+  825  sudo pkill -9 victim_process  
+  826  sudo pkill -9 enemy_process
+  827  echo quit | sudo nvidia-cuda-mps-control
+  828  sudo rm -rf /tmp/nvidia-mps /tmp/nvidia-log
+  829  ps aux | grep mps
+  830  watch -n 0.5 nvidia-smi pmon
+  831  ps aux | grep mps
+  832  sudo pkill -9 nsys
+  833  sudo pkill -9 victim_process  
+  834  sudo pkill -9 enemy_process
+  835  echo quit | sudo nvidia-cuda-mps-control
+  836  sudo rm -rf /tmp/nvidia-mps /tmp/nvidia-log
+  837  ps aux | grep mps
+  838  sudo pkill -9 2786
+  839  ps aux | grep mps
+  840  sudo pkill -9 2786
+  841  ps aux | grep mps
+  842  nvidia-smi
+  843  sudo tegrastats
+  844  watch -n 0.5 nvidia-smi pmon
+  845  ps aux | grep mps
+  846  sudo pkill -9 2911
+  847  ps aux | grep mps
+  848  echo quit | sudo nvidia-cuda-mps-control
+  849  sudo rm -rf /tmp/nvidia-mps /tmp/nvidia-log
+  850  ps aux | grep mps
+  851  pkill -9 2911
+  852  ps aux | grep mps
+  853  pkill -9 2904
+  854  ps aux | grep mps
+  855  ps aux | grep mps
+  856  sudo python pip install -U jetson-stats
+  857  sudo python3 pip install -U jetson-stats
+  858  sudo python3 -m pip install -U jetson-stats
+  859  sudo apt install python3-pip
+  860  sudo python3 -m pip install -U jetson-stats
+  861  jtop
+  862  sudo reboot
+  863  ps aux | grep mps
+  864  jtop
+  865  sudo pkill -9 nsys
+  866  sudo pkill -9 victim_process  
+  867  sudo pkill -9 enemy_process
+  868  echo quit | sudo nvidia-cuda-mps-control
+  869  sudo rm -rf /tmp/nvidia-mps /tmp/nvidia-log
+  870  ps aux |grep mps
+  871  sudo pkill -9 19666
+  872  ps aux |grep mps
+  873  pkill -9 1966
+  874  ps aux |grep mps
+  875  cd building-aggressors-on-Orin/MPS-experiments/
+  876  ls
+  877  ./run_mps_contention.sh 
+  878  ./run2.sh 
+  879  cat ncu_victim_alone.csv
+  880  cat ncu_victim_concurrent.csv
+  881  ls
+  882  rm ncu_victim_alone.csv
+  883  rm ncu_victim_alone.log
+  884  rm ncu_victim_concurrent.csv
+  885  rm ncu_victim_concurrent.log
+  886  ls
+  887  ./run2.sh
+  888  ls
+  889  ./run_mps_contention.sh 
+  890  cat ncu_victim_alone.csv
+  891  cat ncu_victim_concurrent.csv
+  892  cat ncu_victim_alone.log
+  893  cat ncu_victim_concurrent.log
+  894  ./run2.sh
+  895  ls
+  896  cat nsysrun.sh 
+  897  ./nsysrun.sh 
+  898  ls
+  899  ps aux | grep mps
+  900  nano nsysrun.sh 
+  901  nano nsysrun.sh 
+  902  vi nsysrun.sh 
+  903  ./nsysrun.sh 
+  904  ls
+  905  cat run2.sh
+  906  ./run2.sh 
+  907  cat run2.sh
+  908  sudo nsys profile   --trace=cuda,nvtx,osrt   --sample=cpu   --cuda-backtrace=disable   --trace-fork-before-exec=true   --force-overwrite=true   --output=report_mps_concurrent   ./run2.sh
+  909  sudo nsys profile   --trace=cuda  --trace-fork-before-exec=true   --force-overwrite=true   --output=report_mps_concurrent   ./run2.sh
+  910  sudo -E env "PATH=$PATH" nsys profile   --trace=cuda   --trace-fork-before-exec=true   --force-overwrite=true   --output=report_mps_concurrent   ./run2.sh
+  911  ls
+  912  git add run2.sh 
+  913  git commit -m "it worked weirdly"
+  914  git push
+  915  cp setup_mps.sh setup_mps_nosudo.sh 
+  916  vi setup_mps_nosudo.sh 
+  917  vi run2.sh 
+  918  sudo -E env "PATH=$PATH" nsys profile   --trace=cuda   --trace-fork-before-exec=true   --force-overwrite=true   --output=report_mps_concurrent   ./run2.sh
+  919  ls
+  920  git add report_mps_concurrent.nsys-rep 
+  921  git commit -m "i'll see it later"
+  922  git push
+  923  sudo shutdown -h now
+  924  jtop
+  925  sudo pkill -9 nsys
+  926  echo quit | sudo nvidia-cuda-mps-control
+  927  jtop
+  928  sudo pkill -9 nsys
+  929  jtop
+  930  echo quit | sh -c "CUDA_MPS_PIPE_DIRECTORY=$CUDA_MPS_PIPE_DIRECTORY nvidia-cuda-mps-control"
+  931  ls
+  932  nsys --version
+  933  ncu --version
+  934  apt list --upgradable
+  935  cd building-aggressors-on-Orin/
+  936  ls
+  937  cd MPS-experiments/
+  938  ls
+  939  ./run_mps_contention.sh
+  940  ./run2.sh
+  941  sudo -E env "PATH=$PATH" nsys profile --trace=cuda --sample=none --force-overwrite=true --output=report_mps_concurrent ./run2.sh
+  942  vi run2.sh
+  943  ls
+  944  sudo -E env "PATH=$PATH" nsys profile --trace=cuda --sample=none --force-overwrite=true --output=report_mps_concurrent ./run2.sh
+  945  ls
+  946  git add report_mps_concurrent.nsys-rep 
+  947  git commit -m "another try"
+  948  git push
+  949  sudo -E env "PATH=$PATH" nsys profile --trace=cuda --trace-fork-before-exec=true --sample=none --force-overwrite=true --output=report_mps_concurrent ./run2.sh
+  950  git add report_mps_concurrent.nsys-rep 
+  951  git commit -m "enemy wasnt traced last time so i hope this time it will"
+  952  git push
+  953  cat run2.sh
+  954  export CUDA_MPS_PIPE_DIRECTORY=/tmp/nvidia-mps
+  955  export CUDA_MPS_LOG_DIRECTORY=/tmp/nvidia-log
+  956  ./setup_mps.sh
+  957  sudo -E env "PATH=$PATH" nsys profile   --trace=cuda   --sample=none   --force-overwrite=true   --output=report_both   bash -c '
+  958      # Launch enemy in background
+  959      ./enemy_process 0 > enemy_log.txt 2>&1 &
+  960      ENEMY_PID=$!
+  961      echo "Enemy PID: $ENEMY_PID"
+  962      
+  963      sleep 15  # Let enemy saturate L2
+  964      
+  965      # Launch victim (nsys captures this too)
+  966      ./victim_process 50000
+  967      VICTIM_EXIT=$?
+  968      
+  969      # Kill enemy after victim completes
+  970      kill -9 $ENEMY_PID 2>/dev/null
+  971      
+  972      exit $VICTIM_EXIT
+  973    '
+  974  cat run2.sh 
+  975  git add run2.sh 
+  976  git commit -m "the new working script"
+  977  git push
+  978  sudo -E env "PATH=$PATH" nsys profile   --trace=cuda,osrt   --pid=$$   --force-overwrite=true   --output=report_concurrent   bash -c "
+  979      ./setup_mps_nosudo.sh
+  980      ./enemy_process 0 &
+  981      sleep 15
+  982      ./victim_process 50000
+  983      kill -9 \$(jobs -p)
+  984    "
+  985  ls
+  986  sudo -E env "PATH=$PATH" nsys profile   --trace=cuda,osrt   --sample=none   --force-overwrite=true   --output=report_concurrent   bash -c "
+  987      ./setup_mps_nosudo.sh
+  988      ./enemy_process 0 > enemy_log.txt 2>&1 &
+  989      ENEMY_PID=\$!
+  990      sleep 15
+  991      ./victim_process 50000
+  992      kill -9 \$ENEMY_PID 2>/dev/null
+  993    "
+  994  sudo -E env "PATH=$PATH" nsys profile   --trace=cuda   --sample=none   --force-overwrite=true   --output=report_concurrent   bash -c "
+  995      ./setup_mps_nosudo.sh
+  996      ./enemy_process 0 > enemy_log.txt 2>&1 &
+  997      ENEMY_PID=\$!
+  998      sleep 15
+  999      ./victim_process 50000
+ 1000      kill -9 \$ENEMY_PID 2>/dev/null
+ 1001    "
+ 1002  ls
+ 1003  ps aux | grep mps
+ 1004  echo quit | sudo sh -c "CUDA_MPS_PIPE_DIRECTORY=$CUDA_MPS_PIPE_DIRECTORY nvidia-cuda-mps-control"
+ 1005  ps aux | grep mps
+ 1006  rm -rf $CUDA_MPS_PIPE_DIRECTORY
+ 1007  rm -rf $CUDA_MPS_LOG_DIRECTORY
+ 1008  ps aux | grep mps
+ 1009  git reboot
+ 1010  sudo reboot
+ 1011  cd building-aggressors-on-Orin/MPS-experiments/
+ 1012  vi run_mps_contention.sh 
+ 1013  git fetch origin
+ 1014  git pull
+ 1015  ./run_mps_contention.sh 
+ 1016  cat ncu_victim_alone.csv
+ 1017  cat ncu_victim_concurrent.csv
+ 1018  cat ncu_victim_concurrent.log
+ 1019  cat ncu_victim_alone.loh
+ 1020  cat ncu_victim_alone.log
+ 1021  cat victim_process2.cu 
+ 1022  sudo -E env "PATH=$PATH" ./run2.sh 
+ 1023  vi run2.sh 
+ 1024  sudo -E env "PATH=$PATH" ./run2.sh
+ 1025  vi victim_process3.cu
+ 1026  vi run_mps_contention.sh 
+ 1027  ./run_mps_contention.sh 
+ 1028  cat ncu_victim_alone.csv
+ 1029  cat ncu_victim_concurrent.csv
+ 1030  cat ncu_victim_alone.csv
+ 1031  cat ncu_victim_alone.log
+ 1032  cat ncu_victim_concurrent.log
+ 1033  cp ncu_victim_alone.csv ncu_victim_alone_compute.csv
+ 1034  cp ncu_victim_alone.log ncu_victim_alone_compute.log
+ 1035  cp ncu_victim_concurrent.csv ncu_victim_concurrent_compute.csv
+ 1036  cp ncu_victim_concurrent.log ncu_victim_concurrent_compute.log
+ 1037  ls
+ 1038  vi run_mps_contention.sh 
+ 1039  ./run_mps_contention.sh 
+ 1040  cat ncu_victim_alone.log
+ 1041  cat ncu_victim_concurrent.log
+ 1042  cat ncu_victim_alone.csv
+ 1043  cat ncu_victim_concurrent.csv
+ 1044  git add victim_process3.cu *compute*
+ 1045  git commit -m "last contention verifications DONEEEEE YAY"
+ 1046  git push
+ 1047  vi run2.sh 
+ 1048  sudo -E env "PATH=$PATH" ./run2.sh
+ 1049  history > allcommands.txt
