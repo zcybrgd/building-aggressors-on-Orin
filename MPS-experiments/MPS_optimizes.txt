@@ -29,3 +29,55 @@ Running victim (enemy running)...
 
 Terminating enemy (PID: 4195)...
  Enemy terminated
+
+
+
+
+
+
+zaineb@orinpfe:~/building-aggressors-on-Orin/MPS-experiments$ sudo -E env "PATH=$PATH" ./run2.sh
+========================================
+  L2 CACHE CONTENTION with MPS
+========================================
+
+Compiling victim and enemy...
+Compilation done
+
+=== Starting MPS Daemon ===
+CUDA_MPS_PIPE_DIRECTORY=/tmp/nvidia-mps
+CUDA_MPS_LOG_DIRECTORY=/tmp/nvidia-log
+MPS Control Daemon is running
+MPS Control Daemon ready
+  (MPS Server will start on first CUDA application)
+
+========================================
+  SCENARIO 1: Victim Alone
+========================================
+
+[VICTIM] N=262144 (1.0MB), iters=50000
+[VICTIM] Time: 893.97 ms
+[VICTIM] RESULT=1.145132e+00
+ Victim alone complete
+
+========================================
+  SCENARIO 2: Victim + Enemy (MPS)
+========================================
+
+Launching enemy in background...
+Enemy PID: 3409
+Running victim (enemy running)...
+[VICTIM] N=262144 (1.0MB), iters=50000
+[VICTIM] Time: 13896.92 ms
+[VICTIM] RESULT=1.145133e+00
+ Victim concurrent complete
+
+Terminating enemy (PID: 3409)...
+ Enemy terminated
+
+========================================
+  CLEANUP
+========================================
+
+Stopping MPS...
+
+ Done!
