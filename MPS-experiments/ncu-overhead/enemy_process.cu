@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
     free(h_chase);
     
     // launch aggressive enemy
-    enemyKernel<<<512, 256>>>(d_chase, size, cycles, d_stop_flag);
+    enemyKernel<<<16, 256>>>(d_chase, size, cycles, d_stop_flag);
     
     //if infinite mode, wait for signal
     if (cycles == 0) {
