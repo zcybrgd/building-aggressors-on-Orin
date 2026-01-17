@@ -34,6 +34,8 @@ fi
 # NCU metrics
 NCU_METRICS="lts__t_sectors_lookup_miss.sum,lts__t_sector_op_read_hit_rate.pct,sm__cycles_elapsed.avg,smsp__average_warps_issue_stalled_long_scoreboard_per_issue_active.pct,gpu__time_duration"
 
+NCU_METRICS="lts__t_sector_op_read_hit_rate.pct,lts__t_sector_op_write_hit_rate.pct,lts__t_sectors_lookup_miss.sum,lts__t_requests_aperture_device_op_read_lookup_hit,lts__t_requests_aperture_device_op_read_lookup_miss,lts__t_requests_aperture_device_op_write_lookup_hit,lts__t_requests_aperture_device_op_write_lookup_miss,gpu__time_duration.avg,sm__cycles_elapsed.avg,smsp__average_warps_issue_stalled_long_scoreboard_per_issue_active.pct,l1tex__t_sector_pipe_lsu_mem_global_op_ld_hit_rate,sm__active_warps.avg"
+
 # Victim iterations and profiling repetitions
 VICTIM_ITERS=50000
 RUNS=30
@@ -93,7 +95,7 @@ for ((i = 1; i <= RUNS; i++)); do
     csv_file=$(printf "ncu_victim_alone_run_%02d.csv" "$i")
     log_file=$(printf "ncu_victim_alone_run_%02d.log" "$i")
     start_ns=$(date +%s%N)
-    if ! sudo "$NCU_BIN" --metrics "$NCU_METRICS" --launch-skip 1 \
+    if ! sudo "$NCU_BIN" --metrics "$NCU_METRICS" \
         --kernel-name victimKernel \
         --csv \
         --log-file "$log_file" \
@@ -135,7 +137,7 @@ for ((i = 1; i <= RUNS; i++)); do
     csv_file=$(printf "ncu_victim_concurrent_run_%02d.csv" "$i")
     log_file=$(printf "ncu_victim_concurrent_run_%02d.log" "$i")
     start_ns=$(date +%s%N)
-    if ! sudo "$NCU_BIN" --metrics "$NCU_METRICS" --launch-skip 1 \
+    if ! sudo "$NCU_BIN" --metrics "$NCU_METRICS" \
         --kernel-name victimKernel \
         --csv \
         --log-file "$log_file" \

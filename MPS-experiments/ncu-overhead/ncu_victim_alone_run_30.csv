@@ -2,5 +2,5 @@
   Working set: 262144 elements (1.05 MB)
   Iterations: 50000
   Grid: 256 blocks x 256 threads = 65536 total threads
-[VICTIM] Completed in 908.18 ms
-[VICTIM] Performance: 43.30 GFLOPS
+[VICTIM] Completed in 7525.03 ms
+[VICTIM] Performance: 5.23 GFLOPS
