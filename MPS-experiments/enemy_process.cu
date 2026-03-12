@@ -66,11 +66,11 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < num_words; i++) {
         h_chase[i] = ((unsigned long long) i * 1234567) % num_words;
     }
-    cudaMemcpy(d_chase, h_chase, size, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_chase, h_chase, size, cudaMemcpyHostToDevice); 
     free(h_chase);
     
     // launch aggressive enemy
-    enemyKernel<<<512, 256>>>(d_chase, size, cycles, d_stop_flag);
+    enemyKernel<<<16, 256>>>(d_chase, size, cycles, d_stop_flag);
     
     //if infinite mode, wait for signal
     if (cycles == 0) {

@@ -1,0 +1,11 @@
+==PROF== Connected to process 14278 (/home/zaineb/building-aggressors-on-Orin/MPS-experiments/victim_process)
+==PROF== Disconnected from process 14278
+"ID","Process ID","Process Name","Host Name","Kernel Name","Context","Stream","Block Size","Grid Size","Device","CC","Section Name","Metric Name","Metric Unit","Metric Value"
+"0","14278","victim_process","127.0.0.1","victimKernel(float *, int, unsigned long long)","1","7","(256, 1, 1)","(256, 1, 1)","0","8.7","Command line profiler metrics","lts__t_sector_op_read_hit_rate.pct","%","30,48"
+"0","14278","victim_process","127.0.0.1","victimKernel(float *, int, unsigned long long)","1","7","(256, 1, 1)","(256, 1, 1)","0","8.7","Command line profiler metrics","lts__t_sectors_lookup_miss.sum","sector","33 169"
+"0","14278","victim_process","127.0.0.1","victimKernel(float *, int, unsigned long long)","1","7","(256, 1, 1)","(256, 1, 1)","0","8.7","Command line profiler metrics","gpu__time_duration.avg","ns","855 986 336"
+"0","14278","victim_process","127.0.0.1","victimKernel(float *, int, unsigned long long)","1","7","(256, 1, 1)","(256, 1, 1)","0","8.7","Command line profiler metrics","gpu__time_duration.max","ns","855 986 336"
+"0","14278","victim_process","127.0.0.1","victimKernel(float *, int, unsigned long long)","1","7","(256, 1, 1)","(256, 1, 1)","0","8.7","Command line profiler metrics","gpu__time_duration.min","ns","855 986 336"
+"0","14278","victim_process","127.0.0.1","victimKernel(float *, int, unsigned long long)","1","7","(256, 1, 1)","(256, 1, 1)","0","8.7","Command line profiler metrics","gpu__time_duration.sum","ns","855 986 336"
+"0","14278","victim_process","127.0.0.1","victimKernel(float *, int, unsigned long long)","1","7","(256, 1, 1)","(256, 1, 1)","0","8.7","Command line profiler metrics","sm__cycles_elapsed.avg","cycle","781 373 703"
+"0","14278","victim_process","127.0.0.1","victimKernel(float *, int, unsigned long long)","1","7","(256, 1, 1)","(256, 1, 1)","0","8.7","Command line profiler metrics","smsp__average_warps_issue_stalled_long_scoreboard_per_issue_active.pct","%","13,07"

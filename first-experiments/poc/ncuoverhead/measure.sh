@@ -60,7 +60,7 @@ for i in $(seq 1 $ITERATIONS); do
     NCU_TEMP_FILE="${TEMP_NCU_DIR}/run_${i}.csv"
     
     echo "  Running NCU profiling..."
-    ncu --launch-skip 1 --metrics "$NCU_METRICS" --csv --log-file "$NCU_TEMP_FILE" $EXECUTABLE $COMMAND > /dev/null 2>&1
+    sudo $(which ncu) --launch-skip 1 --metrics "$NCU_METRICS" --csv --log-file "$NCU_TEMP_FILE" $EXECUTABLE $COMMAND > /dev/null 2>&1
     
     # Also run without NCU to get clean timing
     output=$($EXECUTABLE $COMMAND 2>&1)

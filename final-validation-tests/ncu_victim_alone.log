@@ -1,0 +1,10 @@
+==PROF== Connected to process 2933369 (/home/zaineb/building-aggressors-on-Orin/final-validation-tests/victim_process)
+==PROF== Disconnected from process 2933369
+"ID","Process ID","Process Name","Host Name","Kernel Name","Context","Stream","Block Size","Grid Size","Device","CC","Section Name","Metric Name","Metric Unit","Metric Value"
+"0","2933369","victim_process","127.0.0.1","victimKernel(float *, int, unsigned long long)","1","7","(256, 1, 1)","(256, 1, 1)","0","8.7","Command line profiler metrics","gpu__time_active.sum","ns","855 750 656"
+"0","2933369","victim_process","127.0.0.1","victimKernel(float *, int, unsigned long long)","1","7","(256, 1, 1)","(256, 1, 1)","0","8.7","Command line profiler metrics","lts__t_sector_op_read_hit_rate.pct","%","30,44"
+"0","2933369","victim_process","127.0.0.1","victimKernel(float *, int, unsigned long long)","1","7","(256, 1, 1)","(256, 1, 1)","0","8.7","Command line profiler metrics","lts__t_sector_op_write_hit_rate.pct","%","100,00"
+"0","2933369","victim_process","127.0.0.1","victimKernel(float *, int, unsigned long long)","1","7","(256, 1, 1)","(256, 1, 1)","0","8.7","Command line profiler metrics","lts__t_sectors.sum","sector","1 661 765"
+"0","2933369","victim_process","127.0.0.1","victimKernel(float *, int, unsigned long long)","1","7","(256, 1, 1)","(256, 1, 1)","0","8.7","Command line profiler metrics","lts__t_sectors_op_read_lookup_miss.sum","sector","33 037"
+"0","2933369","victim_process","127.0.0.1","victimKernel(float *, int, unsigned long long)","1","7","(256, 1, 1)","(256, 1, 1)","0","8.7","Command line profiler metrics","lts__t_sectors_op_write_lookup_miss.sum","sector","0"
+"0","2933369","victim_process","127.0.0.1","victimKernel(float *, int, unsigned long long)","1","7","(256, 1, 1)","(256, 1, 1)","0","8.7","Command line profiler metrics","sm__cycles_elapsed.sum","cycle","6 251 122 408"

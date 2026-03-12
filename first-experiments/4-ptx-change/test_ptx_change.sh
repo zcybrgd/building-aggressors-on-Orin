@@ -22,7 +22,7 @@ for matrix in "${MATRICES[@]}"; do
         IFS=',' read -r bx by <<< "$block"
         ptx_file="${OUTPUT_DIR}/compile_time_m${matrix}_b${bx}x${by}.ptx"
         echo "  Compiling: MATRIX=$matrix, BLOCK=$bx×$by"
-        nvcc -arch=sm_87 -ptx ptx_change_test.cu \
+        nvcc -arch=sm_87 -ptx test_ptx.cu \
             -DMATRIX_SIZE=$matrix -DBLOCK_X=$bx -DBLOCK_Y=$by \
             -o "$ptx_file" 2>/dev/null
         #extract key metrics from PTX
@@ -40,7 +40,7 @@ echo "-------------------------------------------------------------------"
 #compile once with runtime parameters (no -D flags)
 ptx_runtime="${OUTPUT_DIR}/runtime_params.ptx"
 echo "  Compiling with runtime parameters..."
-nvcc -arch=sm_87 -ptx ptx_change_test.cu -o "$ptx_runtime" 2>/dev/null
+nvcc -arch=sm_87 -ptx test_ptx.cu -o "$ptx_runtime" 2>/dev/null
 if [ -f "$ptx_runtime" ]; then
     num_regs=$(grep ".maxnreg" "$ptx_runtime" | head -1 | awk '{print $2}')
     num_insts=$(grep -c "^\s*[a-z]" "$ptx_runtime")

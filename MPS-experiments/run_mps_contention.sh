@@ -27,6 +27,10 @@ fi
 # NCU metrics
 NCU_METRICS="lts__t_sectors_lookup_miss.sum,lts__t_sector_op_read_hit_rate.pct,sm__cycles_elapsed.avg,smsp__average_warps_issue_stalled_long_scoreboard_per_issue_active.pct,gpu__time_duration"
 
+NCU_METRICS="lts__t_sector_op_read_hit_rate.pct, lts__t_sector_op_write_hit_rate.pct, lts__t_sectors_lookup_miss.sum, lts__t_requests_aperture_device_op_read_lookup_hit + _lookup_miss, lts__t_requests_aperture_device_op_write_lookup_hit + _lookup_miss, gpu__time_duration.avg, sm__cycles_elapsed.avg, smsp__average_warps_issue_stalled_long_scoreboard_per_issue_active.pct, l1tex__t_sector_pipe_lsu_mem_global_op_ld_hit_rate, sm__active_warps.avg"
+
+NCU_METRICS="lts__t_sector_op_read_hit_rate.pct,lts__t_sector_op_write_hit_rate.pct,lts__t_sectors_lookup_miss.sum,lts__t_requests_aperture_device_op_read_lookup_hit+_lookup_miss,lts__t_requests_aperture_device_op_write_lookup_hit+_lookup_miss,gpu__time_duration.avg,sm__cycles_elapsed.avg,smsp__average_warps_issue_stalled_long_scoreboard_per_issue_active.pct,l1tex__t_sector_pipe_lsu_mem_global_op_ld_hit_rate,sm__active_warps.avg"
+
 # Victim iterations
 VICTIM_ITERS=50000
 
@@ -35,7 +39,7 @@ echo "  SCENARIO 1: Victim Alone (with NCU)"
 echo "========================================"
 echo ""
 
-sudo $(which ncu) --metrics $NCU_METRICS --launch-skip 1\
+sudo $(which ncu) --metrics $NCU_METRICS \
     --kernel-name victimKernel \
     --csv \
     --log-file ncu_victim_alone.log \
@@ -63,7 +67,7 @@ sleep 3
 
 # Profile victim
 echo "Profiling victim with NCU (enemy running)..."
-sudo $(which ncu) --metrics $NCU_METRICS --launch-skip 1 \
+sudo $(which ncu) --metrics $NCU_METRICS \
     --kernel-name victimKernel \
     --csv \
     --log-file ncu_victim_concurrent.log \

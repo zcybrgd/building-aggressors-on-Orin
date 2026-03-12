@@ -11,7 +11,7 @@ echo ""
 
 # Compile programs
 echo "Compiling victim and enemy..."
-nvcc -arch=sm_87 -O3 -o victim_process victim_process.cu
+nvcc -arch=sm_87 -O3 -o victim_process victim_process3.cu
 nvcc -arch=sm_87 -O3 -o enemy_process enemy_process.cu
 echo "Compilation done"
 echo ""
@@ -34,6 +34,11 @@ echo ""
 
 ./victim_process $VICTIM_ITERS
 
+./victim_process $VICTIM_ITERS
+
+./victim_process $VICTIM_ITERS
+
+
 echo " Victim alone complete"
 echo ""
 
@@ -51,7 +56,7 @@ ENEMY_PID=$!
 echo "Enemy PID: $ENEMY_PID"
 
 # Wait for enemy to saturate L2
-sleep 15
+sleep 5 
 # Run victim
 echo "Running victim (enemy running)..."
 ./victim_process $VICTIM_ITERS

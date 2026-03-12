@@ -1,0 +1,6 @@
+metric,value
+runs,30
+mean_ms,9502.733
+std_ms,58.242
+min_ms,9378.000
+max_ms,9597.000
