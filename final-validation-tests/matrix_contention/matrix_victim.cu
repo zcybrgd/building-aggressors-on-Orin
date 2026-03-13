@@ -1,0 +1,135 @@
+#include <cuda.h>
+#include <cuda_runtime.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define CHECK_CU(call) do { \
+    CUresult err = call; \
+    if (err != CUDA_SUCCESS) { \
+        const char *errName, *errStr; \
+        cuGetErrorName(err, &errName); \
+        cuGetErrorString(err, &errStr); \
+        fprintf(stderr, "[CUDA Driver Error] %s: %s at %s:%d\n", errName, errStr, __FILE__, __LINE__); \
+        exit(EXIT_FAILURE); \
+    } \
+} while(0)
+
+#define CHECK_RT(call) do { \
+    cudaError_t err = call; \
+    if (err != cudaSuccess) { \
+        fprintf(stderr, "[CUDA Runtime Error] %s at %s:%d\n", cudaGetErrorString(err), __FILE__, __LINE__); \
+        exit(EXIT_FAILURE); \
+    } \
+} while(0)
+
+// Original GPUMultiplyMatrix kernel — 1D indexing, L2-sensitive
+__global__ void GPUMultiplyMatrix(long *matrix1, long *matrix2, int paths, int count) {
+    int element = blockIdx.x * blockDim.x + threadIdx.x;
+    int i;
+    while (paths > 0) {
+        long sum = 0;
+        int col = element % count;
+        int row = element / count;
+        for (i = 0; i < count; i++) {
+            sum += matrix1[count * i + col] * matrix2[row * count + i];
+        }
+        __syncthreads();
+        matrix2[element] = sum;
+        paths--;
+    }
+}
+
+// Usage: ./matrix_victim <matrix_size> <block_x> <block_y> <paths> <mode>
+//   mode: 0 = alone (all SMs), 1 = concurrent (6 SMs green context)
+int main(int argc, char** argv) {
+    int count     = (argc > 1) ? atoi(argv[1]) : 240;
+    int block_x   = (argc > 2) ? atoi(argv[2]) : 32;
+    int block_y   = (argc > 3) ? atoi(argv[3]) : 32;
+    int paths     = (argc > 4) ? atoi(argv[4]) : 15;
+    int concurrent = (argc > 5) ? atoi(argv[5]) : 0;
+
+    int threadsPerBlock = block_x * block_y;
+    int numBlocks = (count * count + threadsPerBlock - 1) / threadsPerBlock;
+
+    CHECK_CU(cuInit(0));
+    CUdevice device;
+    CHECK_CU(cuDeviceGet(&device, 0));
+    CUcontext primaryCtx;
+    CHECK_CU(cuDevicePrimaryCtxRetain(&primaryCtx, device));
+    CHECK_CU(cuCtxSetCurrent(primaryCtx));
+
+    int totalSMs;
+    CHECK_RT(cudaDeviceGetAttribute(&totalSMs, cudaDevAttrMultiProcessorCount, 0));
+
+    int totalElements = count * count;
+    size_t matSize = (size_t)totalElements * sizeof(long);
+    long *d_matrix1, *d_matrix2;
+    CHECK_RT(cudaMalloc(&d_matrix1, matSize));
+    CHECK_RT(cudaMalloc(&d_matrix2, matSize));
+
+    // Initialize matrices on host
+    long *h_matrix1 = (long*)malloc(matSize);
+    long *h_matrix2 = (long*)malloc(matSize);
+    for (int i = 0; i < totalElements; i++) {
+        h_matrix1[i] = (i % 17) + 1;
+        h_matrix2[i] = (i % 13) + 1;
+    }
+    CHECK_RT(cudaMemcpy(d_matrix1, h_matrix1, matSize, cudaMemcpyHostToDevice));
+    CHECK_RT(cudaMemcpy(d_matrix2, h_matrix2, matSize, cudaMemcpyHostToDevice));
+    free(h_matrix1);
+    free(h_matrix2);
+
+    cudaEvent_t start, stop;
+    CHECK_RT(cudaEventCreate(&start));
+    CHECK_RT(cudaEventCreate(&stop));
+
+    printf("[VICTIM] Matrix: %dx%d | Block: (%d,%d)=%d threads | Grid: %d blocks | Paths: %d | Memory: %.2f MB\n",
+           count, count, block_x, block_y, threadsPerBlock, numBlocks, paths, 2.0 * matSize / 1e6);
+
+    if (!concurrent) {
+        printf("[VICTIM] ALONE — all %d SMs\n", totalSMs);
+        CHECK_RT(cudaEventRecord(start, 0));
+        GPUMultiplyMatrix<<<numBlocks, threadsPerBlock>>>(d_matrix1, d_matrix2, paths, count);
+        CHECK_RT(cudaEventRecord(stop, 0));
+        CHECK_RT(cudaStreamSynchronize(0));
+    } else {
+        // Green context: victim gets 6 SMs
+        CUdevResource fullSMs;
+        CHECK_CU(cuDeviceGetDevResource(device, &fullSMs, CU_DEV_RESOURCE_TYPE_SM));
+
+        CUdevResource victimSlice, enemySlice;
+        unsigned int nbGroups = 1;
+        CHECK_CU(cuDevSmResourceSplitByCount(&victimSlice, &nbGroups, &fullSMs, &enemySlice, 0, 5));
+
+        CUdevResourceDesc descVictim;
+        CHECK_CU(cuDevResourceGenerateDesc(&descVictim, &victimSlice, 1));
+        CUgreenCtx victimGCtx;
+        CHECK_CU(cuGreenCtxCreate(&victimGCtx, descVictim, device, CU_GREEN_CTX_DEFAULT_STREAM));
+        CUstream victimStream;
+        CHECK_CU(cuGreenCtxStreamCreate(&victimStream, victimGCtx, CU_STREAM_NON_BLOCKING, 0));
+
+        CUdevResource verify;
+        CHECK_CU(cuGreenCtxGetDevResource(victimGCtx, &verify, CU_DEV_RESOURCE_TYPE_SM));
+        printf("[VICTIM] CONCURRENT — %u SMs (enemy has 2 SMs, shared L2)\n", verify.sm.smCount);
+
+        CHECK_RT(cudaEventRecord(start, victimStream));
+        GPUMultiplyMatrix<<<numBlocks, threadsPerBlock, 0, victimStream>>>(d_matrix1, d_matrix2, paths, count);
+        CHECK_RT(cudaEventRecord(stop, victimStream));
+        CHECK_RT(cudaStreamSynchronize(victimStream));
+
+        CHECK_CU(cuStreamDestroy(victimStream));
+        CHECK_CU(cuGreenCtxDestroy(victimGCtx));
+    }
+
+    float ms;
+    CHECK_RT(cudaEventElapsedTime(&ms, start, stop));
+    printf("[VICTIM] Completed in %.2f ms\n", ms);
+
+    CHECK_RT(cudaEventDestroy(start));
+    CHECK_RT(cudaEventDestroy(stop));
+    CHECK_RT(cudaFree(d_matrix1));
+    CHECK_RT(cudaFree(d_matrix2));
+    CHECK_CU(cuDevicePrimaryCtxRelease(device));
+    return 0;
+}

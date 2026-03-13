@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
     cudaMemset(d_writeback, 0, size);
     
     // 16x256 launch keeps memory pipes hot but still leaves room for victims under mps
-    enemyKernel<<<16, 256>>>(d_chase, d_writeback, size, cycles, d_stop_flag);
+    enemyKernel<<<16,1024>>>(d_chase, d_writeback, size, cycles, d_stop_flag);
     
     //if infinite mode, wait for signal
     if (cycles == 0) {

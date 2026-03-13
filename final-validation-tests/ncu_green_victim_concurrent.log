@@ -1,0 +1,13 @@
+==PROF== Connected to process 2938656 (/home/zaineb/building-aggressors-on-Orin/final-validation-tests/green_victim)
+==PROF== Disconnected from process 2938656
+"ID","Process ID","Process Name","Host Name","Kernel Name","Context","Stream","Block Size","Grid Size","Device","CC","Section Name","Metric Name","Metric Unit","Metric Value"
+"0","2938656","green_victim","127.0.0.1","victimKernel(float *, int, unsigned long long)","2","15","(256, 1, 1)","(128, 1, 1)","0","8.7","Command line profiler metrics","gpu__time_active.sum","ns","2 541 411 232"
+"0","2938656","green_victim","127.0.0.1","victimKernel(float *, int, unsigned long long)","2","15","(256, 1, 1)","(128, 1, 1)","0","8.7","Command line profiler metrics","lts__t_sector_op_read_hit_rate.pct","%","30,59"
+"0","2938656","green_victim","127.0.0.1","victimKernel(float *, int, unsigned long long)","2","15","(256, 1, 1)","(128, 1, 1)","0","8.7","Command line profiler metrics","lts__t_sector_op_write_hit_rate.pct","%","100,00"
+"0","2938656","green_victim","127.0.0.1","victimKernel(float *, int, unsigned long long)","2","15","(256, 1, 1)","(128, 1, 1)","0","8.7","Command line profiler metrics","lts__t_sectors.sum","sector","123 442 581"
+"0","2938656","green_victim","127.0.0.1","victimKernel(float *, int, unsigned long long)","2","15","(256, 1, 1)","(128, 1, 1)","0","8.7","Command line profiler metrics","lts__t_sectors_op_read_lookup_miss.sum","sector","36 902 710"
+"0","2938656","green_victim","127.0.0.1","victimKernel(float *, int, unsigned long long)","2","15","(256, 1, 1)","(128, 1, 1)","0","8.7","Command line profiler metrics","lts__t_sectors_op_write_lookup_miss.sum","sector","0"
+"0","2938656","green_victim","127.0.0.1","victimKernel(float *, int, unsigned long long)","2","15","(256, 1, 1)","(128, 1, 1)","0","8.7","Command line profiler metrics","sm__cycles_elapsed.avg","cycle","1 063 012 535"
+"0","2938656","green_victim","127.0.0.1","victimKernel(float *, int, unsigned long long)","2","15","(256, 1, 1)","(128, 1, 1)","0","8.7","Command line profiler metrics","sm__inst_executed.sum","inst","16 901 497 516"
+"0","2938656","green_victim","127.0.0.1","victimKernel(float *, int, unsigned long long)","2","15","(256, 1, 1)","(128, 1, 1)","0","8.7","Command line profiler metrics","sm__warps_launched.sum","warp","1 024"
+"0","2938656","green_victim","127.0.0.1","victimKernel(float *, int, unsigned long long)","2","15","(256, 1, 1)","(128, 1, 1)","0","8.7","Command line profiler metrics","smsp__warps_active.avg","warp","10 785 497 690,58"

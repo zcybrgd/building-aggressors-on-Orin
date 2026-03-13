@@ -1,0 +1,4 @@
+[ENEMY] Running on 2 SMs | PID: 2935062
+[ENEMY] Sharing L2 with victim — contention active
+[ENEMY] Running until killed...
+[ENEMY] Stopped.
