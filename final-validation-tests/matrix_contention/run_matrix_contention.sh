@@ -1,18 +1,15 @@
 #!/bin/bash
-
-# ================================================================
 # MATRIX MULTIPLY CONTENTION EXPERIMENT
 # Green Context SM Isolation: Victim=6 SMs, Enemy=2 SMs
-# L2 cache is SHARED — testing contention across all matrix/block combos
-# ================================================================
+# Both processes run on the same GPU (shared L2 cache) but are
+# restricted to disjoint SM sets via CUDA green contexts, letting
+# us measure pure L2 contention with zero SM sharing.
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PARENT_DIR="$(dirname "$SCRIPT_DIR")"
 RESULTS_DIR="$SCRIPT_DIR/results_$(date +%Y%m%d_%H%M%S)"
 PATHS=15       # kernel internal iteration count
 NUM_RUNS=1    # how many times to repeat each experiment
-
-# NCU metrics
 NCU_METRICS="lts__t_sector_op_read_hit_rate.pct,lts__t_sector_op_write_hit_rate.pct,lts__t_sectors.sum,lts__t_sectors_op_read_lookup_miss.sum,lts__t_sectors_op_write_lookup_miss.sum,sm__cycles_elapsed.avg,gpu__time_active.sum,sm__inst_executed.sum,smsp__warps_active.avg,sm__warps_launched.sum"
 
 # Matrix sizes
@@ -35,37 +32,31 @@ BLOCK_CONFIGS=(
     #"512,2"
 )
 
-echo "========================================================"
-echo "  MATRIX MULTIPLY L2 CONTENTION EXPERIMENT"
-echo "  Green Context: Victim=6 SMs | Enemy=2 SMs | L2=SHARED"
+echo "  Green Context: Victim=6 SMs | Enemy=2 SMs"
 echo "  Runs per combo: $NUM_RUNS"
-echo "========================================================"
 echo ""
 
-# --- Compile ---
-echo "Compiling matrix_victim..."
-nvcc -arch=sm_87 -O3 -o "$SCRIPT_DIR/matrix_victim" "$SCRIPT_DIR/matrix_victim_rt.cu" -lcuda
-echo "Compiling green_enemy (from parent dir)..."
-nvcc -arch=sm_87 -O3 -o "$PARENT_DIR/green_enemy" "$PARENT_DIR/green_enemy_rt.cu" -lcuda
+echo "Compiling the victim kernel"
+nvcc -arch=sm_87 -O3 -o "$SCRIPT_DIR/matrix_victim" "$SCRIPT_DIR/matrix_victim.cu" -lcuda
+echo "Compiling the enemy kernel"
+nvcc -arch=sm_87 -O3 -o "$PARENT_DIR/green_enemy" "$PARENT_DIR/green_enemy.cu" -lcuda
 cp "$PARENT_DIR/green_enemy" "$SCRIPT_DIR/green_enemy"
 echo "Compilation done"
 echo ""
 
-# --- Create results directory ---
 mkdir -p "$RESULTS_DIR"
-
-# --- Raw CSV (every single run) ---
 RAW_CSV="$RESULTS_DIR/raw_all_runs.csv"
 echo "matrix_size,block_x,block_y,threads_per_block,num_blocks,memory_MB,scenario,run,gpu_time_ns,l2_read_hit_rate_pct,l2_total_sectors,l2_read_miss_sectors,l2_write_miss_sectors,sm_cycles_avg,sm_inst_executed,smsp_warps_active_avg,sm_warps_launched" > "$RAW_CSV"
 
-# --- Helper to extract metric value from NCU CSV log ---
+
+# NCU CSV output quotes metric names, so we grep for the quoted name, take the
+# last match (in case of multiple kernel invocations), and pull the value field.
 extract_metric() {
     local logfile="$1"
     local metric="$2"
     grep "\"$metric\"" "$logfile" | tail -1 | awk -F'"' '{print $(NF-1)}' | tr -d ' '
 }
 
-# --- Run experiments ---
 TOTAL_COMBOS=$(( ${#MATRIX_SIZES[@]} * ${#BLOCK_CONFIGS[@]} ))
 COMBO=0
 
@@ -83,12 +74,10 @@ for MSIZE in "${MATRIX_SIZES[@]}"; do
         echo "========================================================"
         echo "  [$COMBO/$TOTAL_COMBOS] Matrix: ${MSIZE}x${MSIZE} | Block: (${BX},${BY})=${THREADS} | Grid: ${NUM_BLOCKS}"
         echo "  Memory: ${MEM_MB} MB | Paths: ${PATHS} | Runs: ${NUM_RUNS}"
-        echo "========================================================"
 
         for RUN in $(seq 1 $NUM_RUNS); do
             echo "  --- Run $RUN/$NUM_RUNS ---"
 
-            # ---- ALONE ----
             ALONE_LOG="$RESULTS_DIR/ncu_${TAG}_alone_r${RUN}.log"
             sudo $(which ncu) --metrics $NCU_METRICS \
                 --kernel-name GPUMultiplyMatrix \
@@ -112,11 +101,16 @@ for MSIZE in "${MATRIX_SIZES[@]}"; do
 
             sleep 1
 
-            # ---- CONCURRENT (with enemy) ----
             CONC_LOG="$RESULTS_DIR/ncu_${TAG}_concurrent_r${RUN}.log"
+            #launch the enemy as a background process before NCU starts.
+            # args: cycles=0 (infinite), use_green=1 (restricted to 2 SMs).
+            # The enemy will run until it receives SIGTERM below
             "$SCRIPT_DIR/green_enemy" 0 1 > "$RESULTS_DIR/enemy_${TAG}_r${RUN}.log" 2>&1 &
             ENEMY_PID=$!
-
+            # Give the enemy time to initialise its green context, allocate device
+            # memory, and launch its kernel before NCU starts profiling the victim.
+            # Without this delay the enemy may not yet be saturating the L2 cache
+            # when the victim's kernel begins, causing under-estimated contention.
             sleep 3
 
             sudo $(which ncu) --metrics $NCU_METRICS \
@@ -126,7 +120,10 @@ for MSIZE in "${MATRIX_SIZES[@]}"; do
                 "$SCRIPT_DIR/matrix_victim" $MSIZE $BX $BY $PATHS 1 \
                 2>/dev/null
 
-            # Kill enemy
+            # Kill enemy: send SIGTERM first so the process can write the stop flag
+            # to device memory and let the GPU kernel exit gracefully. The sleep
+            # gives it time to do so. SIGKILL (-9) is a hard fallback in case the
+            # process is stuck (e.g. waiting on a long cudaStreamSynchronize)
             kill $ENEMY_PID 2>/dev/null || true
             sleep 1
             kill -9 $ENEMY_PID 2>/dev/null || true
@@ -153,12 +150,8 @@ for MSIZE in "${MATRIX_SIZES[@]}"; do
     done
 done
 
-echo "========================================================"
-echo "  ALL EXPERIMENTS COMPLETE"
-echo "========================================================"
-echo ""
+
 echo "Results directory: $RESULTS_DIR/"
 echo "Raw data CSV:      $RESULTS_DIR/raw_all_runs.csv"
 echo "Individual logs:   $RESULTS_DIR/ncu_m*_r*.log"
-echo ""
 echo "Total: $TOTAL_COMBOS combos × $NUM_RUNS runs × 2 scenarios = $((TOTAL_COMBOS * NUM_RUNS * 2)) profiling runs"

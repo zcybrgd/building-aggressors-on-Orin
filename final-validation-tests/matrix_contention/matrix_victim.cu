@@ -57,15 +57,13 @@ int main(int argc, char** argv) {
     int threadsPerBlock = block_x * block_y;
     int numBlocks = (count * count + threadsPerBlock - 1) / threadsPerBlock;
 
-    CHECK_CU(cuInit(0));
+    int devIdx = 0;
+    CHECK_RT(cudaSetDevice(devIdx));
     CUdevice device;
-    CHECK_CU(cuDeviceGet(&device, 0));
-    CUcontext primaryCtx;
-    CHECK_CU(cuDevicePrimaryCtxRetain(&primaryCtx, device));
-    CHECK_CU(cuCtxSetCurrent(primaryCtx));
+    CHECK_CU(cuDeviceGet(&device, devIdx));
 
     int totalSMs;
-    CHECK_RT(cudaDeviceGetAttribute(&totalSMs, cudaDevAttrMultiProcessorCount, 0));
+    CHECK_RT(cudaDeviceGetAttribute(&totalSMs, cudaDevAttrMultiProcessorCount, devIdx));
 
     int totalElements = count * count;
     size_t matSize = (size_t)totalElements * sizeof(long);
@@ -99,21 +97,39 @@ int main(int argc, char** argv) {
         CHECK_RT(cudaEventRecord(stop, 0));
         CHECK_RT(cudaStreamSynchronize(0));
     } else {
-        // Green context: victim gets 6 SMs
+        // Step 1: query the full SM resource pool of the device.
+        // CU_DEV_RESOURCE_TYPE_SM is the only resource type relevant here;
+        // it describes how many SMs are available for partitioning.
         CUdevResource fullSMs;
         CHECK_CU(cuDeviceGetDevResource(device, &fullSMs, CU_DEV_RESOURCE_TYPE_SM));
 
+        // Step 2: split SMs into a group + remainder.
         CUdevResource victimSlice, enemySlice;
         unsigned int nbGroups = 1;
         CHECK_CU(cuDevSmResourceSplitByCount(&victimSlice, &nbGroups, &fullSMs, &enemySlice, 0, 5));
 
+        // Step 3: pack the SM resource into an opaque descriptor.
+        // cuDevResourceGenerateDesc bundles one or more CUdevResource objects
+        // into a CUdevResourceDesc that cuGreenCtxCreate can consume.
         CUdevResourceDesc descVictim;
         CHECK_CU(cuDevResourceGenerateDesc(&descVictim, &victimSlice, 1));
+
+        // Step 4: create the green context restricted to victimSlice (6 SMs).
+        // CU_GREEN_CTX_DEFAULT_STREAM requests a default stream be associated
+        // with this green context (required flag in CUDA 12.x).
         CUgreenCtx victimGCtx;
         CHECK_CU(cuGreenCtxCreate(&victimGCtx, descVictim, device, CU_GREEN_CTX_DEFAULT_STREAM));
+
+        // Step 5: create a stream bound to the green context.
+        // CU_STREAM_NON_BLOCKING prevents implicit synchronisation with stream 0
+        // (the default stream), ensuring the victim's work stays isolated and
+        // does not accidentally wait on unrelated Runtime API operations.
         CUstream victimStream;
         CHECK_CU(cuGreenCtxStreamCreate(&victimStream, victimGCtx, CU_STREAM_NON_BLOCKING, 0));
 
+        // Sanity check: confirm the driver actually assigned the expected SM count.
+        // cuGreenCtxGetDevResource reads back the resource from the live context,
+        // so this catches any silent rounding or rejection by the driver.
         CUdevResource verify;
         CHECK_CU(cuGreenCtxGetDevResource(victimGCtx, &verify, CU_DEV_RESOURCE_TYPE_SM));
         printf("[VICTIM] CONCURRENT — %u SMs (enemy has 2 SMs, shared L2)\n", verify.sm.smCount);
@@ -123,6 +139,8 @@ int main(int argc, char** argv) {
         CHECK_RT(cudaEventRecord(stop, victimStream));
         CHECK_RT(cudaStreamSynchronize(victimStream));
 
+        // cuStreamDestroy / cuGreenCtxDestroy must be used (not their Runtime
+        // equivalents) because the stream and context were created via Driver API.
         CHECK_CU(cuStreamDestroy(victimStream));
         CHECK_CU(cuGreenCtxDestroy(victimGCtx));
     }
@@ -135,6 +153,5 @@ int main(int argc, char** argv) {
     CHECK_RT(cudaEventDestroy(stop));
     CHECK_RT(cudaFree(d_matrix1));
     CHECK_RT(cudaFree(d_matrix2));
-    CHECK_CU(cuDevicePrimaryCtxRelease(device));
     return 0;
 }

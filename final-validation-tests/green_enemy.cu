@@ -24,14 +24,23 @@
     } \
 } while(0)
 
+// keep_running is set to 0 by the signal handler so the host loop in infinite
+// mode can exit cleanly and then write the stop flag to GPU memory
 volatile sig_atomic_t keep_running = 1;
 
+// Signal handler for SIGTERM / SIGINT (sent by the run script via kill) // only flips the flag
 void signal_handler(int signum) {
     keep_running = 0;
 }
 
-// Same L2-thrashing kernel from enemy_process_enhanced.cu
+
 // 16 MB footprint, pointer chase + scatter writes
+// Two run modes controlled by `cycles`:
+//   cycles==0 : run until d_stop_flag[0] is set to 1 by the host (infinite mode,
+//               used when the enemy must outlive an NCU profiling session of the victim).
+//   cycles >0 : run for exactly `cycles` GPU clock cycles then exit.
+// d_stop_flag lives in device memory so the host can poke it at any time without
+// needing a kernel re-launch or a CUDA IPC mechanism.
 
 __global__ void printSMIDs() {
     if (threadIdx.x == 0) {
@@ -90,28 +99,24 @@ int main(int argc, char** argv) {
     signal(SIGTERM, signal_handler);
     signal(SIGINT, signal_handler);
 
-    CHECK_CU(cuInit(0));
+    //the Runtime API automatically initialises CUDA and creates/activates the primary context on the first Runtime call
+    // cuDeviceGet() is still required to obtain the CUdevice handle used by the Driver API
+    // green context calls below (cuDeviceGetDevResource, cuGreenCtxCreate, etc.)
+    int devIdx = 0;
+    CHECK_RT(cudaSetDevice(devIdx));
     CUdevice device;
-    CHECK_CU(cuDeviceGet(&device, 0));
-    CUcontext primaryCtx;
-    CHECK_CU(cuDevicePrimaryCtxRetain(&primaryCtx, device));
-    CHECK_CU(cuCtxSetCurrent(primaryCtx));
-
+    CHECK_CU(cuDeviceGet(&device, devIdx));
     int totalSMs;
-    CHECK_RT(cudaDeviceGetAttribute(&totalSMs, cudaDevAttrMultiProcessorCount, 0));
-
-    int size = 16 * 1024 * 1024; // 16 MB
+    CHECK_RT(cudaDeviceGetAttribute(&totalSMs, cudaDevAttrMultiProcessorCount, devIdx));
+    int size = 16 * 1024 * 1024; 
     unsigned int* d_chase;
     unsigned int* d_writeback;
     int* d_stop_flag;
     CHECK_RT(cudaMalloc(&d_chase, size));
     CHECK_RT(cudaMalloc(&d_writeback, size));
     CHECK_RT(cudaMalloc(&d_stop_flag, sizeof(int)));
-
     int h_stop_flag = 0;
     CHECK_RT(cudaMemcpy(d_stop_flag, &h_stop_flag, sizeof(int), cudaMemcpyHostToDevice));
-
-    // Build permutation for pointer chase
     unsigned int* h_chase = (unsigned int*)malloc(size);
     int num_words = size / sizeof(unsigned int);
     for (int i = 0; i < num_words; i++) {
@@ -122,7 +127,6 @@ int main(int argc, char** argv) {
     CHECK_RT(cudaMemset(d_writeback, 0, size));
 
     if (!use_green) {
-        // No green context — enemy uses default context (all SMs)
         printf("[ENEMY] No green context — using all %d SMs\n", totalSMs);
         printf("[ENEMY] Running... (PID: %d)\n", getpid());
         printSMIDs<<<16, 1>>>();
@@ -130,22 +134,33 @@ int main(int argc, char** argv) {
         enemyKernel<<<16, 1024>>>(d_chase, d_writeback, size, cycles, d_stop_flag);
 
     } else {
-        // Green context: enemy gets the remainder 2 SMs
-        // Split: minCount=5 -> group=6 SMs (victim), remainder=2 SMs (enemy)
+        //from the documentation
+        //step 1: query the full SM resource pool of the device
         CUdevResource fullSMs;
         CHECK_CU(cuDeviceGetDevResource(device, &fullSMs, CU_DEV_RESOURCE_TYPE_SM));
-
+        //step 2: same split as the victim process, both processes independently
+        // call cuDevSmResourceSplitByCount with identical arguments so they agree
+        //the enemy takes the *remainder* (enemySlice), not the group, giving it
+        // the minimum possible SM allocation and leaving the maximum to the victim.
         CUdevResource victimSlice, enemySlice;
         unsigned int nbGroups = 1;
         CHECK_CU(cuDevSmResourceSplitByCount(&victimSlice, &nbGroups, &fullSMs, &enemySlice, 0, 5));
 
+        //step 3: pack enemySlice into an opaque descriptor for cuGreenCtxCreate.
         CUdevResourceDesc descEnemy;
         CHECK_CU(cuDevResourceGenerateDesc(&descEnemy, &enemySlice, 1));
+
+        //step 4: create green context restricted to enemySlice (2 SMs)
         CUgreenCtx enemyGCtx;
         CHECK_CU(cuGreenCtxCreate(&enemyGCtx, descEnemy, device, CU_GREEN_CTX_DEFAULT_STREAM));
+
+        //step 5: stream bound to the green context
+        // CU_STREAM_NON_BLOCKING prevents implicit sync with stream 0, so the
+        // long-running enemy kernel never accidentally blocks other Runtime calls.
         CUstream enemyStream;
         CHECK_CU(cuGreenCtxStreamCreate(&enemyStream, enemyGCtx, CU_STREAM_NON_BLOCKING, 0));
 
+        //sanity check: confirm the driver assigned the expected 2 SMs
         CUdevResource verify;
         CHECK_CU(cuGreenCtxGetDevResource(enemyGCtx, &verify, CU_DEV_RESOURCE_TYPE_SM));
         printf("[ENEMY] Green context — %u SMs (victim has 6 SMs, shared L2)\n", verify.sm.smCount);
@@ -155,13 +170,20 @@ int main(int argc, char** argv) {
         enemyKernel<<<16, 1024, 0, enemyStream>>>(d_chase, d_writeback, size, cycles, d_stop_flag);
 
         if (cycles == 0) {
+            // Infinite mode: block the host until a SIGTERM/SIGINT arrives
+            // sleep(1) keeps the CPU idle so we don't busy-spin while the GPU
+            // kernel runs autonomously on the green context stream
             while (keep_running) {
                 sleep(1);
             }
+            // Write stop flag to device memory so the GPU kernel exits its loop
+            // on the next iteration. Using a device-visible flag is safer than
+            // killing a running kernel mid-flight
             printf("[ENEMY] Stop signal received, terminating kernel...\n");
             h_stop_flag = 1;
             CHECK_RT(cudaMemcpy(d_stop_flag, &h_stop_flag, sizeof(int), cudaMemcpyHostToDevice));
         }
+
 
         CHECK_RT(cudaStreamSynchronize(enemyStream));
         CHECK_CU(cuStreamDestroy(enemyStream));
@@ -171,11 +193,12 @@ int main(int argc, char** argv) {
         CHECK_RT(cudaFree(d_chase));
         CHECK_RT(cudaFree(d_writeback));
         CHECK_RT(cudaFree(d_stop_flag));
-        CHECK_CU(cuDevicePrimaryCtxRelease(device));
         return 0;
     }
 
-    // Non-green infinite mode wait
+    // Non-green infinite mode: same stop-flag mechanism as the green path above.
+    // The kernel was launched on the default stream, so cudaDeviceSynchronize()
+    // is sufficient to wait for it after the flag has been written.
     if (cycles == 0) {
         while (keep_running) {
             sleep(1);
@@ -191,6 +214,5 @@ int main(int argc, char** argv) {
     CHECK_RT(cudaFree(d_chase));
     CHECK_RT(cudaFree(d_writeback));
     CHECK_RT(cudaFree(d_stop_flag));
-    CHECK_CU(cuDevicePrimaryCtxRelease(device));
     return 0;
 }
