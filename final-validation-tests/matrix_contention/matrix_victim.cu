@@ -27,11 +27,11 @@
 __global__ void GPUMultiplyMatrix(long *matrix1, long *matrix2, int paths, int count) {
     int element = blockIdx.x * blockDim.x + threadIdx.x;
     int i;
-    if (threadIdx.x == 0) {
-        unsigned int smid;
-        asm volatile("mov.u32 %0, %%smid;" : "=r"(smid));
-        printf("[VICTIM] block %d -> SM %u\n", blockIdx.x, smid);
-    }
+    //if (threadIdx.x == 0) {
+    //    unsigned int smid;
+    //    asm volatile("mov.u32 %0, %%smid;" : "=r"(smid));
+    //    printf("[VICTIM] block %d -> SM %u\n", blockIdx.x, smid);
+    //}
     while (paths > 0) {
         long sum = 0;
         int col = element % count;
@@ -104,6 +104,12 @@ int main(int argc, char** argv) {
         CHECK_CU(cuDeviceGetDevResource(device, &fullSMs, CU_DEV_RESOURCE_TYPE_SM));
 
         // Step 2: split SMs into a group + remainder.
+        // cuDevSmResourceSplit is the recommended API but is not available in
+        // CUDA 12.6 (missing from headers and libcuda.so on this Orin).
+        // cuDevSmResourceSplitByCount is the only split API present here.
+        // minCount=5 on 8 SMs with alignment=2 gives group=6 SMs (victim)
+        // and remainder=2 SMs (enemy). Both processes call the same split
+        // independently and each takes its slice — no IPC needed.
         CUdevResource victimSlice, enemySlice;
         unsigned int nbGroups = 1;
         CHECK_CU(cuDevSmResourceSplitByCount(&victimSlice, &nbGroups, &fullSMs, &enemySlice, 0, 5));

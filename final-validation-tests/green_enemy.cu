@@ -138,10 +138,12 @@ int main(int argc, char** argv) {
         //step 1: query the full SM resource pool of the device
         CUdevResource fullSMs;
         CHECK_CU(cuDeviceGetDevResource(device, &fullSMs, CU_DEV_RESOURCE_TYPE_SM));
-        //step 2: same split as the victim process, both processes independently
-        // call cuDevSmResourceSplitByCount with identical arguments so they agree
-        //the enemy takes the *remainder* (enemySlice), not the group, giving it
-        // the minimum possible SM allocation and leaving the maximum to the victim.
+        //step 2: split SMs into a group + remainder.
+        // cuDevSmResourceSplit is the recommended API but is not available in
+        // CUDA 12.6 (missing from headers and libcuda.so on this Orin).
+        // cuDevSmResourceSplitByCount is the only split API present here.
+        // minCount=5 on 8 SMs with alignment=2 gives group=6 SMs (victim)
+        // and remainder=2 SMs. Enemy takes the *remainder* (enemySlice).
         CUdevResource victimSlice, enemySlice;
         unsigned int nbGroups = 1;
         CHECK_CU(cuDevSmResourceSplitByCount(&victimSlice, &nbGroups, &fullSMs, &enemySlice, 0, 5));
