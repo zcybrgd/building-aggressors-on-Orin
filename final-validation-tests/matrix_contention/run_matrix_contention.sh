@@ -44,9 +44,9 @@ echo ""
 
 # --- Compile ---
 echo "Compiling matrix_victim..."
-nvcc -arch=sm_87 -O3 -o "$SCRIPT_DIR/matrix_victim" "$SCRIPT_DIR/matrix_victim.cu" -lcuda
+nvcc -arch=sm_87 -O3 -o "$SCRIPT_DIR/matrix_victim" "$SCRIPT_DIR/matrix_victim_rt.cu" -lcuda
 echo "Compiling green_enemy (from parent dir)..."
-nvcc -arch=sm_87 -O3 -o "$PARENT_DIR/green_enemy" "$PARENT_DIR/green_enemy.cu" -lcuda
+nvcc -arch=sm_87 -O3 -o "$PARENT_DIR/green_enemy" "$PARENT_DIR/green_enemy_rt.cu" -lcuda
 cp "$PARENT_DIR/green_enemy" "$SCRIPT_DIR/green_enemy"
 echo "Compilation done"
 echo ""
