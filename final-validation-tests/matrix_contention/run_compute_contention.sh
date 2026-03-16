@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ================================================================
-# MATRIX MULTIPLY CONTENTION EXPERIMENT
+# COMPUTE KERNEL CONTENTION EXPERIMENT 
 # Green Context SM Isolation: Victim=6 SMs, Enemy=2 SMs
 # L2 cache is SHARED — testing contention across all matrix/block combos
 # ================================================================
@@ -10,7 +10,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PARENT_DIR="$(dirname "$SCRIPT_DIR")"
 RESULTS_DIR="$SCRIPT_DIR/results_$(date +%Y%m%d_%H%M%S)"
 PATHS=15       # kernel internal iteration count
-NUM_RUNS=1    # how many times to repeat each experiment
+NUM_RUNS=5    # how many times to repeat each experiment
 
 # NCU metrics
 NCU_METRICS="lts__t_sector_op_read_hit_rate.pct,lts__t_sector_op_write_hit_rate.pct,lts__t_sectors.sum,lts__t_sectors_op_read_lookup_miss.sum,lts__t_sectors_op_write_lookup_miss.sum,sm__cycles_elapsed.avg,gpu__time_active.sum,sm__inst_executed.sum,smsp__warps_active.avg,sm__warps_launched.sum"
@@ -20,33 +20,35 @@ MATRIX_SIZES=(784)
 
 # Block configs: "BLOCK_X,BLOCK_Y"
 BLOCK_CONFIGS=(
-    #"1,1024"
-    #"2,512"
-    #"4,256"
-    #"8,128"
-    #"16,64"
+    "1,1024"
+   # "2,512"
+   # "4,256"
+    "8,128"
+    "16,64"
     "32,32"
-    #"64,16"
-    #"128,8"
-    #"256,4"
-    #"4,128"
-    #"8,64"
-    #"1024,1"
-    #"512,2"
+   # "64,16"
+   # "128,8"
+   # "256,4"
+   # "4,128"
+   # "8,64"
+   # "1024,1"
+   # "512,2"
 )
 
 echo "========================================================"
-echo "  MATRIX MULTIPLY L2 CONTENTION EXPERIMENT"
+echo "  COMPUTE KERNEL L2 CONTENTION EXPERIMENT"
 echo "  Green Context: Victim=6 SMs | Enemy=2 SMs | L2=SHARED"
 echo "  Runs per combo: $NUM_RUNS"
 echo "========================================================"
 echo ""
 
 # --- Compile ---
-echo "Compiling matrix_victim..."
-nvcc -arch=sm_87 -O3 -o "$SCRIPT_DIR/matrix_victim" "$SCRIPT_DIR/matrix_victim.cu" -lcuda
+echo "Compiling compute_kernel..."
+nvcc -arch=sm_87 -O3 -o "$SCRIPT_DIR/matrix_victim" "$SCRIPT_DIR/compute.cu" -lcuda
 echo "Compiling green_enemy (from parent dir)..."
-nvcc -arch=sm_87 -O3 -o "$PARENT_DIR/green_enemy" "$PARENT_DIR/green_enemy.cu" -lcuda
+if [ ! -f "$PARENT_DIR/green_enemy" ]; then
+    nvcc -arch=sm_87 -O3 -o "$PARENT_DIR/green_enemy" "$PARENT_DIR/green_enemy.cu" -lcuda
+fi
 cp "$PARENT_DIR/green_enemy" "$SCRIPT_DIR/green_enemy"
 echo "Compilation done"
 echo ""
@@ -91,11 +93,11 @@ for MSIZE in "${MATRIX_SIZES[@]}"; do
             # ---- ALONE ----
             ALONE_LOG="$RESULTS_DIR/ncu_${TAG}_alone_r${RUN}.log"
             sudo $(which ncu) --metrics $NCU_METRICS \
-                --kernel-name GPUMultiplyMatrix \
+                --kernel-name GPUComputeIntensive \
                 --csv \
                 --log-file "$ALONE_LOG" \
                 "$SCRIPT_DIR/matrix_victim" $MSIZE $BX $BY $PATHS 0 \
-                2>/dev/null
+                > /dev/null 2>&1
 
             A_TIME=$(extract_metric "$ALONE_LOG" "gpu__time_active.sum")
             A_RHIT=$(extract_metric "$ALONE_LOG" "lts__t_sector_op_read_hit_rate.pct")
@@ -120,11 +122,11 @@ for MSIZE in "${MATRIX_SIZES[@]}"; do
             sleep 3
 
             sudo $(which ncu) --metrics $NCU_METRICS \
-                --kernel-name GPUMultiplyMatrix \
+                --kernel-name GPUComputeIntensive \
                 --csv \
                 --log-file "$CONC_LOG" \
                 "$SCRIPT_DIR/matrix_victim" $MSIZE $BX $BY $PATHS 1 \
-                2>/dev/null
+                > /dev/null 2>&1
 
             # Kill enemy
             kill $ENEMY_PID 2>/dev/null || true

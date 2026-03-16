@@ -27,6 +27,11 @@
 __global__ void GPUMultiplyMatrix(long *matrix1, long *matrix2, int paths, int count) {
     int element = blockIdx.x * blockDim.x + threadIdx.x;
     int i;
+    if (threadIdx.x == 0) {
+        unsigned int smid;
+        asm volatile("mov.u32 %0, %%smid;" : "=r"(smid));
+        printf("[VICTIM] block %d -> SM %u\n", blockIdx.x, smid);
+    }
     while (paths > 0) {
         long sum = 0;
         int col = element % count;

@@ -26,6 +26,11 @@ __global__ void victimKernel(float* d_data, int N, unsigned long long iters) {
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
     int stride = blockDim.x * gridDim.x;
     float sum = 0.0f;
+    if (threadIdx.x == 0) {
+        unsigned int smid;
+        asm volatile("mov.u32 %0, %%smid;" : "=r"(smid));
+        printf("[VICTIM] block %d -> SM %u\n", blockIdx.x, smid);
+    }
     for (unsigned long long iter = 0; iter < iters; iter++) {
         for (int i = tid; i < N; i += stride) {
             sum += d_data[i] * 1.1f;

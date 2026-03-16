@@ -32,6 +32,15 @@ void signal_handler(int signum) {
 
 // Same L2-thrashing kernel from enemy_process_enhanced.cu
 // 16 MB footprint, pointer chase + scatter writes
+
+__global__ void printSMIDs() {
+    if (threadIdx.x == 0) {
+        unsigned int smid;
+        asm volatile("mov.u32 %0, %%smid;" : "=r"(smid));
+        printf("[ENEMY] block %d -> SM %u\n", blockIdx.x, smid);
+    }
+}
+
 __global__ void enemyKernel(unsigned int* d_chase, unsigned int* d_writeback, int size, unsigned long long cycles, int* d_stop_flag) {
     unsigned long long start = clock64();
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
@@ -116,6 +125,8 @@ int main(int argc, char** argv) {
         // No green context — enemy uses default context (all SMs)
         printf("[ENEMY] No green context — using all %d SMs\n", totalSMs);
         printf("[ENEMY] Running... (PID: %d)\n", getpid());
+        printSMIDs<<<16, 1>>>();
+        CHECK_RT(cudaDeviceSynchronize());
         enemyKernel<<<16, 1024>>>(d_chase, d_writeback, size, cycles, d_stop_flag);
 
     } else {
@@ -139,7 +150,8 @@ int main(int argc, char** argv) {
         CHECK_CU(cuGreenCtxGetDevResource(enemyGCtx, &verify, CU_DEV_RESOURCE_TYPE_SM));
         printf("[ENEMY] Green context — %u SMs (victim has 6 SMs, shared L2)\n", verify.sm.smCount);
         printf("[ENEMY] Running... (PID: %d)\n", getpid());
-
+        printSMIDs<<<16, 1, 0, enemyStream>>>();
+        CHECK_RT(cudaStreamSynchronize(enemyStream));
         enemyKernel<<<16, 1024, 0, enemyStream>>>(d_chase, d_writeback, size, cycles, d_stop_flag);
 
         if (cycles == 0) {
