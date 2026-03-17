@@ -1,3 +1,0 @@
-matrix_size,block_x,block_y,threads_per_block,num_blocks,memory_MB,scenario,run,gpu_time_ns,l2_read_hit_rate_pct,l2_total_sectors,l2_read_miss_sectors,l2_write_miss_sectors,sm_cycles_avg,sm_inst_executed,smsp_warps_active_avg,sm_warps_launched
-784,1024,1,1024,601,9.83,alone,1,260569856,87,29,1393310359,176829708,0,237513477,1726377994,1878810878,19232
-784,1024,1,1024,601,9.83,concurrent,1,771168096,82,83,1419032554,240554155,0,322154669,1726439180,2449397944,25,19232

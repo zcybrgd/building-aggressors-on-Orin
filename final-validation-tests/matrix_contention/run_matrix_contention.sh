@@ -9,20 +9,20 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PARENT_DIR="$(dirname "$SCRIPT_DIR")"
 RESULTS_DIR="$SCRIPT_DIR/results_$(date +%Y%m%d_%H%M%S)"
 PATHS=15       # kernel internal iteration count
-NUM_RUNS=1    # how many times to repeat each experiment
+NUM_RUNS=5    # how many times to repeat each experiment
 NCU_METRICS="lts__t_sector_op_read_hit_rate.pct,lts__t_sector_op_write_hit_rate.pct,lts__t_sectors.sum,lts__t_sectors_op_read_lookup_miss.sum,lts__t_sectors_op_write_lookup_miss.sum,sm__cycles_elapsed.avg,gpu__time_active.sum,sm__inst_executed.sum,smsp__warps_active.avg,sm__warps_launched.sum"
 
 # Matrix sizes
-MATRIX_SIZES=(784)
+MATRIX_SIZES=(240 496 784 1016 1232 1680 2024)
 
 # Block configs: "BLOCK_X,BLOCK_Y"
 BLOCK_CONFIGS=(
-    #"1,1024"
-    #"2,512"
+    "1,1024"
+    "2,512"
     #"4,256"
-    #"8,128"
+    "8,128"
     "16,64"
-    #"32,32"
+    "32,32"
     #"64,16"
     #"128,8"
     "256,4"
