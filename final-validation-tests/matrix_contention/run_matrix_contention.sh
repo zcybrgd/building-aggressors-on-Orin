@@ -9,26 +9,30 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PARENT_DIR="$(dirname "$SCRIPT_DIR")"
 RESULTS_DIR="$SCRIPT_DIR/results_$(date +%Y%m%d_%H%M%S)"
 PATHS=15       # kernel internal iteration count
-NUM_RUNS=5    # how many times to repeat each experiment
+NUM_RUNS=1    # how many times to repeat each experiment
 NCU_METRICS="lts__t_sector_op_read_hit_rate.pct,lts__t_sector_op_write_hit_rate.pct,lts__t_sectors.sum,lts__t_sectors_op_read_lookup_miss.sum,lts__t_sectors_op_write_lookup_miss.sum,sm__cycles_elapsed.avg,gpu__time_active.sum,sm__inst_executed.sum,smsp__warps_active.avg,sm__warps_launched.sum"
 
 # Matrix sizes
-MATRIX_SIZES=(240 496 784 1016 1232 1680 2024)
+MATRIX_SIZES=(
+    #240 496 
+784 
+#1016 1232 
+#1680 2024
+)
 
 # Block configs: "BLOCK_X,BLOCK_Y"
 BLOCK_CONFIGS=(
-    "1,1024"
-    "2,512"
+    #"1,1024"
+   # "2,512"
     #"4,256"
-    "8,128"
-    "16,64"
+    #"8,128"
     "32,32"
     #"64,16"
     #"128,8"
-    "256,4"
-    "4,128"
-    "8,64"
-    "1024,1"
+   # "256,4"
+   # "4,128"
+   # "8,64"
+   # "1024,1"
     #"512,2"
 )
 
@@ -79,12 +83,13 @@ for MSIZE in "${MATRIX_SIZES[@]}"; do
             echo "  --- Run $RUN/$NUM_RUNS ---"
 
             ALONE_LOG="$RESULTS_DIR/ncu_${TAG}_alone_r${RUN}.log"
+            ALONE_STDOUT="$RESULTS_DIR/victim_${TAG}_alone_r${RUN}.stdout" 
             sudo $(which ncu) --metrics $NCU_METRICS \
                 --kernel-name GPUMultiplyMatrix \
                 --csv \
                 --log-file "$ALONE_LOG" \
                 "$SCRIPT_DIR/matrix_victim" $MSIZE $BX $BY $PATHS 0 \
-                2>/dev/null
+                > "$ALONE_STDOUT" 2>/dev/null                      
 
             A_TIME=$(extract_metric "$ALONE_LOG" "gpu__time_active.sum")
             A_RHIT=$(extract_metric "$ALONE_LOG" "lts__t_sector_op_read_hit_rate.pct")
@@ -102,6 +107,7 @@ for MSIZE in "${MATRIX_SIZES[@]}"; do
             sleep 1
 
             CONC_LOG="$RESULTS_DIR/ncu_${TAG}_concurrent_r${RUN}.log"
+            CONC_STDOUT="$RESULTS_DIR/victim_${TAG}_concurrent_r${RUN}.stdout" 
             #launch the enemy as a background process before NCU starts.
             # args: cycles=0 (infinite), use_green=1 (restricted to 2 SMs).
             # The enemy will run until it receives SIGTERM below
@@ -118,7 +124,7 @@ for MSIZE in "${MATRIX_SIZES[@]}"; do
                 --csv \
                 --log-file "$CONC_LOG" \
                 "$SCRIPT_DIR/matrix_victim" $MSIZE $BX $BY $PATHS 1 \
-                2>/dev/null
+                > "$CONC_STDOUT" 2>/dev/null 
 
             # Kill enemy: send SIGTERM first so the process can write the stop flag
             # to device memory and let the GPU kernel exit gracefully. The sleep

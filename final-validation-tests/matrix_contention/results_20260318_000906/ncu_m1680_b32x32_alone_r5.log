@@ -1,0 +1,9 @@
+==PROF== Connected to process 659948 (/home/zaineb/building-aggressors-on-Orin/final-validation-tests/matrix_contention/matrix_victim)
+==PROF== Trying to shutdown target application
+==ERROR== Failed to prepare kernel for profiling
+
+==ERROR== An error was reported by the counter measurement library:
+==ERROR== Unknown Error on device 0.
+==ERROR== Failed to profile "GPUComputeIntensive" in process 659948
+==PROF== Trying to shutdown target application
+==ERROR== An error occurred while trying to profile.

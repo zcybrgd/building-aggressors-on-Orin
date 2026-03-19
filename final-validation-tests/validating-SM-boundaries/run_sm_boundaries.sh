@@ -50,7 +50,7 @@ for SCENARIO in 0 1 2; do
         LOG="$RESULTS_DIR/ncu_s${SCENARIO}_r${RUN}.log"
         sudo $(which ncu) \
             --metrics $NCU_METRICS \
-            --kernel-name victimKernel \
+            --kernel-name computeKernel \
             --csv \
             --log-file "$LOG" \
             "$SCRIPT_DIR/simple_kernel" $SCENARIO $RUN \

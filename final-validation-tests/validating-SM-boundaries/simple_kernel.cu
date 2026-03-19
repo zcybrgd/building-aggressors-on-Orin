@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
     if (scenario == 0) {
         printf("[RUN %d][8 SMs] 16 blocks x 256 threads (no green ctx)\n", run_num);
         CHECK_RT(cudaEventRecord(t0,0));
-        victimKernel<<<16,256>>>(d_data, N, iters);
+        computeKernel<<<16,256>>>(d_data, (int)iters);
         CHECK_RT(cudaEventRecord(t1,0)); CHECK_RT(cudaStreamSynchronize(0));
     } else {
         CUdevResource full; CHECK_CU(cuDeviceGetDevResource(dev, &full, CU_DEV_RESOURCE_TYPE_SM));
@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
         CUdevResource ver; CHECK_CU(cuGreenCtxGetDevResource(gCtx, &ver, CU_DEV_RESOURCE_TYPE_SM));
         printf("[RUN %d][%u SMs] 16 blocks x 256 threads (green ctx scenario %d)\n", run_num, ver.sm.smCount, scenario);
         CHECK_RT(cudaEventRecord(t0, gStream));
-        victimKernel<<<16,256,0,gStream>>>(d_data, N, iters);
+        computeKernel<<<16,256,0,gStream>>>(d_data, (int)iters);
         CHECK_RT(cudaEventRecord(t1, gStream)); CHECK_RT(cudaStreamSynchronize(gStream));
         CHECK_CU(cuStreamDestroy(gStream)); CHECK_CU(cuGreenCtxDestroy(gCtx));
     }

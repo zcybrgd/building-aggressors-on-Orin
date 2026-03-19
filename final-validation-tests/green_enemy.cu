@@ -108,7 +108,7 @@ int main(int argc, char** argv) {
     CHECK_CU(cuDeviceGet(&device, devIdx));
     int totalSMs;
     CHECK_RT(cudaDeviceGetAttribute(&totalSMs, cudaDevAttrMultiProcessorCount, devIdx));
-    int size = 16 * 1024 * 1024; 
+    int size = 32 * 1024 * 1024; 
     unsigned int* d_chase;
     unsigned int* d_writeback;
     int* d_stop_flag;
@@ -129,9 +129,9 @@ int main(int argc, char** argv) {
     if (!use_green) {
         printf("[ENEMY] No green context — using all %d SMs\n", totalSMs);
         printf("[ENEMY] Running... (PID: %d)\n", getpid());
-        printSMIDs<<<16, 1>>>();
+        printSMIDs<<<32, 1>>>();
         CHECK_RT(cudaDeviceSynchronize());
-        enemyKernel<<<16, 1024>>>(d_chase, d_writeback, size, cycles, d_stop_flag);
+        enemyKernel<<<32, 1024>>>(d_chase, d_writeback, size, cycles, d_stop_flag);
 
     } else {
         //from the documentation
@@ -140,15 +140,15 @@ int main(int argc, char** argv) {
         CHECK_CU(cuDeviceGetDevResource(device, &fullSMs, CU_DEV_RESOURCE_TYPE_SM));
         //step 2: split SMs into a group + remainder.
         // cuDevSmResourceSplit is the recommended API but is not available in
-        // CUDA 12.6 (missing from headers and libcuda.so on this Orin).
+        // CUDA 12.6 
         // cuDevSmResourceSplitByCount is the only split API present here.
         // minCount=5 on 8 SMs with alignment=2 gives group=6 SMs (victim)
         // and remainder=2 SMs. Enemy takes the *remainder* (enemySlice).
         CUdevResource victimSlice, enemySlice;
         unsigned int nbGroups = 1;
         CHECK_CU(cuDevSmResourceSplitByCount(&victimSlice, &nbGroups, &fullSMs, &enemySlice, 0, 5));
-
-        //step 3: pack enemySlice into an opaque descriptor for cuGreenCtxCreate.
+//victim slide = 6 , enemy slice = 2
+        //step 3: pack enemySlice into an opaque descriptor for cuGreenCtxCreate
         CUdevResourceDesc descEnemy;
         CHECK_CU(cuDevResourceGenerateDesc(&descEnemy, &enemySlice, 1));
 
@@ -165,11 +165,11 @@ int main(int argc, char** argv) {
         //sanity check: confirm the driver assigned the expected 2 SMs
         CUdevResource verify;
         CHECK_CU(cuGreenCtxGetDevResource(enemyGCtx, &verify, CU_DEV_RESOURCE_TYPE_SM));
-        printf("[ENEMY] Green context — %u SMs (victim has 6 SMs, shared L2)\n", verify.sm.smCount);
+        printf("[ENEMY] Green context — %u SMs \n", verify.sm.smCount);
         printf("[ENEMY] Running... (PID: %d)\n", getpid());
-        printSMIDs<<<16, 1, 0, enemyStream>>>();
+        printSMIDs<<<32, 1, 0, enemyStream>>>();
         CHECK_RT(cudaStreamSynchronize(enemyStream));
-        enemyKernel<<<16, 1024, 0, enemyStream>>>(d_chase, d_writeback, size, cycles, d_stop_flag);
+        enemyKernel<<<32, 1024, 0, enemyStream>>>(d_chase, d_writeback, size, cycles, d_stop_flag);
 
         if (cycles == 0) {
             // Infinite mode: block the host until a SIGTERM/SIGINT arrives

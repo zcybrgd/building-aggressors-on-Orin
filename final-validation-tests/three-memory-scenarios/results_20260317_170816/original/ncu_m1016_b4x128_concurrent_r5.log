@@ -1,0 +1,13 @@
+==PROF== Connected to process 539392 (/home/zaineb/building-aggressors-on-Orin/final-validation-tests/three-memory-scenarios/matrix_victim)
+==PROF== Disconnected from process 539392
+"ID","Process ID","Process Name","Host Name","Kernel Name","Context","Stream","Block Size","Grid Size","Device","CC","Section Name","Metric Name","Metric Unit","Metric Value"
+"0","539392","matrix_victim","127.0.0.1","GPUMultiplyMatrix(long *, long *, int, int)","2","15","(512, 1, 1)","(2017, 1, 1)","0","8.7","Command line profiler metrics","gpu__time_active.sum","ns","1 475 775 744"
+"0","539392","matrix_victim","127.0.0.1","GPUMultiplyMatrix(long *, long *, int, int)","2","15","(512, 1, 1)","(2017, 1, 1)","0","8.7","Command line profiler metrics","lts__t_sector_op_read_hit_rate.pct","%","54,43"
+"0","539392","matrix_victim","127.0.0.1","GPUMultiplyMatrix(long *, long *, int, int)","2","15","(512, 1, 1)","(2017, 1, 1)","0","8.7","Command line profiler metrics","lts__t_sector_op_write_hit_rate.pct","%","102,75"
+"0","539392","matrix_victim","127.0.0.1","GPUMultiplyMatrix(long *, long *, int, int)","2","15","(512, 1, 1)","(2017, 1, 1)","0","8.7","Command line profiler metrics","lts__t_sectors.sum","sector","3 224 560 898"
+"0","539392","matrix_victim","127.0.0.1","GPUMultiplyMatrix(long *, long *, int, int)","2","15","(512, 1, 1)","(2017, 1, 1)","0","8.7","Command line profiler metrics","lts__t_sectors_op_read_lookup_miss.sum","sector","1 519 352 095"
+"0","539392","matrix_victim","127.0.0.1","GPUMultiplyMatrix(long *, long *, int, int)","2","15","(512, 1, 1)","(2017, 1, 1)","0","8.7","Command line profiler metrics","lts__t_sectors_op_write_lookup_miss.sum","sector","0"
+"0","539392","matrix_victim","127.0.0.1","GPUMultiplyMatrix(long *, long *, int, int)","2","15","(512, 1, 1)","(2017, 1, 1)","0","8.7","Command line profiler metrics","sm__cycles_elapsed.avg","cycle","616 785 410"
+"0","539392","matrix_victim","127.0.0.1","GPUMultiplyMatrix(long *, long *, int, int)","2","15","(512, 1, 1)","(2017, 1, 1)","0","8.7","Command line profiler metrics","sm__inst_executed.sum","inst","3 737 974 362"
+"0","539392","matrix_victim","127.0.0.1","GPUMultiplyMatrix(long *, long *, int, int)","2","15","(512, 1, 1)","(2017, 1, 1)","0","8.7","Command line profiler metrics","sm__warps_launched.sum","warp","32 272"
+"0","539392","matrix_victim","127.0.0.1","GPUMultiplyMatrix(long *, long *, int, int)","2","15","(512, 1, 1)","(2017, 1, 1)","0","8.7","Command line profiler metrics","smsp__warps_active.avg","warp","6 995 240 572,96"

@@ -23,15 +23,14 @@
     } \
 } while(0)
 
-// Original GPUMultiplyMatrix kernel — 1D indexing, L2-sensitive
 __global__ void GPUMultiplyMatrix(long *matrix1, long *matrix2, int paths, int count) {
     int element = blockIdx.x * blockDim.x + threadIdx.x;
     int i;
-    //if (threadIdx.x == 0) {
-    //    unsigned int smid;
-    //    asm volatile("mov.u32 %0, %%smid;" : "=r"(smid));
-    //    printf("[VICTIM] block %d -> SM %u\n", blockIdx.x, smid);
-    //}
+    if (threadIdx.x == 0) {
+        unsigned int smid;
+        asm volatile("mov.u32 %0, %%smid;" : "=r"(smid));
+        printf("[VICTIM] block %d -> SM %u\n", blockIdx.x, smid);
+    }
     while (paths > 0) {
         long sum = 0;
         int col = element % count;
@@ -71,7 +70,6 @@ int main(int argc, char** argv) {
     CHECK_RT(cudaMalloc(&d_matrix1, matSize));
     CHECK_RT(cudaMalloc(&d_matrix2, matSize));
 
-    // Initialize matrices on host
     long *h_matrix1 = (long*)malloc(matSize);
     long *h_matrix2 = (long*)malloc(matSize);
     for (int i = 0; i < totalElements; i++) {
@@ -97,35 +95,31 @@ int main(int argc, char** argv) {
         CHECK_RT(cudaEventRecord(stop, 0));
         CHECK_RT(cudaStreamSynchronize(0));
     } else {
-        // Step 1: query the full SM resource pool of the device.
+        // step 1: query the full SM resource pool of the device.
         // CU_DEV_RESOURCE_TYPE_SM is the only resource type relevant here;
         // it describes how many SMs are available for partitioning.
         CUdevResource fullSMs;
         CHECK_CU(cuDeviceGetDevResource(device, &fullSMs, CU_DEV_RESOURCE_TYPE_SM));
 
-        // Step 2: split SMs into a group + remainder.
+        // step 2: split SMs into a group + remainder.
         // cuDevSmResourceSplit is the recommended API but is not available in
         // CUDA 12.6 (missing from headers and libcuda.so on this Orin).
         // cuDevSmResourceSplitByCount is the only split API present here.
         // minCount=5 on 8 SMs with alignment=2 gives group=6 SMs (victim)
         // and remainder=2 SMs (enemy). Both processes call the same split
-        // independently and each takes its slice — no IPC needed.
         CUdevResource victimSlice, enemySlice;
         unsigned int nbGroups = 1;
         CHECK_CU(cuDevSmResourceSplitByCount(&victimSlice, &nbGroups, &fullSMs, &enemySlice, 0, 5));
-
         // Step 3: pack the SM resource into an opaque descriptor.
         // cuDevResourceGenerateDesc bundles one or more CUdevResource objects
         // into a CUdevResourceDesc that cuGreenCtxCreate can consume.
         CUdevResourceDesc descVictim;
         CHECK_CU(cuDevResourceGenerateDesc(&descVictim, &victimSlice, 1));
-
         // Step 4: create the green context restricted to victimSlice (6 SMs).
         // CU_GREEN_CTX_DEFAULT_STREAM requests a default stream be associated
         // with this green context (required flag in CUDA 12.x).
         CUgreenCtx victimGCtx;
         CHECK_CU(cuGreenCtxCreate(&victimGCtx, descVictim, device, CU_GREEN_CTX_DEFAULT_STREAM));
-
         // Step 5: create a stream bound to the green context.
         // CU_STREAM_NON_BLOCKING prevents implicit synchronisation with stream 0
         // (the default stream), ensuring the victim's work stays isolated and
@@ -133,12 +127,11 @@ int main(int argc, char** argv) {
         CUstream victimStream;
         CHECK_CU(cuGreenCtxStreamCreate(&victimStream, victimGCtx, CU_STREAM_NON_BLOCKING, 0));
 
-        // Sanity check: confirm the driver actually assigned the expected SM count.
         // cuGreenCtxGetDevResource reads back the resource from the live context,
         // so this catches any silent rounding or rejection by the driver.
         CUdevResource verify;
         CHECK_CU(cuGreenCtxGetDevResource(victimGCtx, &verify, CU_DEV_RESOURCE_TYPE_SM));
-        printf("[VICTIM] CONCURRENT — %u SMs (enemy has 2 SMs, shared L2)\n", verify.sm.smCount);
+        printf("[VICTIM] CONCURRENT — %u SMs\n", verify.sm.smCount);
 
         CHECK_RT(cudaEventRecord(start, victimStream));
         GPUMultiplyMatrix<<<numBlocks, threadsPerBlock, 0, victimStream>>>(d_matrix1, d_matrix2, paths, count);

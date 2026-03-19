@@ -1,0 +1,37 @@
+[ENEMY] Starting in INFINITE mode (run until killed)
+[ENEMY] Green context — 2 SMs (victim has 6 SMs, shared L2)
+[ENEMY] Running... (PID: 845993)
+[ENEMY] block 4 -> SM 6
+[ENEMY] block 2 -> SM 7
+[ENEMY] block 1 -> SM 6
+[ENEMY] block 3 -> SM 7
+[ENEMY] block 0 -> SM 6
+[ENEMY] block 6 -> SM 7
+[ENEMY] block 5 -> SM 6
+[ENEMY] block 7 -> SM 7
+[ENEMY] block 12 -> SM 6
+[ENEMY] block 10 -> SM 7
+[ENEMY] block 9 -> SM 6
+[ENEMY] block 11 -> SM 7
+[ENEMY] block 8 -> SM 6
+[ENEMY] block 14 -> SM 7
+[ENEMY] block 13 -> SM 6
+[ENEMY] block 15 -> SM 7
+[ENEMY] block 20 -> SM 6
+[ENEMY] block 17 -> SM 7
+[ENEMY] block 18 -> SM 6
+[ENEMY] block 19 -> SM 7
+[ENEMY] block 16 -> SM 6
+[ENEMY] block 21 -> SM 7
+[ENEMY] block 22 -> SM 6
+[ENEMY] block 23 -> SM 7
+[ENEMY] block 28 -> SM 6
+[ENEMY] block 25 -> SM 7
+[ENEMY] block 26 -> SM 6
+[ENEMY] block 27 -> SM 7
+[ENEMY] block 24 -> SM 6
+[ENEMY] block 29 -> SM 7
+[ENEMY] block 30 -> SM 6
+[ENEMY] block 31 -> SM 7
+[ENEMY] Stop signal received, terminating kernel...
+[ENEMY] Completed
