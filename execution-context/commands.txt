@@ -1,0 +1,11 @@
+ 1996  vi ptxas_test_kernels.cu
+ 1997  nvcc -arch=sm_87 -Xptxas -v -o ptxas_all_tests ptxas_test_kernels.cu
+ 1998  # Disable ALL optimizations
+ 1999  nvcc -arch=sm_87 -Xptxas -v -O0 -o test_unoptimized ptxas_test_kernels.cu
+ 2000  nvcc -arch=sm_87 -Xptxas "-v -O0" -o test_really_unoptimized ptxas_test_kernels.cu
+ 2001  cd /usr/local/cuda/samples/1_Utilities/deviceQuery
+ 2002  nvcc -arch=sm_87 -Xptxas "-v -O0" -o test_really_unoptimized ptxas_test_kernels.cu > results.txt
+ 2003  ls
+ 2004  cat results.txt
+ 2005  nvcc -arch=sm_87 -Xptxas "-v -O0" -o test_really_unoptimized ptxas_test_kernels.cu
+ 2006  history

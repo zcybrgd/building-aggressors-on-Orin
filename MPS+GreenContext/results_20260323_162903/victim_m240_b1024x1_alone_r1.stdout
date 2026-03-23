@@ -1,0 +1,4 @@
+==PROF== Importing kernel demangled names from /root/.config/NVIDIA Corporation/ncu-kernel-renames.yaml
+[CONV] Matrix: 240x240 | Block: (1024,1) | Grid: (1,240) | FilterR: 2
+[CONV] ALONE — all 8 SMs
+[CONV] Completed in 11020.15 ms

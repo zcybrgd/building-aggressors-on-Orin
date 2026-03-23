@@ -1,0 +1,4 @@
+==PROF== Importing kernel demangled names from /root/.config/NVIDIA Corporation/ncu-kernel-renames.yaml
+[VICTIM] Kernel: GPUMultiplyMatrix | Matrix: 32x32 (int) | Block: (1,1024) | Grid: (32,1) | Paths: 15 | Memory: 12.00 KB
+[VICTIM] ALONE — all 8 SMs
+[VICTIM] Completed in 9429.28 ms

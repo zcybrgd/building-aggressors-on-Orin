@@ -8,10 +8,13 @@ export CUDA_MPS_PIPE_DIRECTORY=/tmp/nvidia-mps
 export CUDA_MPS_LOG_DIRECTORY=/tmp/nvidia-log
 
 PATHS=15
-NUM_RUNS=1
+NUM_RUNS=3
 
-MATRIX_SIZES=(240 496 784 1016 1232)          #  (240 496 784 1016 1232)
-BLOCK_CONFIGS=("32,32" "1,1024" "64,16")     # ("1,1024" "32,32" "64,16")...
+MATRIX_SIZES=(240 496 784 1016 1232 1680 1024)          #  (240 496 784 1016 1232)
+BLOCK_CONFIGS=("32,32" "1,1024" "64,16" "512,2" "1024,1" "8,64" "4,128")     # ("1,1024" "32,32" "64,16")...
+
+#MATRIX_SIZES=(784)     
+#BLOCK_CONFIGS=("32,32") 
 
 NCU_METRICS="lts__t_sector_op_read_hit_rate.pct,\
 lts__t_sector_op_write_hit_rate.pct,\
@@ -35,7 +38,7 @@ sm_cycles_avg,sm_inst_executed,smsp_warps_active_avg,sm_warps_launched" \
     > "$RAW_CSV"
 
 echo "Compiling :"
-VICTIM_SRC="$SCRIPT_DIR/../final-validation-tests/matrix_contention/matrix_victim.cu"
+VICTIM_SRC="$SCRIPT_DIR/../final-validation-tests/matrix_contention/conv.cu"
 ENEMY_SRC="$SCRIPT_DIR/../final-validation-tests/green_enemy.cu"
 nvcc -arch=sm_87 -O3 -o "$SCRIPT_DIR/matrix_victim" \
     "$VICTIM_SRC" -lcuda
@@ -85,12 +88,12 @@ Block: (${BX},${BY})=${THREADS} | Grid: ${NUM_BLOCKS}"
             echo "  --- Run $RUN/$NUM_RUNS ---"
             ALONE_LOG="$RESULTS_DIR/ncu_${TAG}_alone_r${RUN}.log"
             ALONE_OUT="$RESULTS_DIR/victim_${TAG}_alone_r${RUN}.stdout"
-            sudo "$(which ncu)" \
+            sudo -S "$(which ncu)" \
                     --metrics "$NCU_METRICS" \
-                     --kernel-name GPUMultiplyMatrix \
-                     --csv \
+                    --kernel-name ConvolutionRowGPU \
+                    --csv \
                     --log-file "$ALONE_LOG" \
-                     "$SCRIPT_DIR/matrix_victim" \
+                    "$SCRIPT_DIR/matrix_victim" \
                          "$MSIZE" "$BX" "$BY" "$PATHS" 0 \
                  > "$ALONE_OUT" 2>/dev/null
             #"$SCRIPT_DIR/matrix_victim" "$MSIZE" "$BX" "$BY" "$PATHS" 0 \
@@ -122,12 +125,12 @@ $RUN,$A_TIME,$A_RHIT,$A_SECT,$A_RMISS,$A_WMISS,$A_CYCLES,$A_INST,$A_WACT,$A_WLNC
             ENEMY_PID=$!
             echo "    [ENEMY]  PID=$ENEMY_PID — waiting for L2 saturation..."
             sleep 3
-            sudo  "$(which ncu)" \
-                     --metrics "$NCU_METRICS" \
-                    --kernel-name GPUMultiplyMatrix \
-                     --csv \
-                     --log-file "$CONC_LOG" \
-                     "$SCRIPT_DIR/matrix_victim" \
+            sudo -S "$(which ncu)" \
+                    --metrics "$NCU_METRICS" \
+                    --kernel-name ConvolutionRowGPU \
+                    --csv \
+                    --log-file "$CONC_LOG" \
+                    "$SCRIPT_DIR/matrix_victim" \
                          "$MSIZE" "$BX" "$BY" "$PATHS" 1 \
                  > "$CONC_OUT" 2>/dev/null
             #"$SCRIPT_DIR/matrix_victim" "$MSIZE" "$BX" "$BY" "$PATHS" 1 \
